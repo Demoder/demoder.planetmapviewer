@@ -1,0 +1,125 @@
+﻿<Root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Project" Version="1" xsi:noNamespaceSchemaLocation="http://aodevs.com/xsd/Project.v1.xsd">
+  <Name>Vha.Chat</Name>
+  <Tagline>
+    Vha.Chat is a standalone chat client for Anarchy Online
+  </Tagline>
+  <Description>
+    [b]The Client[/b][br] Vha.Chat is a new standalone Anarchy Online chat client that aims to replace AORC as the primary chat client.[br] I hope to achieve this by creating a solid and much more feature complete implementation of Anarchy Online's chat.[br] Already has Vha.Chat matched many of AORC's features and includes several AORC doesn't.[br] [br] The main difference between AORC and this client:[br] [ulist] [*]Significant effort has been made to display AOML and Info Windows just like Anarchy Online does. [*]Full support for encoded messages (displays the tower and org msg. channel correctly) [*]Full support for system messages (offline tells, inbox full, /cc commands) [*]Completely open source with active development and a public roadmap [*]Popup windows for a single channel or private conversation [/ulist] [br] [b]The chat library[/b][br] The library (Vha.Net) is a heavily cleaned and fixed version of VhaBot's AoLib.[br] Most notable is the addition of full support for remote private channels and system messages.[br] Additionally many shutdown/disconnect related bugs have been fixed.
+  </Description>
+  <License>GPLv2</License>
+  <Games>
+    <Game>Anarchy Online</Game>
+  </Games>
+  <Pages>
+    <Page Label="Contributors">
+      [b]Developers[/b][br] Vha.Chat wouldn't be the state it is in today without the help of the community.[br] Are you a developer and feel like helping out?[br] Simply grab a copy of the source from svn and make some enhancements.[br] Patch files can be submitted here: [url]http://forums.vhabot.net/index.php/board,72.0.html[/url][br] [br] [b]Alpha testers[/b][br] But even as a user you too can help out. With Vha.Chat growing bigger we've increased our need for testers.[br] Among the links there is a link to a list of alpha builds (top one is the latest).[br] We'd be most grateful if you're willing to take the risk of taking these for a spin instead of the stable builds.[br] You can report bugs here on the forum, by PM or even on IRC (#coders @ irc.funcom.com).
+    </Page>
+    <Page Label="Known Issues">
+      [b]Weird characters[/b][br] Output produced by certain bots (like VhaBot) may appear incorrect in Vha.Chat.[br] Unfortunately, this is related to a bug in these bots and a bug fix in Vha.Chat.[br] A fix has been made for VhaBot and will be included in its next release.[br] [br] [b]No colors[/b][br] By default all colors are stripped from scripts and bots in the main chat window.[br] This is working as intended and often greatly improves the readability of bot output.[br] In 1.1 and earlier; this behavior can be changed by manually editing Config.xml.[br] In 1.2 and later; this behavior can be changed in the options interface.[br] [br] [b]Can't select[/b][br] There are some known issues with selecting and copying text from the chat window.[br] I've been unable to track down the source of this and doesn't seem to be reproducible on my machine.[br] If you're having this issue, please reply with your OS and IE version. Also mention if the issue is constant or only at random times.
+    </Page>
+    <Page Label="Mono Support">
+      [i]Currently, Vha.Chat won't work on Mono, despite the best of my effort.[br] Several attempts have been made to obtain Mono compatibility, but all of them were halted by bugs in Mono.[br] Most of these bugs have been known for over a year, but simply are not being fixed by Novell.[/i][br] [br] [b]Implementation[/b][br] Vha.Chat relies on System.Windows.Forms.WebBrowser for rendering it's output.[br] It's currently the only control available in .NET 2.0 that is sufficiently rich to support all my formatting needs.[br] System.Windows.Forms.RichTextBox lacks support for custom links which makes it unsuitable for Vha.Chat.[br] [br] [b]Bugs[/b][br] [u]WebBrowser.DocumentText[/u][br] Not properly implemented on Mono and using it triggers an HtmlElement.OuterHtml related exception.[br] https://bugzilla.novell.com/show_bug.cgi?id=499758 (2009-04-30)[br] [br] [u]WebBrowser.DocumentStream[/u][br] Not properly implemented on Mono and using it triggers a segfault.[br] [br] [u]HtmlDocument.Write[/u][br] Doesn't throw any errors, but also doesn't result in any visual changes.[br] [br] [u]HtmlDocument.InvokeScript[/u][br] Lacks input sanitation on string arguments (on several levels in code).[br] Lacks support for bool arguments.[br] Silently fails on large arguments.[br] Returned output is incorrect/broken.[br] https://bugzilla.novell.com/show_bug.cgi?id=509337 (2009-06-03)[br] [br] [u]HtmlElement.OuterHtml[/u][br] Not properly implemented on Mono and using it triggers an exception[br] [br] [u]HtmlElement.InnerHtml[/u][br] Doesn't throw any errors, but also doesn't result in any visual changes.[br] https://bugzilla.novell.com/show_bug.cgi?id=456352 (2008-12-04)[br] [br] [b]Conclusion[/b][br] I need to dynamically generate and modify html inside the WebBrowser control.[br] Unfortunately, Mono's implementation is so severely bugged that I've exhausted pretty much all options in achieving this goal.[br] Until at least one of the bugs listed above is fixed, I have no way of making Vha.Chat work on Mono.[br] [br] [i]Use [url=http://forums.vhabot.net/index.php/topic,7005.0.html]this thread[/url] for discussion regarding this subject[/i]
+    </Page>
+    <Page Label="Wine Support">
+      <![CDATA[
+      [i]Wine is not officially supported by Vha.Chat and never will.[br] Vha.Chat may or may not work under Wine and possibly break between releases.[br] Even if Vha.Chat does work, certain features may not work.[br] Bug reports related to Wine will only be handled if the fix is easy to apply and doesn't conflict with Windows functionality[/i][br] [br] [b]Status[/b][br] Vha.Chat version 1.3 and later is capable of running on Linux using Wine.[br] The application relies on Microsoft .NET 2.0 and Internet Explorer to run, you can install both of these using winetricks.[br] Some functionality like 'relocating the side panel' is known to be broken and is related to bugs in Wine itself.[br] [br] [b]Howto[/b][br] [ulist] [*]Install [url=http://www.winehq.org/]Wine[/url] (review your distribution's documentation for this step) [*]Obtain [url=http://wiki.winehq.org/winetricks]winetricks[/url]: [b]wget http://www.kegel.com/wine/winetricks[/b] [*]Install prerequisites: [b]./winetricks fontfix ie6 dotnet20[/b] [*]Run Vha.Chat: [b]wine Vha.Chat.exe[/b] [/ulist] [br] [b]Issues and workarounds[/b][br] [u]Chat output box remains blank[/u][br] If the output box remains completely white and doesn't fill with chat, it's possibly one of the initialization modes for this box is not supported by your wine version.[br] A possible workaround is to try different modes. Since 1.3.0.281 you can change this by modifying [b]<OuputMode>[/b] in [b]Configuration.xml[/b]
+      ]]>
+    </Page>
+  </Pages>
+  <Staff>
+    <Member Position="Author" Name="Vhab" Server="Atlantean"/>
+    <Member Position="Contributor" Name="Demoder" Server="Rimor"/>
+    <Member Position="Contributor" Name="Iriche" Server="Atlantean"/>
+  </Staff>
+  <Links>
+    <Link Label="Website" Url="http://www.vhabot.net"/>
+    <Link Label="Forums" Url="http://aodevs.com/forums/index.php/board,31.0.html"/>
+    <Link Label="Redmine" Url="http://code.aodevs.com"/>
+    <Link Label="Bitbucket" Url="https://bitbucket.org/Vhab"/>
+  </Links>
+  <Versions>
+    <LocalVersion Type="Stable" Value="1.3.1" Package="1.3.1"/>
+    <LocalVersion Type="Beta" Value="1.3.2" Package="hg-1.3"/>
+    <LocalVersion Type="Alpha" Value="1.4.0" Package="hg-trunk"/>
+  </Versions>
+  <Packages>
+    <!--
+    <Package Name="hg-trunk">
+      <Link Label="Nightly Builds" Url="http://build.vhabot.net/ccnet/server/win32/project/Vha.Chat/PackageList.aspx"/>
+      <Repository Type="Mercurial" Label="Source" Url="https://bitbucket.org/Vhab/vha.chat/src/default"/>
+    </Package>
+    -->
+    <Package Name="1.0.0" Date="2012-03-24">
+      <File Label="Binaries" Url=""/>
+      <File Label="Setup" Url=""/>
+      <Repository Type="Subversion" Label="Source" Url="https://bitbucket.org/Vhab/vha.chat/src/1.3.1"/>
+    </Package>
+    <Package Name="1.3.0" Date="2011-01-30">
+      <File Label="Binaries" Url="https://bitbucket.org/Vhab/vha.chat/downloads/Vha.Chat 1.3.0.zip"/>
+      <File Label="Setup" Url="https://bitbucket.org/Vhab/vha.chat/downloads/Vha.Chat 1.3.0 Setup.exe"/>
+      <Repository Type="Subversion" Label="Source" Url="http://code.vhabot.net/svn/vhachat/tags/1.3.0/"/>
+    </Package>
+    <Package Name="1.3.0 RC2" Date="2011-01-18">
+      <File Label="Binaries" Url="https://bitbucket.org/Vhab/vha.chat/downloads/Vha.Chat 1.3.0 RC2.zip"/>
+      <File Label="Setup" Url="https://bitbucket.org/Vhab/vha.chat/downloads/Vha.Chat 1.3.0 RC2 Setup.exe"/>
+      <Repository Type="Subversion" Label="Source" Url="http://code.vhabot.net/svn/vhachat/tags/1.3.0 RC2/"/>
+    </Package>
+    <Package Name="1.3.0 RC1" Date="2010-12-13">
+      <File Label="Binaries" Url="https://bitbucket.org/Vhab/vha.chat/downloads/Vha.Chat 1.3.0 RC1.rar"/>
+      <File Label="Setup" Url="https://bitbucket.org/Vhab/vha.chat/downloads/Vha.Chat 1.3.0 RC1 Setup.exe"/>
+      <Repository Type="Subversion" Label="Source" Url="http://code.vhabot.net/svn/vhachat/tags/1.3.0 RC1/"/>
+    </Package>
+    <Package Name="1.2.1" Date="2010-09-12">
+      <File Label="Binaries" Url="https://bitbucket.org/Vhab/vha.chat/downloads/Vha.Chat 1.2.1.zip"/>
+      <Repository Type="Subversion" Label="Source" Url="http://code.vhabot.net/svn/vhachat/tags/1.2.0/"/>
+    </Package>
+    <Package Name="1.2.0" Date="2010-08-01">
+      <File Label="Binaries" Url="https://bitbucket.org/Vhab/vha.chat/downloads/Vha.Chat 1.2.0.zip"/>
+      <Repository Type="Subversion" Label="Source" Url="http://code.vhabot.net/svn/vhachat/tags/1.2.0/"/>
+    </Package>
+    <Package Name="1.2.0 Beta" Date="2010-07-25">
+      <File Label="Binaries" Url="https://bitbucket.org/Vhab/vha.chat/downloads/Vha.Chat 1.2.0 Beta.zip"/>
+      <Repository Type="Subversion" Label="Source" Url="http://code.vhabot.net/svn/vhachat/tags/1.2.0 Beta/"/>
+    </Package>
+    <Package Name="1.1.7" Date="2010-06-24">
+      <File Label="Binaries" Url="https://bitbucket.org/Vhab/vha.chat/downloads/Vha.Chat 1.1.7.rar"/>
+      <Repository Type="Subversion" Label="Source" Url="http://code.vhabot.net/svn/vhachat/tags/1.1.7/"/>
+    </Package>
+    <Package Name="1.1.6" Date="2010-03-26">
+      <File Label="Binaries" Url="https://bitbucket.org/Vhab/vha.chat/downloads/Vha.Chat 1.1.6.rar"/>
+      <Repository Type="Subversion" Label="Source" Url="http://code.vhabot.net/svn/vhachat/tags/1.1.6/"/>
+    </Package>
+    <Package Name="1.1.6 Beta" Date="2010-03-21">
+      <File Label="Binaries" Url="https://bitbucket.org/Vhab/vha.chat/downloads/Vha.Chat 1.1.6 Beta.rar"/>
+      <Repository Type="Subversion" Label="Source" Url="http://code.vhabot.net/svn/vhachat/tags/1.1.6 Beta/"/>
+    </Package>
+    <Package Name="1.1.5" Date="2010-03-17">
+      <File Label="Binaries" Url="https://bitbucket.org/Vhab/vha.chat/downloads/Vha.Chat 1.1.5.rar"/>
+      <Repository Type="Subversion" Label="Source" Url="http://code.vhabot.net/svn/vhachat/tags/1.1.5/"/>
+    </Package>
+    <Package Name="1.1.4" Date="2010-03-11">
+      <File Label="Binaries" Url="https://bitbucket.org/Vhab/vha.chat/downloads/Vha.Chat 1.1.4.rar"/>
+      <Repository Type="Subversion" Label="Source" Url="http://code.vhabot.net/svn/vhachat/tags/1.1.4/"/>
+    </Package>
+    <Package Name="1.1.3" Date="2010-03-03">
+      <File Label="Binaries" Url="https://bitbucket.org/Vhab/vha.chat/downloads/Vha.Chat 1.1.3.rar"/>
+      <Repository Type="Subversion" Label="Source" Url="http://code.vhabot.net/svn/vhachat/tags/1.1.3/"/>
+    </Package>
+    <Package Name="1.1.2" Date="2010-02-10">
+      <File Label="Binaries" Url="https://bitbucket.org/Vhab/vha.chat/downloads/Vha.Chat 1.1.2.rar"/>
+      <Repository Type="Subversion" Label="Source" Url="http://code.vhabot.net/svn/vhachat/tags/1.1.2/"/>
+    </Package>
+    <Package Name="1.1.1" Date="2010-02-03">
+      <File Label="Binaries" Url="https://bitbucket.org/Vhab/vha.chat/downloads/Vha.Chat 1.1.5.rar"/>
+      <Repository Type="Subversion" Label="Source" Url="http://code.vhabot.net/svn/vhachat/tags/1.1.1/"/>
+    </Package>
+    <Package Name="1.1.0" Date="2010-01-27">
+      <File Label="Binaries" Url="https://bitbucket.org/Vhab/vha.chat/downloads/Vha.Chat 1.1.0.rar"/>
+      <Repository Type="Subversion" Label="Source" Url="http://code.vhabot.net/svn/vhachat/tags/1.1.0/"/>
+    </Package>
+    <Package Name="1.0.0" Date="2010-01-25">
+      <File Label="Binaries" Url="https://bitbucket.org/Vhab/vha.chat/downloads/Vha.Chat 1.0.0.rar"/>
+      <Repository Type="Subversion" Label="Source" Url="http://code.vhabot.net/svn/vhachat/tags/1.0.0/"/>
+    </Package>
+  </Packages>
+</Root>
