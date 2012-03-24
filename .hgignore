@@ -3,6 +3,7 @@ syntax: glob
 */obj/**
 **/bin/**
 **/obj/**
+**/*.cachefile
 *.user
 *.suo
 **/*.suo
