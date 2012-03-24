@@ -32,7 +32,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
+using thrd = System.Threading;
 using System.Windows.Forms;
 using Demoder.AoHook;
 using Demoder.Common;
@@ -53,9 +53,11 @@ namespace Demoder.PlanetMapViewer.Forms
         internal Context Context;
         #endregion
         private Stopwatch lastException;
-        private Texture2D characterLocator = null;
 
-        private System.Threading.Timer updateCharacterListTimer;
+        #region Timers
+        private thrd.Timer updateCharacterListTimer;
+        private thrd.Timer topMostTimer;
+        #endregion
 
         #endregion
 
@@ -105,7 +107,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
                 this.Context.ContentManager = this.tileDisplay1.Content;
                 this.Context.HookInfo = new HookInfoTracker();
-                this.updateCharacterListTimer = new System.Threading.Timer(this.UpdateCharacterList, null, 1000, 2000);
+                this.updateCharacterListTimer = new thrd.Timer(this.UpdateCharacterList, null, 1000, 2000);
 
                 this.bgwVersionCheck.DoWork += bgwVersionCheck_DoWork;
                 this.bgwVersionCheck.RunWorkerCompleted += bgwVersionCheck_RunWorkerCompleted;
@@ -116,7 +118,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.Context.Camera = new Camera(this.Context);
 
 
-                this.characterLocator = this.Context.ContentManager.Load<Texture2D>(@"Textures\GFX_GUI_PLANETMAP_PLAYER_MARKER");
+                this.Context.Content.Textures.CharacterLocator = this.Context.ContentManager.Load<Texture2D>(@"Textures\GFX_GUI_PLANETMAP_PLAYER_MARKER");
                 this.ApplySettings();
                 this.Context.Camera.AdjustScrollbarsToLayer();
 
@@ -231,7 +233,7 @@ namespace Demoder.PlanetMapViewer.Forms
         }
         #endregion
 
-        private System.Threading.Timer topMostTimer;
+        
 
         /// <summary>
         /// Applies form-related settings.
@@ -402,7 +404,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
                 #region Draw character locators
 
-                if (this.characterLocator != null)
+                if (this.Context.Content.Textures.CharacterLocator != null)
                 {
                     // Retrieve all information related to character locators
                     var locators = this.GetCharacterLocators();
@@ -488,20 +490,7 @@ namespace Demoder.PlanetMapViewer.Forms
             }
         }
 
-        private class CharacterLocator
-        {
-            public Vector2 CenterPosition;
-            public List<StringDefinition> Strings = new List<StringDefinition>();
-        }
-
-        private class StringDefinition
-        {
-            public Vector2 CenterPosition;
-            public string Text;
-        }
-
-
-        private void RenderCharacterLocators(CharacterLocator[] characters)
+        private void RenderCharacterLocators(CharacterLocatorInformation[] characters)
         {
             this.Context.SpriteBatch.Begin(
             SpriteSortMode.Texture,
@@ -512,7 +501,7 @@ namespace Demoder.PlanetMapViewer.Forms
             {
                 foreach (var c in characters)
                 {
-                    this.CenterTextureOnPixel(this.characterLocator, (int)c.CenterPosition.X, (int)c.CenterPosition.Y, Microsoft.Xna.Framework.Color.White);
+                    this.CenterTextureOnPixel(this.Context.Content.Textures.CharacterLocator, (int)c.CenterPosition.X, (int)c.CenterPosition.Y, Microsoft.Xna.Framework.Color.White);
                 }
             }
             finally
@@ -521,12 +510,12 @@ namespace Demoder.PlanetMapViewer.Forms
             }
         }
 
-        private CharacterLocator[] GetCharacterLocators()
+        private CharacterLocatorInformation[] GetCharacterLocators()
         {
-            var chrs = new List<CharacterLocator>();
+            var chrs = new List<CharacterLocatorInformation>();
             if (this.Context.HookInfo == null || this.Context.HookInfo.Processes == null)
             {
-                return new CharacterLocator[0];
+                return new CharacterLocatorInformation[0];
             }
 
             lock (this.Context.HookInfo.Processes)
@@ -534,12 +523,12 @@ namespace Demoder.PlanetMapViewer.Forms
                 foreach (var info in this.Context.HookInfo.Processes.Values)
                 {
                     if (info == null || info.Zone == null || info.Position == null || info.Character == null || info.Character.Name == null) { continue; }
-                    var charLoc = new CharacterLocator();
+                    var charLoc = new CharacterLocatorInformation();
                     charLoc.CenterPosition = this.Context.MapManager.GetPosition(info.Zone.ID, info.Position.X, info.Position.Z);
 
                     charLoc.Strings.Add(new StringDefinition
                     {
-                        CenterPosition = new Vector2(charLoc.CenterPosition.X, charLoc.CenterPosition.Y + (int)this.characterLocator.Height / 2),
+                        CenterPosition = new Vector2(charLoc.CenterPosition.X, charLoc.CenterPosition.Y + (int)this.Context.Content.Textures.CharacterLocator.Height / 2),
                         Text = info.Character.Name
                     });
 
@@ -557,8 +546,8 @@ namespace Demoder.PlanetMapViewer.Forms
                     new Microsoft.Xna.Framework.Rectangle(
                         x - tex.Width / 2,
                         y - tex.Height / 2,
-                        this.characterLocator.Width,
-                        this.characterLocator.Height),
+                        this.Context.Content.Textures.CharacterLocator.Width,
+                        this.Context.Content.Textures.CharacterLocator.Height),
                          color);
         }
 
@@ -782,7 +771,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 if (Properties.WindowSettings.Default.OverlaymodeTopmostWorkaround)
                 {
                     if (this.topMostTimer != null) { this.topMostTimer.Dispose(); }
-                    this.topMostTimer = new System.Threading.Timer((TimerCallback)delegate(object obj)
+                    this.topMostTimer = new thrd.Timer((thrd.TimerCallback)delegate(object obj)
                     {
                         this.ForceTopMost();
                     }, null, 250, 250);
