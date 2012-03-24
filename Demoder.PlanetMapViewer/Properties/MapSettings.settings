@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Demoder.PlanetMapViewer.Properties" GeneratedClassName="MapSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="AoPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SelectedShadowlandsMap" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Shadowlands\ShadowlandsMap.txt</Value>
+    </Setting>
+    <Setting Name="SelectedRubikaMap" Type="System.String" Scope="User">
+      <Value Profile="(Default)">normal\PlanetMapIndexNormal.txt</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
