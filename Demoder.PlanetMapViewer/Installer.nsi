@@ -31,20 +31,18 @@ UninstPage instfiles
 
 Section "Prequesites (required)"
     SectionIn RO
-    SetOutPath $INSTDIR\Redist
-    File "..\Dependency\*"
-    
+    SetOutPath $INSTDIR\Redist  
   
   ; .NET 4.0 full
   ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\" "Install"
   IntCmp $0 1 +4 ;If this value is 1, skip executing
-    File "..\Dependency\dotNetFx40_Full_setup.exe"
+    File "..\Dep\dotNetFx40_Full_setup.exe"
     ExecWait '"$INSTDIR\Redist\dotNetFx40_Full_setup.exe" /passive /promptrestart'
   
   ; .NET 3.5
   ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\NET Framework Setup\NDP\v3.5\" "Install"
   IntCmp $0 1 +3
-    File "..\Dependency\dotNetFx35setup.exe"
+    File "..\Dep\dotNetFx35setup.exe"
     ExecWait '"$INSTDIR\Redist\dotNetFx35setup.exe" /passive /promptrestart'
   
   ; XNA Framework
@@ -52,7 +50,7 @@ Section "Prequesites (required)"
   IntCmp $0 1 +5
    ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\XNA\Framework\v4.0\" "Installed" ; i386 Systems
   IntCmp $0 1 +3
-   File "..\Dependency\xnafx40_redist.msi"
+   File "..\Dep\xnafx40_redist.msi"
    ExecWait '"msiexec" /i "$INSTDIR\Redist\xnafx40_redist.msi"  /passive'
 
    RMDir /r "$INSTDIR\Redist"
@@ -71,12 +69,15 @@ Section "Demoder.PlanetMapViewer (required)"
   File "bin\Release\Demoders PlanetMap Viewer.exe"
   File "bin\Release\*.dll"
   File "bin\Release\*.txt"
-  File "..\Demoder.AoHookBridge\bin\Release\*.dll"
-  File "..\dlls\*"
+  File "..\lib\Demoder.AoHookBridge\bin\Release\*.dll"
+  ; EasyHook
+  File "..\Msc\dlls\*.dll"
+  File "..\Msc\dlls\*.exe"
 
-  ; Set output path to the directories we're copying
+  ; Fonts
   SetOutPath $INSTDIR\Content\Fonts
   File "bin\Release\Content\\Fonts\*"
+  ; Textures
   SetOutPath $INSTDIR\Content\Textures
   File "bin\Release\Content\Textures\*"
 
@@ -94,17 +95,13 @@ SectionEnd
 
 ; Optional section (can be disabled by the user)
 Section "Start Menu Shortcuts"
-
   CreateDirectory "$SMPROGRAMS\Demoder.PlanetMapViewer"
   CreateShortCut "$SMPROGRAMS\Demoder.PlanetMapViewer\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
   CreateShortCut "$SMPROGRAMS\Demoder.PlanetMapViewer\Demoders PlanetMap Viewer.lnk" "$INSTDIR\Demoders PlanetMap Viewer.exe" "" "$INSTDIR\Demoders PlanetMap Viewer.exe" 0
-  
 SectionEnd
 
 Section "Desktop Shortcut"
-
   CreateShortCut "$DESKTOP\Demoders PlanetMap Viewer.lnk" "$INSTDIR\Demoders PlanetMap Viewer.exe" "" "$INSTDIR\Demoders PlanetMap Viewer.exe" 0
-  
 SectionEnd
 
 Section "Launch Application"
@@ -116,7 +113,6 @@ SectionEnd
 ; Uninstaller
 
 Section "Uninstall"
-  
   ; Remove registry keys
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Demoder.PlanetMapViewer"
   DeleteRegKey HKLM "SOFTWARE\Demoder\PlanetMapViewer"
@@ -127,5 +123,4 @@ Section "Uninstall"
   ; Remove directories used
   RMDir /r "$SMPROGRAMS\Demoder.PlanetMapViewer"
   RMDir /r "$INSTDIR"
-
 SectionEnd

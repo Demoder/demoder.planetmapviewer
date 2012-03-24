@@ -28,8 +28,9 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
+using Demoder.PlanetMapViewer.DataClasses;
 
-namespace Demoder.PlanetMapViewer
+namespace Demoder.PlanetMapViewer.Helpers
 {
     public class Camera
     {

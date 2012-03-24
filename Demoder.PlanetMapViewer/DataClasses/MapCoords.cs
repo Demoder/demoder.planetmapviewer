@@ -27,7 +27,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Demoder.PlanetMapViewer
+namespace Demoder.PlanetMapViewer.DataClasses
 {
     [XmlRoot("root")]
     public class MapCoords

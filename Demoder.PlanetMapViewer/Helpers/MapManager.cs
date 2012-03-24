@@ -23,14 +23,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using Demoder.PlanetMapViewer.DataClasses;
-using System.IO;
 using System.Windows.Forms;
+using Demoder.PlanetMapViewer.DataClasses;
+using Demoder.PlanetMapViewer.Forms;
+using Demoder.PlanetMapViewer.Helpers;
 using Demoder.PlanetMapViewer.Properties;
 
-namespace Demoder.PlanetMapViewer
+namespace Demoder.PlanetMapViewer.Helpers
 {
     public class MapManager
     {

@@ -21,7 +21,7 @@
 * THE SOFTWARE.
 */
 
-namespace Demoder.PlanetMapViewer
+namespace Demoder.PlanetMapViewer.Forms
 {
     partial class OptionWindow
     {

@@ -22,30 +22,31 @@
 */
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
+using Demoder.AoHook;
+using Demoder.Common;
+using Demoder.PlanetMapViewer.DataClasses;
+using Demoder.PlanetMapViewer.Helpers;
+using Demoder.PlanetMapViewer.Xna;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework;
-using System.Drawing;
-using System.IO;
-using Demoder.AoHook;
-using System.Collections.Concurrent;
-using System.Diagnostics;
-using System.Threading;
-using Demoder.PlanetMapViewer.DataClasses;
-using Microsoft.Xna.Framework.Content;
-using Demoder.PlanetMapViewer.Xna;
-using System.Drawing.Imaging;
-using Demoder.Common;
 
-namespace Demoder.PlanetMapViewer
+namespace Demoder.PlanetMapViewer.Forms
 {
-    public partial class Form1 : Form
+    public partial class MainWindow : Form
     {
         #region Members
         #region  XNA stuff
@@ -59,7 +60,7 @@ namespace Demoder.PlanetMapViewer
         #endregion
 
         #region Form setup
-        public Form1()
+        public MainWindow()
         {
             try
             {

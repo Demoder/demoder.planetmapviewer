@@ -31,7 +31,7 @@ using Demoder.PlanetMapViewer.DataClasses;
 using Microsoft.Xna.Framework;
 using System.Threading;
 
-namespace Demoder.PlanetMapViewer
+namespace Demoder.PlanetMapViewer.Helpers
 {
     public class HookInfoTracker
     {
