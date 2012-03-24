@@ -26,10 +26,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Microsoft.Xna.Framework.Graphics;
+using Demoder.PlanetMapViewer.Forms;
+using Demoder.PlanetMapViewer.Helpers;
+using Demoder.PlanetMapViewer.Xna;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace Demoder.PlanetMapViewer
+namespace Demoder.PlanetMapViewer.DataClasses
 {
     public class Context
     {
@@ -61,7 +64,7 @@ namespace Demoder.PlanetMapViewer
 
     public class ContextUiElements
     {
-        public Form1 ParentForm;
+        public MainWindow ParentForm;
         public VScrollBar VScrollBar;
         public HScrollBar HScrollBar;
         public ComboBox MapList;

@@ -93,40 +93,39 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutBox1.cs">
+    <Compile Include="Forms\AboutBox1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AboutBox1.Designer.cs">
+    <Compile Include="Forms\AboutBox1.Designer.cs">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Camera.cs" />
-    <Compile Include="Context.cs" />
+    <Compile Include="Helpers\Camera.cs" />
+    <Compile Include="DataClasses\Context.cs" />
     <Compile Include="DataClasses\AoInfo.cs" />
     <Compile Include="Properties\GeneralSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>GeneralSettings.settings</DependentUpon>
     </Compile>
-    <Compile Include="HookInfoTracker.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="Helpers\HookInfoTracker.cs" />
+    <Compile Include="Forms\MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Forms\MainWindow.Designer.cs">
+      <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="MapCoords.cs" />
-    <Compile Include="MapManager.cs" />
-    <Compile Include="OptionWindow.cs">
+    <Compile Include="DataClasses\MapCoords.cs" />
+    <Compile Include="Helpers\MapManager.cs" />
+    <Compile Include="Forms\OptionWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OptionWindow.Designer.cs">
+    <Compile Include="Forms\OptionWindow.Designer.cs">
       <DependentUpon>OptionWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="PlanetMap.cs" />
+    <Compile Include="Helpers\PlanetMap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TextBoxStreamWriter.cs" />
-    <Compile Include="TileDisplay.cs">
+    <Compile Include="Xna\TileDisplay.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\WindowSettings.Designer.cs">
@@ -134,19 +133,19 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>WindowSettings.settings</DependentUpon>
     </Compile>
-    <Compile Include="XnaContent.cs" />
+    <Compile Include="DataClasses\XnaContent.cs" />
     <Compile Include="Xna\GraphicsDeviceControl.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Xna\GraphicsDeviceService.cs" />
     <Compile Include="Xna\ServiceContainer.cs" />
-    <EmbeddedResource Include="AboutBox1.resx">
+    <EmbeddedResource Include="Forms\AboutBox1.resx">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\MainWindow.resx">
+      <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OptionWindow.resx">
+    <EmbeddedResource Include="Forms\OptionWindow.resx">
       <DependentUpon>OptionWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -183,15 +182,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Demoder.AoHook\Demoder.AoHook.csproj">
+    <ProjectReference Include="..\Lib\Demoder.AoHook\Demoder.AoHook.csproj">
       <Project>{A4D11EA9-1C7A-4140-943B-0325907BF8D9}</Project>
       <Name>Demoder.AoHook</Name>
     </ProjectReference>
-    <ProjectReference Include="..\External\Demoder.Common\Demoder.Common.csproj">
+    <ProjectReference Include="..\Ext\Demoder.Common\Demoder.Common.csproj">
       <Project>{AC7BB3A1-A0E3-4931-9661-2BA4DB418B6F}</Project>
       <Name>Demoder.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ContentLibrary\ContentLibrary.csproj">
+    <ProjectReference Include="..\Xna\ContentLibrary\ContentLibrary.csproj">
       <Project>{396ADBE6-FB16-4DBA-8C70-C16A46B448EA}</Project>
       <Name>ContentLibrary</Name>
     </ProjectReference>
@@ -227,6 +226,7 @@
     </Content>
     <Content Include="Xna\Readme.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>"$(ProjectDir)\prebuild.bat" "$(ProjectDir)" $(ConfigurationName)</PreBuildEvent>

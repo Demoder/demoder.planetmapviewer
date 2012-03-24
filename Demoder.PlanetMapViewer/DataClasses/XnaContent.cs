@@ -25,57 +25,28 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.IO;
-using System.Windows.Forms;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace Demoder.PlanetMapViewer
+namespace Demoder.PlanetMapViewer.DataClasses
 {
-    public class TextBoxWriter : TextWriter
+    public class XnaContent
     {
-        private TextBox target;
-
-        public TextBoxWriter(TextBox target)
+        public XnaContent()
         {
-            this.target = target;
+            this.Textures = new XnaContentTextures();
+            this.Fonts = new XnaContentSpriteFonts();
         }
+        public XnaContentTextures Textures { get; private set; }
+        public XnaContentSpriteFonts Fonts { get; private set; }
+    }
 
-        public override void Write(char value)
-        {
-            base.Write(value);
-            this.WriteText(value.ToString());
-        }
+    public class XnaContentTextures
+    {
+        public Texture2D CharacterLocator;
+    }
 
-        public override void Write(string value)
-        {
-            base.Write(value);
-            //this.WriteText(value);
-        }
-
-        public override Encoding Encoding
-        {
-            get { return System.Text.Encoding.UTF8; }
-        }
-
-        private void WriteText(string text)
-        {
-            try
-            {
-                if (this.target.InvokeRequired)
-                {
-                    this.target.Invoke((Action)delegate()
-                    {
-                        this.target.AppendText(text);
-                    });
-                }
-                else
-                {
-                    this.target.AppendText(text);
-                }
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
+    public class XnaContentSpriteFonts
+    {
+        public SpriteFont CharacterName;
     }
 }

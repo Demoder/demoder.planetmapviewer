@@ -23,14 +23,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.IO;
+using Demoder.Common.Serialization;
+using Demoder.PlanetMapViewer.DataClasses;
+using Demoder.PlanetMapViewer.Xna;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Demoder.Common.Serialization;
 
-namespace Demoder.PlanetMapViewer
+namespace Demoder.PlanetMapViewer.Helpers
 {
     public class PlanetMap
     {
@@ -295,8 +297,6 @@ namespace Demoder.PlanetMapViewer
             ret.Y = num - ret.X * this.Tiles.Y;
             return ret;
         }
-        private Texture2D emptyTexture;
-
 
         public void Draw(Context context)
         {
@@ -350,7 +350,8 @@ namespace Demoder.PlanetMapViewer
                                 {
                                     this.invalidTile = new Texture2D(graphicsDevice, this.TextureSize, this.TextureSize, false, SurfaceFormat.Color);
                                     var pixels = new Color[this.TextureSize * this.TextureSize];
-                                    for (int i=0; i<pixels.Length; i++){
+                                    for (int i=0; i<pixels.Length; i++)
+                                    {
                                         pixels[i] = Color.White;
                                     }
 

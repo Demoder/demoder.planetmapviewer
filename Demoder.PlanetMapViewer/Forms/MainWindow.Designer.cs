@@ -21,9 +21,10 @@
 * THE SOFTWARE.
 */
 
-namespace Demoder.PlanetMapViewer
+using Demoder.PlanetMapViewer.Xna;
+namespace Demoder.PlanetMapViewer.Forms
 {
-    partial class Form1
+    partial class MainWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -52,7 +53,7 @@ namespace Demoder.PlanetMapViewer
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fullscreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -70,7 +71,7 @@ namespace Demoder.PlanetMapViewer
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tileDisplay1_vScrollBar = new System.Windows.Forms.VScrollBar();
             this.tileDisplay1_hScrollBar = new System.Windows.Forms.HScrollBar();
-            this.tileDisplay1 = new Demoder.PlanetMapViewer.TileDisplay();
+            this.tileDisplay1 = new Demoder.PlanetMapViewer.Xna.TileDisplay();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.RadioButtonMapSelectionShadowlands = new System.Windows.Forms.RadioButton();
             this.RadioButtonMapSelectionRubika = new System.Windows.Forms.RadioButton();

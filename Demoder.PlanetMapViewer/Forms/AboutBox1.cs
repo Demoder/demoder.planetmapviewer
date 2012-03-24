@@ -29,7 +29,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace Demoder.PlanetMapViewer
+namespace Demoder.PlanetMapViewer.Forms
 {
     partial class AboutBox1 : Form
     {
