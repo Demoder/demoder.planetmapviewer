@@ -110,6 +110,8 @@ namespace Demoder.PlanetMapViewer.Forms
             this.mapSettings.Save();
             this.windowSettings.Save();
             this.generalSettings.Save();
+
+            this.context.UiElements.TileDisplay.RestartFrameTimer();
             this.Close();
         }
 

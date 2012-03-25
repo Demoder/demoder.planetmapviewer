@@ -83,12 +83,18 @@ namespace Demoder.PlanetMapViewer.Xna
             {
                 this.Content = new ContentManager(Services, "Content");
                 this.Context.Content.Fonts.CharacterName = Content.Load<SpriteFont>(@"Fonts\CharacterName");
-                this.frameDrawTimer = new System.Threading.Timer(this.InvalidateFrame, null, 100, 100);
+                RestartFrameTimer();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
             }
+        }
+
+        internal void RestartFrameTimer()
+        {
+            if (this.frameDrawTimer != null) { this.frameDrawTimer.Dispose(); }
+            this.frameDrawTimer = new System.Threading.Timer(this.InvalidateFrame, null, 0, 1000 / FrameFrequency);
         }
 
         #endregion

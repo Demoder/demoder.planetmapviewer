@@ -80,6 +80,16 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             try
             {
+                this.Context.UiElements.TileDisplay = this.tileDisplay1;
+                this.Context.UiElements.HScrollBar = this.tileDisplay1_hScrollBar;
+                this.Context.UiElements.VScrollBar = this.tileDisplay1_vScrollBar;
+                this.Context.UiElements.MapList = this.mapComboBox;
+                this.Context.UiElements.ParentForm = this;
+
+                this.Context.ContentManager = this.tileDisplay1.Content;
+                this.Context.HookInfo = new HookInfoTracker();
+                this.updateCharacterListTimer = new thrd.Timer(this.UpdateCharacterList, null, 1000, 2000);
+
                 // Check if we should attempt to upgrade settings
                 if (Properties.GeneralSettings.Default.SettingVersion != this.ProductVersion.ToString())
                 {
@@ -99,24 +109,12 @@ namespace Demoder.PlanetMapViewer.Forms
                     }
                 }
 
-                this.Context.UiElements.TileDisplay = this.tileDisplay1;
-                this.Context.UiElements.HScrollBar = this.tileDisplay1_hScrollBar;
-                this.Context.UiElements.VScrollBar = this.tileDisplay1_vScrollBar;
-                this.Context.UiElements.MapList = this.mapComboBox;
-                this.Context.UiElements.ParentForm = this;
-
-                this.Context.ContentManager = this.tileDisplay1.Content;
-                this.Context.HookInfo = new HookInfoTracker();
-                this.updateCharacterListTimer = new thrd.Timer(this.UpdateCharacterList, null, 1000, 2000);
-
-                this.bgwVersionCheck.DoWork += bgwVersionCheck_DoWork;
-                this.bgwVersionCheck.RunWorkerCompleted += bgwVersionCheck_RunWorkerCompleted;
-
-
                 this.Context.SpriteBatch = new SpriteBatch(this.Context.GraphicsDevice);
                 this.Context.MapManager = new MapManager(this.Context);
                 this.Context.Camera = new Camera(this.Context);
 
+                this.bgwVersionCheck.DoWork += bgwVersionCheck_DoWork;
+                this.bgwVersionCheck.RunWorkerCompleted += bgwVersionCheck_RunWorkerCompleted;
 
                 this.Context.Content.Textures.CharacterLocator = this.Context.ContentManager.Load<Texture2D>(@"Textures\GFX_GUI_PLANETMAP_PLAYER_MARKER");
                 this.ApplySettings();
