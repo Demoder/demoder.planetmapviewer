@@ -11,7 +11,7 @@ VIProductVersion ${ASSEMBLY_VERSION}
 OutFile "bin\Release\Setup.exe"
 
 ; The default installation directory
-InstallDir "$PROGRAMFILES\Demoder\PlanetMapViewer"
+InstallDir "$PROGRAMFILES\Demoders PlanetMap Viewer"
 
 ; Request application privileges for Windows Vista
 RequestExecutionLevel admin

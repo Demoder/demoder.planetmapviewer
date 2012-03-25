@@ -2,7 +2,7 @@
 
 Requirements
 	Operating system:		Microsoft Windows 7, Vista or XP.
-	User level: 			Administrator (Required for full functionality)
+	User level: 			Standard user (Administrator required for character tracking)
 	
 	Software components
 		.NET Framework 2.0, 3.0, or 3.5
