@@ -227,7 +227,6 @@ namespace Demoder.PlanetMapViewer.Forms
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer1.IsSplitterFixed = true;
             this.splitContainer1.Location = new System.Drawing.Point(0, 24);
             this.splitContainer1.Name = "splitContainer1";
@@ -289,7 +288,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.groupBox4.Controls.Add(this.RadioButtonMapSelectionShadowlands);
             this.groupBox4.Controls.Add(this.RadioButtonMapSelectionRubika);
             this.groupBox4.Controls.Add(this.mapComboBox);
-            this.groupBox4.Location = new System.Drawing.Point(3, 3);
+            this.groupBox4.Location = new System.Drawing.Point(2, 3);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(171, 71);
             this.groupBox4.TabIndex = 10000;
@@ -339,9 +338,9 @@ namespace Demoder.PlanetMapViewer.Forms
             this.groupBox2.Controls.Add(this.ButtonZoomIn);
             this.groupBox2.Controls.Add(this.RadioButtonCameraManual);
             this.groupBox2.Controls.Add(this.RadioButtonCameraFollowCharacters);
-            this.groupBox2.Location = new System.Drawing.Point(3, 80);
+            this.groupBox2.Location = new System.Drawing.Point(2, 80);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(174, 97);
+            this.groupBox2.Size = new System.Drawing.Size(171, 97);
             this.groupBox2.TabIndex = 10000;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Camera Controls";
@@ -395,9 +394,9 @@ namespace Demoder.PlanetMapViewer.Forms
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.followCharacter);
-            this.groupBox1.Location = new System.Drawing.Point(3, 183);
+            this.groupBox1.Location = new System.Drawing.Point(2, 183);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(174, 106);
+            this.groupBox1.Size = new System.Drawing.Size(171, 106);
             this.groupBox1.TabIndex = 10000;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Follow Character";
@@ -409,7 +408,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.followCharacter.Location = new System.Drawing.Point(3, 16);
             this.followCharacter.Name = "followCharacter";
             this.followCharacter.ScrollAlwaysVisible = true;
-            this.followCharacter.Size = new System.Drawing.Size(168, 87);
+            this.followCharacter.Size = new System.Drawing.Size(165, 87);
             this.followCharacter.Sorted = true;
             this.followCharacter.TabIndex = 7;
             // 
