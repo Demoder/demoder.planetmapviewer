@@ -52,10 +52,6 @@ namespace Demoder.PlanetMapViewer.Xna
         /// Used to limit FPS of the tileDisplay.
         /// </summary>
         private Stopwatch timeSinceLastInvalidation = Stopwatch.StartNew();
-        /// <summary>
-        /// Last draw event
-        /// </summary>
-        private Stopwatch lastDraw = Stopwatch.StartNew();
 
         /// <summary>
         /// Determines wether or not the user is panning the map
@@ -123,12 +119,6 @@ namespace Demoder.PlanetMapViewer.Xna
 
         protected override void Draw()
         {
-            while (this.lastDraw.ElapsedMilliseconds < TileDisplay.FrameFrequency)
-            {
-                Thread.Sleep(5);
-            }
-            this.lastDraw.Restart();
-
             if (this.OnDraw != null)
             {
                 this.OnDraw(this, null);
@@ -316,7 +306,7 @@ namespace Demoder.PlanetMapViewer.Xna
         {
             if (this.Context == null) { return; }
             if (this.Context.Camera == null) { return; }
-            this.Invalidate();            
+            //this.Invalidate();            
             this.Context.Camera.AdjustScrollbarsToLayer();
             base.OnResize(e);
         }
@@ -409,20 +399,14 @@ namespace Demoder.PlanetMapViewer.Xna
         {
             if (this.Context == null) { return; }
             if (this.Context.MapManager == null) { return; }
-            if (this.Context.MapManager.ZoomIn())
-            {
-                this.Invalidate();
-            }
+            this.Context.MapManager.ZoomIn();
         }
 
         public void ZoomOut()
         {
             if (this.Context == null) { return; }
             if (this.Context.MapManager == null) { return; }
-            if (this.Context.MapManager.ZoomOut())
-            {
-                this.Invalidate();
-            }
+            this.Context.MapManager.ZoomOut();
         }
     }
 }
