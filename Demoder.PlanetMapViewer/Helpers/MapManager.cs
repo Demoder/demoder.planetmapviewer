@@ -66,24 +66,49 @@ namespace Demoder.PlanetMapViewer.Helpers
         public MapManager(Context context)
         {
             this.Context = context;
-            
-            this.FindAvailableMaps(context.Options.IsMapRubika);
+        }
 
+        public void Initialize()
+        {
+            // Locate maps
+            this.FindAvailableMaps(this.Context.Options.IsMapRubika);
 
+            // RK maps?
             if (this.Context.Options.IsMapRubika)
             {
-                if (!this.SelectRubikaMap())
+                if (this.SelectRubikaMap()) { return; }
+                // Couldn't find selected map. try finding substitute.
+                if (this.AvailablePlanetMaps.Count == 0)
                 {
-                    throw new FileNotFoundException("Previously selected planet map (" + this.settings.SelectedRubikaMap + ") does not exist. Attempted to load default RK planet map, but failed to find that as well.", this.settings.SelectedRubikaMap);
+                    this.ShowMapNotFoundException("Rubi-ka");
+                    return;
                 }
+                this.SelectMap(this.AvailablePlanetMaps.First().Key);
+                return;
             }
-            else 
+            // Other maps
+            if (this.SelectShadowlandsMap()) { return; }
+            // Couldn't find selected map. try finding substitute.
+            if (this.AvailablePlanetMaps.Count == 0)
             {
-                if (!this.SelectShadowlandsMap())
-                {
-                    throw new FileNotFoundException("Previously selected planet map (" + this.settings.SelectedShadowlandsMap + ") does not exist. Attempted to load default SL planet map, but failed to find that as well.", this.settings.SelectedShadowlandsMap);
-                }
+                this.ShowMapNotFoundException("Shadowlands");
+                return;
             }
+            this.SelectMap(this.AvailablePlanetMaps.First().Key);
+        }
+
+        /// <summary>
+        /// Display a preformatted message box for map errors.
+        /// </summary>
+        /// <param name="mapName"></param>
+        /// <param name="mapType"></param>
+        private void ShowMapNotFoundException(string mapType)
+        {
+            MessageBox.Show(
+                String.Format("There are no valid {0} maps in the Anarchy Online planetmap directory.", mapType),
+                "Demoder's Planet Map Viewer: No maps found",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
         }
         #endregion
 
@@ -134,7 +159,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 this.CurrentLayerNum = 0;
                 if (this.Context.Camera != null)
                 {
-                    this.Context.Camera.CenterOnPixel(0, 0);
+                    this.Context.Camera.CenterOnPixel(this.CurrentLayer.Size.X / 2, this.CurrentLayer.Size.Y / 2);
                     this.Context.Camera.AdjustScrollbarsToLayer();
                 }
 

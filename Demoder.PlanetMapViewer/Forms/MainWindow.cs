@@ -112,6 +112,8 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.Context.SpriteBatch = new SpriteBatch(this.Context.GraphicsDevice);
                 this.Context.MapManager = new MapManager(this.Context);
                 this.Context.Camera = new Camera(this.Context);
+                this.Context.MapManager.Initialize();
+                
 
                 this.bgwVersionCheck.DoWork += bgwVersionCheck_DoWork;
                 this.bgwVersionCheck.RunWorkerCompleted += bgwVersionCheck_RunWorkerCompleted;

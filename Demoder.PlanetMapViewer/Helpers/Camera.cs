@@ -73,6 +73,8 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         public void CenterOnPixel(int x, int y)
         {
+            if (this.Context.MapManager == null) { return; }
+            if (this.Context.MapManager.CurrentLayer == null) { return; }
             lock (this)
             {
                 // Sanitize numbers
@@ -125,6 +127,8 @@ namespace Demoder.PlanetMapViewer.Helpers
   
         public void CenterOnRelativePosition(Vector2 relativePosition)
         {
+            if (this.Context.MapManager == null) { return; }
+            if (this.Context.MapManager.CurrentMap == null) { return; }
             //var pfId = this.mapManager.CurrentMap.CoordsFile.Playfields.First(pf=>pf.XScale==1 && pf.YScale==1).ID;
             var pfId = this.Context.MapManager.CurrentMap.CoordsFile.Playfields[0].ID;
             var centerPos = this.Context.MapManager.GetPosition(pfId, relativePosition.X,relativePosition.Y);
@@ -135,6 +139,9 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         public Vector2 RelativePosition()
         {
+            if (this.Context.MapManager == null) { return default(Vector2); }
+            if (this.Context.MapManager.CurrentMap == null) { return default(Vector2); }
+
             //var pfId = this.mapManager.CurrentMap.CoordsFile.Playfields.First(pf => pf.XScale == 1 && pf.YScale == 1).ID;
             var pfId = this.Context.MapManager.CurrentMap.CoordsFile.Playfields[0].ID;
             return this.Context.MapManager.GetReversePosition(pfId, this.Center.X, this.Center.Y);
@@ -142,6 +149,12 @@ namespace Demoder.PlanetMapViewer.Helpers
        
         internal void AdjustScrollbarsToLayer()
         {
+            if (this.Context.UiElements.TileDisplay == null) { return; }
+            if (this.Context.UiElements.HScrollBar == null) { return; }
+            if (this.Context.UiElements.VScrollBar == null) { return; }
+            if (this.Context.MapManager == null) { return; }
+            if (this.Context.MapManager.CurrentLayer == null) { return; }
+
             #region Horizontal scrollbar
             int horModifier = this.Context.UiElements.TileDisplay.Width / 2;
             this.Context.UiElements.HScrollBar.Maximum = (int)this.Context.MapManager.CurrentLayer.Size.X + horModifier;
