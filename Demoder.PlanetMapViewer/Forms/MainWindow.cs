@@ -68,7 +68,6 @@ namespace Demoder.PlanetMapViewer.Forms
             {
                 InitializeComponent();
                 this.Context = this.tileDisplay1.Context;
-
             }
             catch (Exception ex)
             {
