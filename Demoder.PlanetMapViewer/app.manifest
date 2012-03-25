@@ -16,7 +16,7 @@
             If you want to utilize File and Registry Virtualization for backward 
             compatibility then delete the requestedExecutionLevel node.
         -->
-        <requestedExecutionLevel level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel level="highestAvailable" uiAccess="false" />
       </requestedPrivileges>
       <applicationRequestMinimum>
         <defaultAssemblyRequest permissionSetReference="Custom" />
@@ -28,7 +28,8 @@
     <application>
       <!-- A list of all Windows versions that this application is designed to work with. Windows will automatically select the most compatible environment.-->
       <!-- If your application is designed to work with Windows 7, uncomment the following supportedOS node-->
-      <!--<supportedOS Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}"/>-->
+      <supportedOS Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}"/>
+      <supportedOS Id="{e2011457-1546-43c5-a5fe-008deee3d3f0}"/>
     </application>
   </compatibility>
   <!-- Enable themes for Windows common controls and dialogs (Windows XP and later) -->

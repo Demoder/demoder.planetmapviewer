@@ -57,7 +57,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fullscreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.overlayModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.OverlayModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -95,6 +95,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.selectCharactersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.optionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exitOverlayModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -124,7 +125,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // 
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fullscreenToolStripMenuItem,
-            this.overlayModeToolStripMenuItem});
+            this.OverlayModeToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.editToolStripMenuItem.Text = "&View";
@@ -138,14 +139,14 @@ namespace Demoder.PlanetMapViewer.Forms
             this.fullscreenToolStripMenuItem.Text = "Fullscreen";
             this.fullscreenToolStripMenuItem.Click += new System.EventHandler(this.MenuViewFullscreen);
             // 
-            // overlayModeToolStripMenuItem
+            // OverlayModeToolStripMenuItem
             // 
-            this.overlayModeToolStripMenuItem.CheckOnClick = true;
-            this.overlayModeToolStripMenuItem.Name = "overlayModeToolStripMenuItem";
-            this.overlayModeToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F12;
-            this.overlayModeToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-            this.overlayModeToolStripMenuItem.Text = "Overlay Mode";
-            this.overlayModeToolStripMenuItem.Click += new System.EventHandler(this.hideSidebarToolStripMenuItem_Click);
+            this.OverlayModeToolStripMenuItem.CheckOnClick = true;
+            this.OverlayModeToolStripMenuItem.Name = "OverlayModeToolStripMenuItem";
+            this.OverlayModeToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F12;
+            this.OverlayModeToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.OverlayModeToolStripMenuItem.Text = "Overlay Mode";
+            this.OverlayModeToolStripMenuItem.Click += new System.EventHandler(this.hideSidebarToolStripMenuItem_Click);
             // 
             // toolsToolStripMenuItem
             // 
@@ -221,8 +222,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // ToolStripStatusLabel1
             // 
             this.ToolStripStatusLabel1.Name = "ToolStripStatusLabel1";
-            this.ToolStripStatusLabel1.Size = new System.Drawing.Size(121, 17);
-            this.ToolStripStatusLabel1.Text = "ToolStripStatusLabel1";
+            this.ToolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
             // 
             // splitContainer1
             // 
@@ -246,7 +246,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer1.Panel2MinSize = 0;
             this.splitContainer1.Size = new System.Drawing.Size(684, 446);
-            this.splitContainer1.SplitterDistance = 515;
+            this.splitContainer1.SplitterDistance = 524;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 5;
             // 
@@ -254,7 +254,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // 
             this.tileDisplay1_vScrollBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tileDisplay1_vScrollBar.Location = new System.Drawing.Point(501, 0);
+            this.tileDisplay1_vScrollBar.Location = new System.Drawing.Point(510, 0);
             this.tileDisplay1_vScrollBar.Name = "tileDisplay1_vScrollBar";
             this.tileDisplay1_vScrollBar.Size = new System.Drawing.Size(15, 431);
             this.tileDisplay1_vScrollBar.TabIndex = 3;
@@ -266,7 +266,7 @@ namespace Demoder.PlanetMapViewer.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tileDisplay1_hScrollBar.Location = new System.Drawing.Point(0, 431);
             this.tileDisplay1_hScrollBar.Name = "tileDisplay1_hScrollBar";
-            this.tileDisplay1_hScrollBar.Size = new System.Drawing.Size(515, 15);
+            this.tileDisplay1_hScrollBar.Size = new System.Drawing.Size(524, 15);
             this.tileDisplay1_hScrollBar.TabIndex = 2;
             this.tileDisplay1_hScrollBar.Value = 1;
             this.tileDisplay1_hScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.tileDisplay1_ScrollBar_Scroll);
@@ -276,7 +276,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.tileDisplay1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tileDisplay1.Location = new System.Drawing.Point(0, 0);
             this.tileDisplay1.Name = "tileDisplay1";
-            this.tileDisplay1.Size = new System.Drawing.Size(515, 446);
+            this.tileDisplay1.Size = new System.Drawing.Size(524, 446);
             this.tileDisplay1.TabIndex = 1;
             this.tileDisplay1.Text = "PlanetMap";
             this.tileDisplay1.OnDraw += new System.EventHandler(this.tileDisplay1_OnDraw);
@@ -480,11 +480,12 @@ namespace Demoder.PlanetMapViewer.Forms
             this.selectCharactersToolStripMenuItem,
             this.selectMapToolStripMenuItem,
             this.toolStripSeparator4,
+            this.optionsToolStripMenuItem1,
             this.exitOverlayModeToolStripMenuItem});
             this.OverlayTitleContextMenuStrip.Name = "contextMenuStrip1";
             this.OverlayTitleContextMenuStrip.ShowCheckMargin = true;
             this.OverlayTitleContextMenuStrip.ShowImageMargin = false;
-            this.OverlayTitleContextMenuStrip.Size = new System.Drawing.Size(192, 220);
+            this.OverlayTitleContextMenuStrip.Size = new System.Drawing.Size(192, 242);
             this.OverlayTitleContextMenuStrip.Text = "Overlay Mode";
             this.OverlayTitleContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.OverlayTitleContextMenuStrip_Opening);
             // 
@@ -510,6 +511,13 @@ namespace Demoder.PlanetMapViewer.Forms
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(188, 6);
             // 
+            // optionsToolStripMenuItem1
+            // 
+            this.optionsToolStripMenuItem1.Name = "optionsToolStripMenuItem1";
+            this.optionsToolStripMenuItem1.Size = new System.Drawing.Size(191, 22);
+            this.optionsToolStripMenuItem1.Text = "Options...";
+            this.optionsToolStripMenuItem1.Click += new System.EventHandler(this.optionsToolStripMenuItem1_Click);
+            // 
             // exitOverlayModeToolStripMenuItem
             // 
             this.exitOverlayModeToolStripMenuItem.Name = "exitOverlayModeToolStripMenuItem";
@@ -517,7 +525,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.exitOverlayModeToolStripMenuItem.Text = "Exit Overlay Mode";
             this.exitOverlayModeToolStripMenuItem.Click += new System.EventHandler(this.exitOverlayModeToolStripMenuItem_Click);
             // 
-            // Form1
+            // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -528,7 +536,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(300, 300);
-            this.Name = "Form1";
+            this.Name = "MainWindow";
             this.Text = "Demoder\'s Planet Map Viewer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -581,7 +589,6 @@ namespace Demoder.PlanetMapViewer.Forms
         private System.Windows.Forms.Button ButtonZoomIn;
         private System.Windows.Forms.ToolStripMenuItem readmeToolStripMenuItem;
         internal System.Windows.Forms.ToolStripStatusLabel ToolStripStatusLabel1;
-        private System.Windows.Forms.ToolStripMenuItem overlayModeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem regionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rubikaToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem shadowlandsToolStripMenuItem1;
@@ -595,6 +602,8 @@ namespace Demoder.PlanetMapViewer.Forms
         private System.Windows.Forms.ToolStripMenuItem selectCharactersToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem exitOverlayModeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem1;
+        internal System.Windows.Forms.ToolStripMenuItem OverlayModeToolStripMenuItem;
     }
 }
 
