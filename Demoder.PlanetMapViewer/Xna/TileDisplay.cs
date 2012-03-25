@@ -51,7 +51,7 @@ namespace Demoder.PlanetMapViewer.Xna
         /// <summary>
         /// Used to limit FPS of the tileDisplay.
         /// </summary>
-        private Stopwatch timeSinceLastInvalidation = Stopwatch.StartNew();
+        private Stopwatch timeSinceLastDraw = Stopwatch.StartNew();
 
         /// <summary>
         /// Determines wether or not the user is panning the map
@@ -67,14 +67,18 @@ namespace Demoder.PlanetMapViewer.Xna
 
 
         #region Constructor / Initialization
-        
         protected override void Initialize()
         {
             if (this.OnInitialize != null)
             {
                 this.OnInitialize(this, null);
             }
-            
+
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            //this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            this.SetStyle(ControlStyles.UserPaint, true);
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
+
             try
             {
                 this.Content = new ContentManager(Services, "Content");
@@ -97,13 +101,12 @@ namespace Demoder.PlanetMapViewer.Xna
 
         protected override void OnInvalidated(InvalidateEventArgs e)
         {
-            this.timeSinceLastInvalidation.Restart();
             base.OnInvalidated(e);
         }
 
         private void InvalidateFrame(object state)
         {
-            if (this.timeSinceLastInvalidation.ElapsedMilliseconds < TileDisplay.FrameFrequency) { return; }
+            if (this.timeSinceLastDraw.ElapsedMilliseconds < TileDisplay.FrameFrequency) { return; }
             if (this.InvokeRequired)
             {
                 this.Invoke((Action)delegate()
@@ -121,6 +124,7 @@ namespace Demoder.PlanetMapViewer.Xna
         {
             if (this.OnDraw != null)
             {
+                this.timeSinceLastDraw.Restart();
                 this.OnDraw(this, null);
             }
         }
