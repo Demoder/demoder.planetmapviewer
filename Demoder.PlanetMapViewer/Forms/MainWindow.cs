@@ -67,6 +67,7 @@ namespace Demoder.PlanetMapViewer.Forms
             try
             {
                 InitializeComponent();
+                this.splitContainer1.FixedPanel = FixedPanel.Panel2;
                 this.splitContainer1.SplitterDistance = 506;
                 this.Context = this.tileDisplay1.Context;
             }
