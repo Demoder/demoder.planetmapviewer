@@ -49,7 +49,7 @@ namespace Demoder.PlanetMapViewer.Forms
             InitializeComponent();
             // Load settings
             this.AoPath.Text = this.mapSettings.AoPath;
-            this.FPS.Value = this.generalSettings.FramesPerSecond;
+            this.FPS.Value = Math.Min(this.generalSettings.FramesPerSecond, this.FPS.Maximum);
             this.overlayModeShowScrollbars.Checked = this.windowSettings.OverlaymodeShowScrollbars;
             this.overlayModeShowExitButton.Checked = this.windowSettings.OverlaymodeShowControlbox;
             this.overlayModeWorkaroundTopmost.Checked = this.windowSettings.OverlaymodeTopmostWorkaround;
@@ -96,7 +96,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.mapSettings.AoPath = this.AoPath.Text;
 
             this.generalSettings.FramesPerSecond = (int)this.FPS.Value;
-            TileDisplay.FrameFrequency = 1000 / this.generalSettings.FramesPerSecond;
+            TileDisplay.FrameFrequency = this.generalSettings.FramesPerSecond;
 
             this.windowSettings.OverlaymodeShowScrollbars = this.overlayModeShowScrollbars.Checked;
             this.windowSettings.OverlaymodeShowControlbox = this.overlayModeShowExitButton.Checked;
@@ -110,8 +110,6 @@ namespace Demoder.PlanetMapViewer.Forms
             this.mapSettings.Save();
             this.windowSettings.Save();
             this.generalSettings.Save();
-
-            this.context.UiElements.TileDisplay.RestartFrameTimer();
             this.Close();
         }
 

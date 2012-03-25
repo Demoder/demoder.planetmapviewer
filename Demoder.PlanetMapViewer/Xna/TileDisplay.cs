@@ -65,7 +65,6 @@ namespace Demoder.PlanetMapViewer.Xna
         internal Context Context = new Context();
 
 
-
         #region Constructor / Initialization
         protected override void Initialize()
         {
@@ -83,20 +82,13 @@ namespace Demoder.PlanetMapViewer.Xna
             {
                 this.Content = new ContentManager(Services, "Content");
                 this.Context.Content.Fonts.CharacterName = Content.Load<SpriteFont>(@"Fonts\CharacterName");
-                RestartFrameTimer();
+                ThreadPool.QueueUserWorkItem(new WaitCallback(this.InvalidateFrame));
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
             }
         }
-
-        internal void RestartFrameTimer()
-        {
-            if (this.frameDrawTimer != null) { this.frameDrawTimer.Dispose(); }
-            this.frameDrawTimer = new System.Threading.Timer(this.InvalidateFrame, null, 0, 1000 / FrameFrequency);
-        }
-
         #endregion
 
         protected override void OnInvalidated(InvalidateEventArgs e)
@@ -106,26 +98,46 @@ namespace Demoder.PlanetMapViewer.Xna
 
         private void InvalidateFrame(object state)
         {
-            if (this.timeSinceLastDraw.ElapsedMilliseconds < TileDisplay.FrameFrequency) { return; }
-            if (this.InvokeRequired)
+            do
             {
-                this.Invoke((Action)delegate()
-                {
-                    this.Invalidate();
-                });
-            }
-            else
-            {
+                var sw = Stopwatch.StartNew();
                 this.Invalidate();
-            }
+
+                var toSleep = (int)((1000 / TileDisplay.FrameFrequency) - sw.ElapsedMilliseconds);
+                if (toSleep > 0)
+                {
+                    Thread.Sleep(toSleep);
+                    sw.Restart();
+                }
+
+            } while (true);
+
+  
         }
 
         protected override void Draw()
         {
             if (this.OnDraw != null)
             {
+                var curSwVal = this.timeSinceLastDraw.ElapsedMilliseconds;
                 this.timeSinceLastDraw.Restart();
+
                 this.OnDraw(this, null);
+
+
+#if DEBUG
+                {
+                    this.Context.SpriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend);
+                    var fontPos = new Vector2(10, 10);
+                    this.Context.SpriteBatch.DrawString(
+                        this.Context.Content.Fonts.CharacterName,
+                        String.Format("FPS: {0}",1000 / (this.timeSinceLastDraw.ElapsedMilliseconds + curSwVal)),
+                        fontPos,
+                        Microsoft.Xna.Framework.Color.Pink
+                        );
+                    this.Context.SpriteBatch.End();
+                }
+#endif
             }
         }
 
