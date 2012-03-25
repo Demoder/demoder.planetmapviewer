@@ -51,6 +51,7 @@ namespace Demoder.PlanetMapViewer.Forms
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptionWindow));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button1 = new System.Windows.Forms.Button();
             this.AoPath = new System.Windows.Forms.TextBox();
@@ -62,9 +63,9 @@ namespace Demoder.PlanetMapViewer.Forms
             this.label2 = new System.Windows.Forms.Label();
             this.FPS = new System.Windows.Forms.NumericUpDown();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.overlayModeWorkaroundTopmost = new System.Windows.Forms.CheckBox();
             this.overlayModeShowExitButton = new System.Windows.Forms.CheckBox();
             this.overlayModeShowScrollbars = new System.Windows.Forms.CheckBox();
-            this.overlayModeWorkaroundTopmost = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FPS)).BeginInit();
@@ -179,6 +180,16 @@ namespace Demoder.PlanetMapViewer.Forms
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Overlay Mode";
             // 
+            // overlayModeWorkaroundTopmost
+            // 
+            this.overlayModeWorkaroundTopmost.AutoSize = true;
+            this.overlayModeWorkaroundTopmost.Location = new System.Drawing.Point(6, 62);
+            this.overlayModeWorkaroundTopmost.Name = "overlayModeWorkaroundTopmost";
+            this.overlayModeWorkaroundTopmost.Size = new System.Drawing.Size(123, 17);
+            this.overlayModeWorkaroundTopmost.TabIndex = 2;
+            this.overlayModeWorkaroundTopmost.Text = "Force on top (bugfix)";
+            this.overlayModeWorkaroundTopmost.UseVisualStyleBackColor = true;
+            // 
             // overlayModeShowExitButton
             // 
             this.overlayModeShowExitButton.AutoSize = true;
@@ -199,16 +210,6 @@ namespace Demoder.PlanetMapViewer.Forms
             this.overlayModeShowScrollbars.Text = "Show Scrollbars";
             this.overlayModeShowScrollbars.UseVisualStyleBackColor = true;
             // 
-            // overlayModeWorkaroundTopmost
-            // 
-            this.overlayModeWorkaroundTopmost.AutoSize = true;
-            this.overlayModeWorkaroundTopmost.Location = new System.Drawing.Point(6, 62);
-            this.overlayModeWorkaroundTopmost.Name = "overlayModeWorkaroundTopmost";
-            this.overlayModeWorkaroundTopmost.Size = new System.Drawing.Size(123, 17);
-            this.overlayModeWorkaroundTopmost.TabIndex = 2;
-            this.overlayModeWorkaroundTopmost.Text = "Force on top (bugfix)";
-            this.overlayModeWorkaroundTopmost.UseVisualStyleBackColor = true;
-            // 
             // OptionWindow
             // 
             this.AcceptButton = this.ButtonOkay;
@@ -222,6 +223,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.Controls.Add(this.ButtonOkay);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "OptionWindow";
             this.Text = "Options";
             this.TopMost = true;
