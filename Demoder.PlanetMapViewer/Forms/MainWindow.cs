@@ -260,7 +260,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 }
             }
 
-            TileDisplay.FrameFrequency = 1000 / generalSettings.FramesPerSecond;
+            TileDisplay.FrameFrequency = generalSettings.FramesPerSecond;
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -403,9 +403,8 @@ namespace Demoder.PlanetMapViewer.Forms
             lock (this.Context.Camera)
             {
                 this.Context.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
-
                 this.Context.MapManager.CurrentLayer.Draw(this.Context);
-
+   
                 #region Draw character locators
 
                 if (this.Context.Content.Textures.CharacterLocator != null)

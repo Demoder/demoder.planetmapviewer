@@ -154,6 +154,11 @@ namespace Demoder.PlanetMapViewer.Forms
             // FPS
             // 
             this.FPS.Location = new System.Drawing.Point(66, 15);
+            this.FPS.Maximum = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
             this.FPS.Minimum = new decimal(new int[] {
             1,
             0,
