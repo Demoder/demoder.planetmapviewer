@@ -247,7 +247,7 @@ namespace Demoder.PlanetMapViewer.Forms
             if (windowSettings.WindowFullscreen)
             {
                 this.fullscreenToolStripMenuItem.Checked = true;
-                this.ApplyFullscreenSetting();
+                this.ToggleFullscreenSetting();
             }
             else
             {
@@ -600,49 +600,14 @@ namespace Demoder.PlanetMapViewer.Forms
         // Fullscreen
         private void MenuViewFullscreen(object sender, EventArgs e)
         {
-            ApplyFullscreenSetting();
+            ToggleFullscreenSetting();
         }
-
-        private void ApplyFullscreenSetting()
-        {
-            if (this.fullscreenToolStripMenuItem.Checked)
-            {
-                this.OverlayModeToolStripMenuItem.Checked = false;
-                this.ToggleOverlayMode();
-
-                this.oldState = this.WindowState;
-                this.WindowState = FormWindowState.Maximized;
-                this.ControlBox = false;
-                //this.menuStrip1.Visible = false;
-                this.statusStrip1.Visible = false;
-                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-                this.Padding = new Padding(2, 3, 5, 10);
-            }
-
-            else
-            {
-                this.WindowState = this.oldState;
-                this.ControlBox = true;
-                this.menuStrip1.Visible = true;
-                this.statusStrip1.Visible = true;
-                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-                this.Padding = new Padding(0);
-            }
-        }
-
         #endregion
-
-        #region Tiledisplay mouse controls
-
 
         private void tileDisplay1_ScrollBar_Scroll(object sender, ScrollEventArgs e)
         {
             this.RadioButtonCameraManual.Checked = true;
         }
-
-
-
-        #endregion
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -750,6 +715,33 @@ namespace Demoder.PlanetMapViewer.Forms
             this.ToggleOverlayMode();
         }
 
+        internal void ToggleFullscreenSetting()
+        {
+            if (this.fullscreenToolStripMenuItem.Checked)
+            {
+                this.OverlayModeToolStripMenuItem.Checked = false;
+                this.ToggleOverlayMode();
+
+                this.oldState = this.WindowState;
+                this.WindowState = FormWindowState.Maximized;
+                this.ControlBox = false;
+                //this.menuStrip1.Visible = false;
+                this.statusStrip1.Visible = false;
+                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+                this.Padding = new Padding(2, 3, 5, 10);
+            }
+
+            else
+            {
+                this.WindowState = this.oldState;
+                this.ControlBox = true;
+                this.menuStrip1.Visible = true;
+                this.statusStrip1.Visible = true;
+                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+                this.Padding = new Padding(0);
+            }
+        }
+
         internal void ToggleOverlayMode()
         {
             if (this.OverlayModeToolStripMenuItem.Checked)
@@ -781,7 +773,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 }
 
                 this.fullscreenToolStripMenuItem.Checked = false;
-                ApplyFullscreenSetting();
+                ToggleFullscreenSetting();
                 this.splitContainer1.SplitterDistance = this.splitContainer1.Width;
                 this.menuStrip1.Visible = false;
                 this.statusStrip1.Visible = false;
@@ -840,26 +832,22 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void followCharactersToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.RadioButtonCameraFollowCharacters.Select();
-            //this.RadioButtonCameraFollowCharacters.Checked = !this.RadioButtonCameraFollowCharacters.Checked;
-            //this.ToggleCameraControl();
+            this.RadioButtonCameraFollowCharacters.PerformClick();
         }
 
         private void manualToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.RadioButtonCameraManual.Select();
-            //this.RadioButtonCameraManual.Checked = !this.RadioButtonCameraManual.Checked;
-            //this.ToggleCameraControl();
+            this.RadioButtonCameraManual.PerformClick();
         }
 
         private void rubikaToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.RadioButtonMapSelectionRubika.Select();
+            this.RadioButtonMapSelectionRubika.PerformClick();
         }
 
         private void shadowlandsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.RadioButtonMapSelectionShadowlands.Select();
+            this.RadioButtonMapSelectionShadowlands.PerformClick();
         }
 
 
@@ -955,6 +943,9 @@ namespace Demoder.PlanetMapViewer.Forms
                         this.RadioButtonCameraFollowCharacters.Select();
                     }
                     this.followCharacter.SetItemChecked(this.followCharacter.Items.IndexOf(item.Tag), !item.Checked);
+
+                    this.OverlayTitleContextMenuStrip.Show();
+                    this.selectCharactersToolStripMenuItem.ShowDropDown();
                 }
                 catch { }
             }
