@@ -58,7 +58,7 @@ namespace Demoder.PlanetMapViewer.Xna
             parameters.BackBufferFormat = SurfaceFormat.Color;
             parameters.DepthStencilFormat = DepthFormat.Depth24;
             parameters.DeviceWindowHandle = windowHandle;
-            parameters.PresentationInterval = PresentInterval.Immediate;
+            parameters.PresentationInterval = PresentInterval.One;
             parameters.IsFullScreen = false;
 
             graphicsDevice = new GraphicsDevice(GraphicsAdapter.DefaultAdapter,

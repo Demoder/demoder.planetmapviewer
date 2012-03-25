@@ -724,7 +724,6 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.oldState = this.WindowState;
                 this.WindowState = FormWindowState.Maximized;
                 this.ControlBox = false;
-                //this.menuStrip1.Visible = false;
                 this.statusStrip1.Visible = false;
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
                 this.Padding = new Padding(2, 3, 5, 10);
@@ -798,7 +797,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 }
                 this.TopMost = false;
 
-                this.splitContainer1.SplitterDistance = this.Width - 200;
+                this.splitContainer1.SplitterDistance = this.Width - 169;
                 this.menuStrip1.Visible = true;
                 this.statusStrip1.Visible = true;
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
