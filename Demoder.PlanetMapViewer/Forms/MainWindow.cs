@@ -67,6 +67,7 @@ namespace Demoder.PlanetMapViewer.Forms
             try
             {
                 InitializeComponent();
+                this.splitContainer1.SplitterDistance = 506;
                 this.Context = this.tileDisplay1.Context;
             }
             catch (Exception ex)
@@ -770,9 +771,10 @@ namespace Demoder.PlanetMapViewer.Forms
                     }, null, 250, 250);
                 }
 
-                this.fullscreenToolStripMenuItem.Checked = false;
-                ToggleFullscreenSetting();
-                this.splitContainer1.SplitterDistance = this.splitContainer1.Width;
+                if (this.fullscreenToolStripMenuItem.Checked)
+                {
+                    this.fullscreenToolStripMenuItem.PerformClick();
+                }
                 this.menuStrip1.Visible = false;
                 this.statusStrip1.Visible = false;
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
@@ -783,6 +785,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.tileDisplay1_vScrollBar.Visible = Properties.WindowSettings.Default.OverlaymodeShowScrollbars;
 
                 this.ControlBox = Properties.WindowSettings.Default.OverlaymodeShowControlbox;
+                this.splitContainer1.Panel2Collapsed = true;
             }
             else
             {
@@ -797,7 +800,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 }
                 this.TopMost = false;
 
-                this.splitContainer1.SplitterDistance = this.Width - 169;
+                this.splitContainer1.Panel2Collapsed = false;
                 this.menuStrip1.Visible = true;
                 this.statusStrip1.Visible = true;
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;

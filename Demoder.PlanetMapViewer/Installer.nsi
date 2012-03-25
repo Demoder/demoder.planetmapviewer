@@ -76,7 +76,7 @@ Section "Demoder.PlanetMapViewer (required)"
 
   ; Fonts
   SetOutPath $INSTDIR\Content\Fonts
-  File "bin\Release\Content\\Fonts\*"
+  File "bin\Release\Content\Fonts\*"
   ; Textures
   SetOutPath $INSTDIR\Content\Textures
   File "bin\Release\Content\Textures\*"

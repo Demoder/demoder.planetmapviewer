@@ -50,7 +50,7 @@ Credits
 		Thanks to Vhab for creating the icon, and to Onack for giving permission to use AoRK for icon generation.
 
 	Testing:
-		Thanks to Iriche, Vhab, Phooy, Jandorith and Nesual for extensive testing.
+		Thanks to Iriche, Vhab, Phooy, Jandorith, Nesual and Onack for extensive testing.
 
 	[Insert credits here]
 	
