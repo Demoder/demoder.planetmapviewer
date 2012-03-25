@@ -31,6 +31,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Demoder.PlanetMapViewer.Xna;
+using Demoder.PlanetMapViewer.DataClasses;
 
 namespace Demoder.PlanetMapViewer.Forms
 {
@@ -39,8 +40,12 @@ namespace Demoder.PlanetMapViewer.Forms
         private Properties.MapSettings mapSettings { get { return Properties.MapSettings.Default; } }
         private Properties.WindowSettings windowSettings { get { return Properties.WindowSettings.Default; } }
         private Properties.GeneralSettings generalSettings { get { return Properties.GeneralSettings.Default; } }
-        public OptionWindow()
+
+        private Context context;
+
+        public OptionWindow(Context context)
         {
+            this.context = context;
             InitializeComponent();
             // Load settings
             this.AoPath.Text = this.mapSettings.AoPath;
@@ -96,6 +101,11 @@ namespace Demoder.PlanetMapViewer.Forms
             this.windowSettings.OverlaymodeShowScrollbars = this.overlayModeShowScrollbars.Checked;
             this.windowSettings.OverlaymodeShowControlbox = this.overlayModeShowExitButton.Checked;
             this.windowSettings.OverlaymodeTopmostWorkaround = this.overlayModeWorkaroundTopmost.Checked;
+
+            if (this.context.UiElements.ParentForm.OverlayModeToolStripMenuItem.Checked)
+            {
+                this.context.UiElements.ParentForm.ToggleOverlayMode();
+            }
 
             this.mapSettings.Save();
             this.windowSettings.Save();

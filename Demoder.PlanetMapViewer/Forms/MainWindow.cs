@@ -144,9 +144,9 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (this.overlayModeToolStripMenuItem.Checked)
+            if (this.OverlayModeToolStripMenuItem.Checked)
             {
-                this.overlayModeToolStripMenuItem.Checked = false;
+                this.OverlayModeToolStripMenuItem.Checked = false;
                 e.Cancel = true;
                 this.ToggleOverlayMode();
                 return;
@@ -217,7 +217,7 @@ namespace Demoder.PlanetMapViewer.Forms
         #region Features specific to overlay mode
         protected override void WndProc(ref Message m)
         {
-            if (this.overlayModeToolStripMenuItem == null || !this.overlayModeToolStripMenuItem.Checked)
+            if (this.OverlayModeToolStripMenuItem == null || !this.OverlayModeToolStripMenuItem.Checked)
             {
                 base.WndProc(ref m);
                 return;
@@ -233,7 +233,7 @@ namespace Demoder.PlanetMapViewer.Forms
         }
         #endregion
 
-        
+
 
         /// <summary>
         /// Applies form-related settings.
@@ -272,6 +272,9 @@ namespace Demoder.PlanetMapViewer.Forms
                 case System.Windows.Forms.Keys.D:
                 case System.Windows.Forms.Keys.Oemplus:
                 case System.Windows.Forms.Keys.OemMinus:
+                case System.Windows.Forms.Keys.Zoom:
+                case System.Windows.Forms.Keys.Add:
+                case System.Windows.Forms.Keys.Subtract:
                     this.tileDisplay1.HandleKeyDown(e);
                     return;
             }
@@ -604,7 +607,7 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             if (this.fullscreenToolStripMenuItem.Checked)
             {
-                this.overlayModeToolStripMenuItem.Checked = false;
+                this.OverlayModeToolStripMenuItem.Checked = false;
                 this.ToggleOverlayMode();
 
                 this.oldState = this.WindowState;
@@ -648,7 +651,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private DialogResult ShowOptionsDialog(string customTitle = null)
         {
-            var options = new OptionWindow();
+            var options = new OptionWindow(this.Context);
             options.StartPosition = FormStartPosition.CenterParent;
             if (customTitle != null)
             {
@@ -747,16 +750,16 @@ namespace Demoder.PlanetMapViewer.Forms
             this.ToggleOverlayMode();
         }
 
-        private void ToggleOverlayMode()
+        internal void ToggleOverlayMode()
         {
-            if (this.overlayModeToolStripMenuItem.Checked)
+            if (this.OverlayModeToolStripMenuItem.Checked)
             {
                 if (!Properties.GeneralSettings.Default.IgnoreOverlaymodeWarning)
                 {
                     var res = MessageBox.Show("You are about to enter overlay mode.\r\nTo exit overlay mode, press [F12] or click the 'close window' button in the title bar.\r\n\r\nDo you wish to ignore this notice in the future?", "Overlay Mode", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
                     if (res == System.Windows.Forms.DialogResult.Cancel)
                     {
-                        this.overlayModeToolStripMenuItem.Checked = false;
+                        this.OverlayModeToolStripMenuItem.Checked = false;
                         return;
                     }
                     if (res == System.Windows.Forms.DialogResult.Yes)
@@ -786,11 +789,8 @@ namespace Demoder.PlanetMapViewer.Forms
 
                 this.MinimumSize = new Size(100, 100);
 
-                if (!Properties.WindowSettings.Default.OverlaymodeShowScrollbars)
-                {
-                    this.tileDisplay1_hScrollBar.Visible = false;
-                    this.tileDisplay1_vScrollBar.Visible = false;
-                }
+                this.tileDisplay1_hScrollBar.Visible = Properties.WindowSettings.Default.OverlaymodeShowScrollbars;
+                this.tileDisplay1_vScrollBar.Visible = Properties.WindowSettings.Default.OverlaymodeShowScrollbars;
 
                 this.ControlBox = Properties.WindowSettings.Default.OverlaymodeShowControlbox;
             }
@@ -806,7 +806,7 @@ namespace Demoder.PlanetMapViewer.Forms
                     this.topMostTimer = null;
                 }
                 this.TopMost = false;
-                
+
                 this.splitContainer1.SplitterDistance = this.Width - 200;
                 this.menuStrip1.Visible = true;
                 this.statusStrip1.Visible = true;
@@ -962,7 +962,12 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void exitOverlayModeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.overlayModeToolStripMenuItem.PerformClick();
+            this.OverlayModeToolStripMenuItem.PerformClick();
+        }
+
+        private void optionsToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            this.optionsToolStripMenuItem.PerformClick();
         }
     }
 

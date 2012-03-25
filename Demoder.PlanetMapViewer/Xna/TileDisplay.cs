@@ -337,13 +337,26 @@ namespace Demoder.PlanetMapViewer.Xna
                     this.PanMap(e);
                     break;
                 case System.Windows.Forms.Keys.Oemplus:
+                case System.Windows.Forms.Keys.Add:
                     e.SuppressKeyPress = true;
                     this.ZoomIn();
                     break;
                 case System.Windows.Forms.Keys.OemMinus:
+                case System.Windows.Forms.Keys.Subtract:
                     e.SuppressKeyPress = true;
-                    this.ZoomOut();                    
+                    this.ZoomOut();
                     return;
+                case System.Windows.Forms.Keys.Zoom:
+                    e.SuppressKeyPress = true;
+                    if (!e.Control)
+                    {
+                        this.ZoomIn();
+                    }
+                    else
+                    {
+                        this.ZoomOut();
+                    }
+                    break;
             }
         }
 
