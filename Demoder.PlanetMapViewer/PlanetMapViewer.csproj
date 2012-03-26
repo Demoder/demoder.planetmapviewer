@@ -259,6 +259,7 @@
     </Content>
     <Content Include="Building.txt" />
     <Content Include="Icon.ico" />
+    <Content Include="License.txt" />
     <Content Include="Readme.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

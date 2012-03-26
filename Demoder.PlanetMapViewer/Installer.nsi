@@ -8,7 +8,7 @@ VIAddVersionKey "FileVersion" "${ASSEMBLY_VERSION}"
 VIProductVersion ${ASSEMBLY_VERSION}
 
 ; The file to write
-OutFile "bin\Release\Setup.exe"
+OutFile "..\Rel\Installer\Setup.exe"
 
 ; The default installation directory
 InstallDir "$PROGRAMFILES\Demoders PlanetMap Viewer"

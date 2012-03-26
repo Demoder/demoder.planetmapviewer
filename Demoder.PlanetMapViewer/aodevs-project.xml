@@ -1,5 +1,5 @@
 ﻿<Root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Project" Version="1" xsi:noNamespaceSchemaLocation="http://aodevs.com/xsd/Project.v1.xsd">
-  <Name>Vha.Chat</Name>
+  <Name>Demoders PlanetMap Viewer</Name>
   <Tagline>
     See ingame maps outside the game! Are you a multilogger? Demoders PlanetMap Viewer can track multiple characters simultaniously.
   </Tagline>
@@ -8,17 +8,17 @@
     [b]Features[/b]
     - Plot character marker on planet map for all locally running AO clients[br]
     - Smart camera tracking of multiple (selectable) characters[br]
-    - [b]Fullscreen mode[/b] (F11)[br]
-    [ulist]
-    [*]Optimal for running on a dedicated display
-    [*]Window is maximized
-    [*]Borders are removed
-    [/ulist]
     - [b]Overlay mode[/b] (F12)[br]
     [ulist]
     [*]Window will remain on top of other windows, such as Anarchy Online
     [*]Minimal footprint on screen real estate
     [*]An extensive menu becomes available upon right-click of the title bar
+    [/ulist]
+    - [b]Fullscreen mode[/b] (F11)[br]
+    [ulist]
+    [*]Optimal for running on a dedicated display
+    [*]Window is maximized
+    [*]Borders are removed
     [/ulist]
   </Description>
   <License>GPLv2</License>
