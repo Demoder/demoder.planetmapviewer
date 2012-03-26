@@ -93,17 +93,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataClasses\MainWindowDataClasses.cs" />
+    <Compile Include="DataClasses\StringDefinition.cs" />
     <Compile Include="Forms\AboutBox1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\AboutBox1.Designer.cs">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataClasses\CharacterLocatorInformation.cs" />
+    <Compile Include="Forms\ErrorLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ErrorLog.Designer.cs">
+      <DependentUpon>ErrorLog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\Camera.cs" />
     <Compile Include="DataClasses\Context.cs" />
     <Compile Include="DataClasses\AoInfo.cs" />
     <Compile Include="Helpers\FrameDrawer.cs" />
+    <Compile Include="Helpers\Tutorial.cs" />
+    <Compile Include="Properties\OverlayTutorial.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>OverlayTutorial.settings</DependentUpon>
+    </Compile>
     <Compile Include="Properties\GeneralSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -144,6 +157,9 @@
     <EmbeddedResource Include="Forms\AboutBox1.resx">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ErrorLog.resx">
+      <DependentUpon>ErrorLog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -163,6 +179,10 @@
     <None Include="app.config" />
     <None Include="app.manifest">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\OverlayTutorial.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>OverlayTutorial.Designer.cs</LastGenOutput>
     </None>
     <None Include="Properties\GeneralSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

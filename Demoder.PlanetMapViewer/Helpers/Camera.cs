@@ -94,7 +94,10 @@ namespace Demoder.PlanetMapViewer.Helpers
                     this.Context.UiElements.HScrollBar.Value = (int)pos.X;
                     this.Context.UiElements.VScrollBar.Value = (int)pos.Y;
                 }
-                catch { }
+                catch(Exception ex) 
+                {
+                    this.Context.ErrorLog.Enqueue(ex.ToString());
+                }
             }
         }
 

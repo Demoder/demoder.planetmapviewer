@@ -71,7 +71,6 @@ namespace Demoder.PlanetMapViewer.Forms
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tileDisplay1_vScrollBar = new System.Windows.Forms.VScrollBar();
             this.tileDisplay1_hScrollBar = new System.Windows.Forms.HScrollBar();
-            this.tileDisplay1 = new Demoder.PlanetMapViewer.Xna.TileDisplay();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.RadioButtonMapSelectionShadowlands = new System.Windows.Forms.RadioButton();
             this.RadioButtonMapSelectionRubika = new System.Windows.Forms.RadioButton();
@@ -97,6 +96,9 @@ namespace Demoder.PlanetMapViewer.Forms
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exitOverlayModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.errorLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.tileDisplay1 = new Demoder.PlanetMapViewer.Xna.TileDisplay();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -184,6 +186,8 @@ namespace Demoder.PlanetMapViewer.Forms
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.checkVersionToolStripMenuItem,
             this.readmeToolStripMenuItem,
+            this.toolStripSeparator5,
+            this.errorLogToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
@@ -192,21 +196,21 @@ namespace Demoder.PlanetMapViewer.Forms
             // checkVersionToolStripMenuItem
             // 
             this.checkVersionToolStripMenuItem.Name = "checkVersionToolStripMenuItem";
-            this.checkVersionToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.checkVersionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.checkVersionToolStripMenuItem.Text = "Update...";
             this.checkVersionToolStripMenuItem.Click += new System.EventHandler(this.checkVersionToolStripMenuItem_Click);
             // 
             // readmeToolStripMenuItem
             // 
             this.readmeToolStripMenuItem.Name = "readmeToolStripMenuItem";
-            this.readmeToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.readmeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.readmeToolStripMenuItem.Text = "Readme";
             this.readmeToolStripMenuItem.Click += new System.EventHandler(this.readmeToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "&About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -270,16 +274,6 @@ namespace Demoder.PlanetMapViewer.Forms
             this.tileDisplay1_hScrollBar.Value = 1;
             this.tileDisplay1_hScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.tileDisplay1_ScrollBar_Scroll);
             // 
-            // tileDisplay1
-            // 
-            this.tileDisplay1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tileDisplay1.Location = new System.Drawing.Point(0, 0);
-            this.tileDisplay1.Name = "tileDisplay1";
-            this.tileDisplay1.Size = new System.Drawing.Size(506, 446);
-            this.tileDisplay1.TabIndex = 1;
-            this.tileDisplay1.Text = "PlanetMap";
-            this.tileDisplay1.OnDraw += new System.EventHandler(this.tileDisplay1_OnDraw);
-            // 
             // groupBox4
             // 
             this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -290,7 +284,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.groupBox4.Controls.Add(this.mapComboBox);
             this.groupBox4.Location = new System.Drawing.Point(2, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(171, 71);
+            this.groupBox4.Size = new System.Drawing.Size(177, 71);
             this.groupBox4.TabIndex = 10000;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Map Selection";
@@ -340,7 +334,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.groupBox2.Controls.Add(this.RadioButtonCameraFollowCharacters);
             this.groupBox2.Location = new System.Drawing.Point(2, 80);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(171, 97);
+            this.groupBox2.Size = new System.Drawing.Size(177, 97);
             this.groupBox2.TabIndex = 10000;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Camera Controls";
@@ -396,7 +390,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.groupBox1.Controls.Add(this.followCharacter);
             this.groupBox1.Location = new System.Drawing.Point(2, 183);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(171, 106);
+            this.groupBox1.Size = new System.Drawing.Size(177, 106);
             this.groupBox1.TabIndex = 10000;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Follow Character";
@@ -408,7 +402,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.followCharacter.Location = new System.Drawing.Point(3, 16);
             this.followCharacter.Name = "followCharacter";
             this.followCharacter.ScrollAlwaysVisible = true;
-            this.followCharacter.Size = new System.Drawing.Size(165, 87);
+            this.followCharacter.Size = new System.Drawing.Size(171, 87);
             this.followCharacter.Sorted = true;
             this.followCharacter.TabIndex = 7;
             // 
@@ -524,6 +518,27 @@ namespace Demoder.PlanetMapViewer.Forms
             this.exitOverlayModeToolStripMenuItem.Text = "Exit Overlay Mode";
             this.exitOverlayModeToolStripMenuItem.Click += new System.EventHandler(this.exitOverlayModeToolStripMenuItem_Click);
             // 
+            // errorLogToolStripMenuItem
+            // 
+            this.errorLogToolStripMenuItem.Name = "errorLogToolStripMenuItem";
+            this.errorLogToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.errorLogToolStripMenuItem.Text = "Error Log";
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(149, 6);
+            // 
+            // tileDisplay1
+            // 
+            this.tileDisplay1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tileDisplay1.Location = new System.Drawing.Point(0, 0);
+            this.tileDisplay1.Name = "tileDisplay1";
+            this.tileDisplay1.Size = new System.Drawing.Size(506, 446);
+            this.tileDisplay1.TabIndex = 1;
+            this.tileDisplay1.Text = "PlanetMap";
+            this.tileDisplay1.OnDraw += new System.EventHandler(this.tileDisplay1_OnDraw);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -603,6 +618,8 @@ namespace Demoder.PlanetMapViewer.Forms
         private System.Windows.Forms.ToolStripMenuItem exitOverlayModeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem1;
         internal System.Windows.Forms.ToolStripMenuItem OverlayModeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripMenuItem errorLogToolStripMenuItem;
     }
 }
 

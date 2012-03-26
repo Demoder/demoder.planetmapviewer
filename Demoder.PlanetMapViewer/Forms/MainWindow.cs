@@ -73,6 +73,7 @@ namespace Demoder.PlanetMapViewer.Forms
             }
             catch (Exception ex)
             {
+                this.Context.ErrorLog.Enqueue(ex.ToString());
                 this.ShowExceptionError(ex);
             }
         }
@@ -87,7 +88,6 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.Context.UiElements.MapList = this.mapComboBox;
                 this.Context.UiElements.ParentForm = this;
 
-                this.Context.ContentManager = this.tileDisplay1.Content;
                 this.Context.HookInfo = new HookInfoTracker();
                 this.updateCharacterListTimer = new thrd.Timer(this.UpdateCharacterList, null, 1000, 2000);
 
@@ -118,17 +118,23 @@ namespace Demoder.PlanetMapViewer.Forms
 
                 this.bgwVersionCheck.DoWork += bgwVersionCheck_DoWork;
                 this.bgwVersionCheck.RunWorkerCompleted += bgwVersionCheck_RunWorkerCompleted;
-
-                this.Context.Content.Textures.CharacterLocator = this.Context.ContentManager.Load<Texture2D>(@"Textures\GFX_GUI_PLANETMAP_PLAYER_MARKER");
                 this.ApplySettings();
                 this.Context.Camera.AdjustScrollbarsToLayer();
 
                 // Setup the tile display.
                 Mouse.WindowHandle = this.tileDisplay1.Handle;
                 this.tileDisplay1.OnDraw += tileDisplay1_OnDraw;
+
+#if DEBUG
+                this.errorLogToolStripMenuItem.Visible = true;
+#else 
+                this.errorLogToolStripMenuItem.Visible = false;
+#endif
+
             }
             catch (Exception ex)
             {
+                this.Context.ErrorLog.Enqueue(ex.ToString());
                 this.ShowExceptionError(ex);
                 Application.Exit();
             }
@@ -403,6 +409,7 @@ namespace Demoder.PlanetMapViewer.Forms
             }
             catch (Exception ex)
             {
+                this.Context.ErrorLog.Enqueue(ex.ToString());
                 this.ShowExceptionError(ex);
             }
         }
@@ -416,114 +423,44 @@ namespace Demoder.PlanetMapViewer.Forms
             lock (this.Context.Camera)
             {
                 this.Context.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
+                if (this.RenderTutorial()) { return; }
+
                 this.Context.MapManager.CurrentLayer.Draw(this.Context);
-   
+                if (!this.Context.Content.Loaded) { return; }
+
                 #region Draw character locators
+                // Retrieve all information related to character locators
+                var locators = this.GetCharacterLocators();
 
-                if (this.Context.Content.Textures.CharacterLocator != null)
+                // Render the text
+                var strings = new List<StringDefinition>();
+                foreach (var loc in locators)
                 {
-                    // Retrieve all information related to character locators
-                    var locators = this.GetCharacterLocators();
-
-                    // Render the text
-                    var strings = new List<StringDefinition>();
-                    foreach (var loc in locators)
-                    {
-                        strings.AddRange(loc.Strings);
-                    }
-                    this.DrawText(strings);
-
-                    // Render the markers
-                    this.RenderCharacterLocators(locators);
+                    strings.AddRange(loc.Strings);
                 }
+                this.Context.FrameDrawer.DrawText(strings, true);
+
+                // Render the markers
+                this.RenderCharacterLocators(locators);
                 #endregion
+
+                
             }
         }
-
-        private void DrawText(IEnumerable<StringDefinition> texts)
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>true if tutorial was rendered, false otherwise</returns>
+        private bool RenderTutorial()
         {
-            if (this.Context.SpriteBatch == null) { return; }
-            if (this.Context.Content.Fonts.CharacterName == null) { return; }
-            this.Context.SpriteBatch.Begin(
-            SpriteSortMode.Texture,
-            BlendState.AlphaBlend,
-            null, null, null, null,
-            this.Context.Camera.TransformMatrix);
-            try
+            if (this.Context.Options.IsOverlayMode)
             {
-                foreach (var sd in texts)
-                {
-                    var textSize = this.Context.Content.Fonts.CharacterName.MeasureString(sd.Text);
-                    var fontPos = new Vector2(
-                            (float)Math.Floor(sd.CenterPosition.X - (textSize.X / 2)),
-                            (float)Math.Floor(sd.CenterPosition.Y + 2)
-                            );
-                    this.Context.SpriteBatch.DrawString(
-                        this.Context.Content.Fonts.CharacterName,
-                        sd.Text,
-                        fontPos,
-                        Microsoft.Xna.Framework.Color.Black
-                        );
-                }
+                if (this.Context.Tutorial.Overlay.Completed) { return false; }
+                this.Context.Tutorial.Overlay.DrawTutorial();
+                return true;
             }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                this.Context.SpriteBatch.End();
-            }
-
-            this.Context.SpriteBatch.Begin(
-                SpriteSortMode.Texture,
-                BlendState.AlphaBlend,
-                null, null, null, null,
-                this.Context.Camera.TransformMatrix);
-            try
-            {
-
-
-                foreach (var sd in texts)
-                {
-                    var textSize = this.Context.Content.Fonts.CharacterName.MeasureString(sd.Text);
-                    var fontPos = new Vector2(
-                            (float)Math.Floor(sd.CenterPosition.X - textSize.X / 2) - 1,
-                            (float)Math.Floor(sd.CenterPosition.Y + 1)
-                            );
-                    this.Context.SpriteBatch.DrawString(
-                        this.Context.Content.Fonts.CharacterName,
-                        sd.Text,
-                        fontPos,
-                        Microsoft.Xna.Framework.Color.White
-                        );
-                }
-            }
-            catch (Exception ex) { throw ex; }
-            finally
-            {
-                this.Context.SpriteBatch.End();
-            }
-        }
-
-        private void RenderCharacterLocators(CharacterLocatorInformation[] characters)
-        {
-            this.Context.SpriteBatch.Begin(
-            SpriteSortMode.Texture,
-            BlendState.AlphaBlend,
-            null, null, null, null,
-            this.Context.Camera.TransformMatrix);
-            try
-            {
-                foreach (var c in characters)
-                {
-                    this.CenterTextureOnPixel(this.Context.Content.Textures.CharacterLocator, (int)c.CenterPosition.X, (int)c.CenterPosition.Y, Microsoft.Xna.Framework.Color.White);
-                }
-            }
-            finally
-            {
-                this.Context.SpriteBatch.End();
-            }
+            return false;
         }
 
         private CharacterLocatorInformation[] GetCharacterLocators()
@@ -541,32 +478,45 @@ namespace Demoder.PlanetMapViewer.Forms
                     if (info == null || info.Zone == null || info.Position == null || info.Character == null || info.Character.Name == null) { continue; }
                     var charLoc = new CharacterLocatorInformation();
                     charLoc.CenterPosition = this.Context.MapManager.GetPosition(info.Zone.ID, info.Position.X, info.Position.Z);
-
                     charLoc.Strings.Add(new StringDefinition
                     {
                         CenterPosition = new Vector2(charLoc.CenterPosition.X, charLoc.CenterPosition.Y + (int)this.Context.Content.Textures.CharacterLocator.Height / 2),
-                        Text = info.Character.Name
+                        Text = info.Character.Name,
+                        TextColor = Microsoft.Xna.Framework.Color.White,
+                        ShadowColor = Microsoft.Xna.Framework.Color.Black,
+                        Shadow = true,
+                        Font = this.Context.Content.Fonts.CharacterName
                     });
 
                     chrs.Add(charLoc);
                 }
             }
-
             return chrs.ToArray();
         }
 
-        private void CenterTextureOnPixel(Texture2D tex, int x, int y, Microsoft.Xna.Framework.Color color)
+        public void RenderCharacterLocators(CharacterLocatorInformation[] characters)
         {
-            if (this.Context.SpriteBatch == null) { return; }
-            this.Context.SpriteBatch.Draw(tex,
-                    new Microsoft.Xna.Framework.Rectangle(
-                        x - tex.Width / 2,
-                        y - tex.Height / 2,
-                        this.Context.Content.Textures.CharacterLocator.Width,
-                        this.Context.Content.Textures.CharacterLocator.Height),
-                         color);
+            this.Context.FrameDrawer.SpriteBatchBegin();
+            try
+            {
+                foreach (var c in characters)
+                {
+                    this.Context.FrameDrawer.TextureCenterOnPixel(
+                        this.Context.Content.Textures.CharacterLocator,
+                        (int)c.CenterPosition.X,
+                        (int)c.CenterPosition.Y,
+                        Microsoft.Xna.Framework.Color.White);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.Context.ErrorLog.Enqueue(ex.ToString());
+            }
+            finally
+            {
+                this.Context.SpriteBatch.End();
+            }
         }
-
 
         FormWindowState oldState = FormWindowState.Normal;
 
@@ -758,20 +708,6 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             if (this.OverlayModeToolStripMenuItem.Checked)
             {
-                if (!Properties.GeneralSettings.Default.IgnoreOverlaymodeWarning)
-                {
-                    var res = MessageBox.Show("You are about to enter overlay mode.\r\nTo exit overlay mode, press [F12] or click the 'close window' button in the title bar.\r\n\r\nDo you wish to ignore this notice in the future?", "Overlay Mode", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
-                    if (res == System.Windows.Forms.DialogResult.Cancel)
-                    {
-                        this.OverlayModeToolStripMenuItem.Checked = false;
-                        return;
-                    }
-                    if (res == System.Windows.Forms.DialogResult.Yes)
-                    {
-                        Properties.GeneralSettings.Default.IgnoreOverlaymodeWarning = true;
-                        Properties.GeneralSettings.Default.Save();
-                    }
-                }
                 this.TopMost = true;
 
                 // Hack for cases where a topmost window still gets hidden behind other windows at random intervals.
@@ -799,6 +735,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
                 this.ControlBox = Properties.WindowSettings.Default.OverlaymodeShowControlbox;
                 this.splitContainer1.Panel2Collapsed = true;
+                this.Context.Options.IsOverlayMode = true;
             }
             else
             {
@@ -822,6 +759,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.tileDisplay1_vScrollBar.Visible = true;
 
                 this.ControlBox = true;
+                this.Context.Options.IsOverlayMode = false;
             }
         }
 
@@ -870,6 +808,11 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             lock (this.OverlayTitleContextMenuStrip)
             {
+                if (!Properties.OverlayTutorial.Default.TitlebarMenu)
+                {
+                    Properties.OverlayTutorial.Default.TitlebarMenu = true;
+                    Properties.OverlayTutorial.Default.Save();
+                }
                 // Camera Controls
                 this.rubikaToolStripMenuItem1.Checked = this.RadioButtonMapSelectionRubika.Checked;
                 this.shadowlandsToolStripMenuItem1.Checked = this.RadioButtonMapSelectionShadowlands.Checked;
@@ -902,6 +845,8 @@ namespace Demoder.PlanetMapViewer.Forms
                         }
                         selectMapToolStripMenuItem.DropDownItems.Add(item);
                     }
+
+                    this.selectMapToolStripMenuItem.Enabled = this.selectMapToolStripMenuItem.DropDownItems.Count != 0;
                 }
                 #endregion
 
@@ -929,8 +874,12 @@ namespace Demoder.PlanetMapViewer.Forms
                             item.Click += this.OverlayTitleContextMenu_CharacterSelectionItemClickEventHandler;
                             this.selectCharactersToolStripMenuItem.DropDownItems.Add(item);
                         }
-                        catch { }
+                        catch(Exception ex) 
+                        {
+                            this.Context.ErrorLog.Enqueue(ex.ToString());
+                        }
                     }
+                    this.selectCharactersToolStripMenuItem.Enabled = this.selectCharactersToolStripMenuItem.DropDownItems.Count != 0;
                 }
                 #endregion
             }
@@ -961,7 +910,10 @@ namespace Demoder.PlanetMapViewer.Forms
                     this.OverlayTitleContextMenuStrip.Show();
                     this.selectCharactersToolStripMenuItem.ShowDropDown();
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    this.Context.ErrorLog.Enqueue(ex.ToString());
+                }
             }
         }
 
@@ -973,6 +925,14 @@ namespace Demoder.PlanetMapViewer.Forms
         private void optionsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             this.optionsToolStripMenuItem.PerformClick();
+        }
+
+        private void errorLogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var err = new ErrorLog();
+            var errors = this.Context.ErrorLog.ToArray();
+            err.textBox1.Text = String.Join("\r\n\r\n", errors);
+            err.ShowDialog();
         }
     }
 

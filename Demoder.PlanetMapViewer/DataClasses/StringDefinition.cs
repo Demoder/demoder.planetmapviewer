@@ -25,35 +25,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Demoder.PlanetMapViewer.DataClasses
 {
-    public class XnaContent
+    /// <summary>
+    /// Stores information about text and its position on the map
+    /// </summary>
+    public class StringDefinition
     {
-        public XnaContent()
+        public Vector2 CenterPosition;
+        public string Text;
+        public Color ShadowColor = Color.Black;
+        public Color TextColor = Color.White;
+        public SpriteFont Font = null;
+        public bool Shadow = true;
+        public Vector2 StringMeasure
         {
-            this.Textures = new XnaContentTextures();
-            this.Fonts = new XnaContentSpriteFonts();
+            get
+            {
+                if (this.Font == null) { return default(Vector2); }
+
+                return this.Font.MeasureString(this.Text);
+            }
         }
-
-        public bool Loaded = false;
-        public XnaContentTextures Textures { get; private set; }
-        public XnaContentSpriteFonts Fonts { get; private set; }
-    }
-
-    public class XnaContentTextures
-    {
-        public Texture2D CharacterLocator;
-        public Texture2D ArrowUp;
-    }
-
-    public class XnaContentSpriteFonts
-    {
-        public SpriteFont CharacterName;
-        public SpriteFont GuiSmall;
-        public SpriteFont GuiNormal;
-        public SpriteFont GuiLarge;
-        public SpriteFont GuiXLarge;
     }
 }
