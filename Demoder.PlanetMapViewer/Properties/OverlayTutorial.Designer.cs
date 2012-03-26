@@ -13,11 +13,11 @@ namespace Demoder.PlanetMapViewer.Properties {
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "10.0.0.0")]
-    internal sealed partial class GeneralSettings : global::System.Configuration.ApplicationSettingsBase {
+    internal sealed partial class OverlayTutorial : global::System.Configuration.ApplicationSettingsBase {
         
-        private static GeneralSettings defaultInstance = ((GeneralSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new GeneralSettings())));
+        private static OverlayTutorial defaultInstance = ((OverlayTutorial)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new OverlayTutorial())));
         
-        public static GeneralSettings Default {
+        public static OverlayTutorial Default {
             get {
                 return defaultInstance;
             }
@@ -25,25 +25,13 @@ namespace Demoder.PlanetMapViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("30")]
-        public int FramesPerSecond {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool TitlebarMenu {
             get {
-                return ((int)(this["FramesPerSecond"]));
+                return ((bool)(this["TitlebarMenu"]));
             }
             set {
-                this["FramesPerSecond"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string SettingVersion {
-            get {
-                return ((string)(this["SettingVersion"]));
-            }
-            set {
-                this["SettingVersion"] = value;
+                this["TitlebarMenu"] = value;
             }
         }
     }

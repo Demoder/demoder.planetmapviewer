@@ -41,13 +41,21 @@ namespace Demoder.PlanetMapViewer.DataClasses
             this.UiElements = new ContextUiElements();
             this.Options = new ContextOptions();
             this.Content = new XnaContent();
+            this.FrameDrawer = new FrameDrawer(this);
+            this.Tutorial = new Tutorial(this);
         }
+
+        public Queue<string> ErrorLog = new Queue<string>();
+
+        public FrameDrawer FrameDrawer { get; private set; }
         public MapManager MapManager;
         public Camera Camera;
         public SpriteBatch SpriteBatch;
         public HookInfoTracker HookInfo;
         public ContentManager ContentManager;
         public XnaContent Content { get; private set; }
+
+        public Tutorial Tutorial { get; private set; }
 
         public GraphicsDevice GraphicsDevice
         {
@@ -75,6 +83,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
     {
         public bool IsMapRubika = true;
         public CameraControl CameraControl = CameraControl.Character;
+        public bool IsOverlayMode = false;
     }
 
     public enum CameraControl

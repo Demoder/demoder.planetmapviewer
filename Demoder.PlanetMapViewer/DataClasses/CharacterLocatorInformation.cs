@@ -37,13 +37,4 @@ namespace Demoder.PlanetMapViewer.DataClasses
         public Vector2 CenterPosition;
         public List<StringDefinition> Strings = new List<StringDefinition>();
     }
-
-    /// <summary>
-    /// Stores information about text and its position on the map
-    /// </summary>
-    public class StringDefinition
-    {
-        public Vector2 CenterPosition;
-        public string Text;
-    }
 }

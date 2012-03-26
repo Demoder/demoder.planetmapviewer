@@ -57,8 +57,9 @@ namespace Demoder.PlanetMapViewer.Xna
 
         public event EventHandler OnDraw;
         public event EventHandler OnInitialize;
-        public ContentManager Content;
         internal Context Context = new Context();
+
+        private object drawLocker = new Object();
 
 
         #region Constructor / Initialization
@@ -76,8 +77,19 @@ namespace Demoder.PlanetMapViewer.Xna
 
             try
             {
-                this.Content = new ContentManager(Services, "Content");
-                this.Context.Content.Fonts.CharacterName = Content.Load<SpriteFont>(@"Fonts\CharacterName");
+                this.Context.ContentManager = new ContentManager(Services, "Content");
+                // Load textures
+                this.Context.Content.Textures.CharacterLocator = this.Context.ContentManager.Load<Texture2D>(@"Textures\GFX_GUI_PLANETMAP_PLAYER_MARKER");
+                this.Context.Content.Textures.ArrowUp = this.Context.ContentManager.Load<Texture2D>(@"Textures\ArrowUp");
+
+                // Load fonts
+                this.Context.Content.Fonts.CharacterName = this.Context.ContentManager.Load<SpriteFont>(@"Fonts\CharacterName");
+                this.Context.Content.Fonts.GuiSmall = this.Context.ContentManager.Load<SpriteFont>(@"Fonts\GuiSmall");
+                this.Context.Content.Fonts.GuiNormal = this.Context.ContentManager.Load<SpriteFont>(@"Fonts\GuiNormal");
+                this.Context.Content.Fonts.GuiLarge = this.Context.ContentManager.Load<SpriteFont>(@"Fonts\GuiLarge");
+                this.Context.Content.Fonts.GuiXLarge = this.Context.ContentManager.Load<SpriteFont>(@"Fonts\GuiXLarge");
+
+                this.Context.Content.Loaded = true;
                 ThreadPool.QueueUserWorkItem(new WaitCallback(this.InvalidateFrame));
             }
             catch (Exception ex)
@@ -98,8 +110,7 @@ namespace Demoder.PlanetMapViewer.Xna
             do
             {
                 var sw = Stopwatch.StartNew();
-                this.Invoke((Action)delegate() { this.Invalidate(); });
-
+                this.Invalidate();
                 var toSleep = (int)((1000 / TileDisplay.FrameFrequency) - sw.ElapsedMilliseconds);
                 if (toSleep > 0)
                 {
@@ -108,33 +119,32 @@ namespace Demoder.PlanetMapViewer.Xna
                 }
 
             } while (true);
-
-  
         }
 
         protected override void Draw()
         {
-            if (this.OnDraw != null)
+            lock (this.drawLocker)
             {
-                var curSwVal = this.timeSinceLastDraw.ElapsedMilliseconds;
-                this.timeSinceLastDraw.Restart();
-
-                this.OnDraw(this, null);
-
-
-#if DEBUG
+                if (this.OnDraw != null)
                 {
-                    this.Context.SpriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend);
-                    var fontPos = new Vector2(10, 10);
-                    this.Context.SpriteBatch.DrawString(
-                        this.Context.Content.Fonts.CharacterName,
-                        String.Format("FPS: {0}",1000 / (this.timeSinceLastDraw.ElapsedMilliseconds + curSwVal)),
-                        fontPos,
-                        Microsoft.Xna.Framework.Color.Pink
-                        );
-                    this.Context.SpriteBatch.End();
-                }
+                    var curSwVal = this.timeSinceLastDraw.ElapsedMilliseconds;
+                    this.timeSinceLastDraw.Restart();
+
+                    this.OnDraw(this, null);
+#if DEBUG
+                    {
+                        this.Context.SpriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend);
+                        var fontPos = new Vector2(10, 10);
+                        this.Context.SpriteBatch.DrawString(
+                            this.Context.Content.Fonts.CharacterName,
+                            String.Format("FPS: {0}", 1000 / (this.timeSinceLastDraw.ElapsedMilliseconds + curSwVal)),
+                            fontPos,
+                            Microsoft.Xna.Framework.Color.Pink
+                            );
+                        this.Context.SpriteBatch.End();
+                    }
 #endif
+                }
             }
         }
 

@@ -300,11 +300,11 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         public void Draw(Context context)
         {
-            this.Draw(context.SpriteBatch, context.Camera, context.GraphicsDevice, context.UiElements.TileDisplay);
-        }
+            var batch = context.SpriteBatch;
+            var camera = context.Camera;
+            var graphicsDevice = context.GraphicsDevice;
+            var display = context.UiElements.TileDisplay;
 
-        public void Draw(SpriteBatch batch, Camera camera, GraphicsDevice graphicsDevice, TileDisplay display)
-        {
             batch.Begin(
                     SpriteSortMode.Texture,
                     BlendState.AlphaBlend,
@@ -373,6 +373,7 @@ namespace Demoder.PlanetMapViewer.Helpers
             }
             catch (Exception ex)
             {
+                context.ErrorLog.Enqueue(ex.ToString());
                 Console.WriteLine("PlanetMapLayer->Draw() Exception: {0}", ex.ToString());
             }
             finally

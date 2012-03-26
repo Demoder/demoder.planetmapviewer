@@ -199,8 +199,9 @@ namespace Demoder.PlanetMapViewer.Helpers
                         this.AvailablePlanetMaps.Add(pathName, map);
                         this.Context.UiElements.MapList.Items.Add(new MapSelectionItem { MapName = map.Name.Trim('"', ' '), MapPath = pathName });
                     }
-                    catch
+                    catch(Exception ex)
                     {
+                        this.Context.ErrorLog.Enqueue(ex.ToString());
                         continue;
                     }
                 }
