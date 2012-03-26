@@ -260,6 +260,19 @@ namespace Demoder.PlanetMapViewer.Forms
                 }
             }
 
+
+            // Make sure FPS is valid.
+            var fps = generalSettings.FramesPerSecond;
+            if (fps > 30)
+            {
+                generalSettings.FramesPerSecond = 30;
+                generalSettings.Save();
+            }
+            else if (fps < 1)
+            {
+                generalSettings.FramesPerSecond = 1;
+                generalSettings.Save();
+            }
             TileDisplay.FrameFrequency = generalSettings.FramesPerSecond;
         }
 

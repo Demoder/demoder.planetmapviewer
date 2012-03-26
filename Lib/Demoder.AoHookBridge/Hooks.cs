@@ -49,7 +49,7 @@ namespace Demoder.AoHookBridge
                     try
                     {
                         //bool checkPosition = timeSinceLastPositionQuery.ElapsedMilliseconds >= 67;
-                        bool checkPosition = myInstance.DataStore.TimeSinceLastPositionQuery.ElapsedMilliseconds >= 67;
+                        bool checkPosition = myInstance.DataStore.TimeSinceLastPositionQuery.ElapsedMilliseconds >= 100;
 
                         // If there's nothing to do, return now.
                         if (!checkPosition &&
