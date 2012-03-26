@@ -196,5 +196,18 @@ namespace Demoder.PlanetMapViewer.Helpers
                 this.Context.Camera.TransformMatrix);
         }
         #endregion
+
+        public void DrawTutorialStamp(int posX, int posY, int width, int height)
+        {
+            this.Context.FrameDrawer.SpriteBatchBegin(false);
+            this.Context.FrameDrawer.TextureTopMiddleOnPixel(
+                this.Context.Content.Textures.TutorialFrame,
+                posX,
+                posY - 15,
+                Color.Black,
+                new Vector2(width, height)
+                );
+            this.Context.SpriteBatch.End();
+        }
     }
 }

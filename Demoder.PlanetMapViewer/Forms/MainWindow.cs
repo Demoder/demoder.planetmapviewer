@@ -423,7 +423,6 @@ namespace Demoder.PlanetMapViewer.Forms
             lock (this.Context.Camera)
             {
                 this.Context.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
-                if (this.RenderTutorial()) { return; }
 
                 this.Context.MapManager.CurrentLayer.Draw(this.Context);
                 if (!this.Context.Content.Loaded) { return; }
@@ -444,7 +443,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.RenderCharacterLocators(locators);
                 #endregion
 
-                
+                this.RenderTutorial();                
             }
         }
         
@@ -456,11 +455,16 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             if (this.Context.Options.IsOverlayMode)
             {
-                if (this.Context.Tutorial.Overlay.Completed) { return false; }
+                if (this.Context.Tutorial.Overlay.CurrentStage == OverlayTutorialStage.Completed) { return false; }
                 this.Context.Tutorial.Overlay.DrawTutorial();
                 return true;
             }
-            return false;
+            else
+            {
+                if (this.Context.Tutorial.Normal.CurrentStage == NormalTutorialStage.Completed) { return false; }
+                this.Context.Tutorial.Normal.DrawTutorial();
+                return true;
+            }
         }
 
         private CharacterLocatorInformation[] GetCharacterLocators()
@@ -736,6 +740,12 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.ControlBox = Properties.WindowSettings.Default.OverlaymodeShowControlbox;
                 this.splitContainer1.Panel2Collapsed = true;
                 this.Context.Options.IsOverlayMode = true;
+
+                if (this.Context.Tutorial.Normal.CurrentStage == NormalTutorialStage.OverlayMode)
+                {
+                    Properties.NormalTutorial.Default.OverlayMode = true;
+                    Properties.NormalTutorial.Default.Save();
+                }
             }
             else
             {
@@ -760,6 +770,12 @@ namespace Demoder.PlanetMapViewer.Forms
 
                 this.ControlBox = true;
                 this.Context.Options.IsOverlayMode = false;
+
+                if (this.Context.Tutorial.Overlay.CurrentStage == OverlayTutorialStage.ExitOverlayMode)
+                {
+                    Properties.OverlayTutorial.Default.ExitOverlayMode = true;
+                    Properties.OverlayTutorial.Default.Save();
+                }
             }
         }
 
@@ -808,7 +824,7 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             lock (this.OverlayTitleContextMenuStrip)
             {
-                if (!Properties.OverlayTutorial.Default.TitlebarMenu)
+                if (this.Context.Tutorial.Overlay.CurrentStage == OverlayTutorialStage.TitlebarMenu)
                 {
                     Properties.OverlayTutorial.Default.TitlebarMenu = true;
                     Properties.OverlayTutorial.Default.Save();
@@ -933,6 +949,16 @@ namespace Demoder.PlanetMapViewer.Forms
             var errors = this.Context.ErrorLog.ToArray();
             err.textBox1.Text = String.Join("\r\n\r\n", errors);
             err.ShowDialog();
+        }
+
+        private void MainWindow_Resize(object sender, EventArgs e)
+        {
+            if (!this.Context.Options.IsOverlayMode) { return; }
+            if (this.Context.Tutorial.Overlay.CurrentStage == OverlayTutorialStage.ResizeWindow)
+            {
+                Properties.OverlayTutorial.Default.ResizeWindow = true;
+                Properties.OverlayTutorial.Default.Save();
+            }
         }
     }
 

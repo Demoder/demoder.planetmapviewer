@@ -46,6 +46,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
     {
         public Texture2D CharacterLocator;
         public Texture2D ArrowUp;
+        public Texture2D TutorialFrame;
     }
 
     public class XnaContentSpriteFonts

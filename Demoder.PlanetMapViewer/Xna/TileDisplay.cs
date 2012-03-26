@@ -81,6 +81,7 @@ namespace Demoder.PlanetMapViewer.Xna
                 // Load textures
                 this.Context.Content.Textures.CharacterLocator = this.Context.ContentManager.Load<Texture2D>(@"Textures\GFX_GUI_PLANETMAP_PLAYER_MARKER");
                 this.Context.Content.Textures.ArrowUp = this.Context.ContentManager.Load<Texture2D>(@"Textures\ArrowUp");
+                this.Context.Content.Textures.TutorialFrame = this.Context.ContentManager.Load<Texture2D>(@"Textures\TutorialFrame");
 
                 // Load fonts
                 this.Context.Content.Fonts.CharacterName = this.Context.ContentManager.Load<SpriteFont>(@"Fonts\CharacterName");
@@ -110,27 +111,35 @@ namespace Demoder.PlanetMapViewer.Xna
             do
             {
                 var sw = Stopwatch.StartNew();
-                this.Invalidate();
-                var toSleep = (int)((1000 / TileDisplay.FrameFrequency) - sw.ElapsedMilliseconds);
-                if (toSleep > 0)
+                try
                 {
-                    Thread.Sleep(toSleep);
-                    sw.Restart();
+                    this.Invalidate();
+                    var toSleep = (int)((1000 / TileDisplay.FrameFrequency) - sw.ElapsedMilliseconds);
+                    if (toSleep > 0)
+                    {
+                        Thread.Sleep(toSleep);
+                        sw.Restart();
+                    }
                 }
-
+                catch (Exception ex)
+                {
+                    this.Context.ErrorLog.Enqueue(ex.ToString());
+                }
             } while (true);
         }
 
         protected override void Draw()
         {
-            lock (this.drawLocker)
+            try
             {
-                if (this.OnDraw != null)
+                lock (this.drawLocker)
                 {
-                    var curSwVal = this.timeSinceLastDraw.ElapsedMilliseconds;
-                    this.timeSinceLastDraw.Restart();
+                    if (this.OnDraw != null)
+                    {
+                        var curSwVal = this.timeSinceLastDraw.ElapsedMilliseconds;
+                        this.timeSinceLastDraw.Restart();
 
-                    this.OnDraw(this, null);
+                        this.OnDraw(this, null);
 #if DEBUG
                     {
                         this.Context.SpriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend);
@@ -144,7 +153,12 @@ namespace Demoder.PlanetMapViewer.Xna
                         this.Context.SpriteBatch.End();
                     }
 #endif
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                this.Context.ErrorLog.Enqueue(ex.ToString());
             }
         }
 
@@ -421,6 +435,8 @@ namespace Demoder.PlanetMapViewer.Xna
         public void ZoomIn()
         {
             if (this.Context == null) { return; }
+
+            this.TutorialZoomIn();
             if (this.Context.MapManager == null) { return; }
             this.Context.MapManager.ZoomIn();
         }
@@ -428,8 +444,33 @@ namespace Demoder.PlanetMapViewer.Xna
         public void ZoomOut()
         {
             if (this.Context == null) { return; }
+            this.TutorialZoomOut();
             if (this.Context.MapManager == null) { return; }
             this.Context.MapManager.ZoomOut();
         }
+
+        private void TutorialZoomIn()
+        {
+            if (this.Context.Options.IsOverlayMode) { return; }
+            if (this.Context.Tutorial.Normal.CurrentStage == NormalTutorialStage.ZoomIn)
+            {
+                Properties.NormalTutorial.Default.ZoomIn = true;
+                Properties.NormalTutorial.Default.Save();
+            }
+        }
+
+        private void TutorialZoomOut()
+        {
+            if (this.Context.Options.IsOverlayMode) { return; }
+            if (this.Context.Tutorial.Normal.CurrentStage == NormalTutorialStage.ZoomOut)
+            {
+                Properties.NormalTutorial.Default.ZoomOut = true;
+                Properties.NormalTutorial.Default.Save();
+            }
+        }
+
+
+
+        
     }
 }
