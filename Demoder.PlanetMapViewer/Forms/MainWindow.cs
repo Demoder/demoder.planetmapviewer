@@ -945,7 +945,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void optionsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.optionsToolStripMenuItem.PerformClick();
+            this.ShowOptionsDialog();
         }
 
         private void errorLogToolStripMenuItem_Click(object sender, EventArgs e)

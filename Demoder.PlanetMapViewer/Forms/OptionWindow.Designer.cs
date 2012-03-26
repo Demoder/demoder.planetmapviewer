@@ -115,7 +115,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // 
             // ButtonOkay
             // 
-            this.ButtonOkay.Location = new System.Drawing.Point(297, 142);
+            this.ButtonOkay.Location = new System.Drawing.Point(114, 142);
             this.ButtonOkay.Name = "ButtonOkay";
             this.ButtonOkay.Size = new System.Drawing.Size(75, 23);
             this.ButtonOkay.TabIndex = 1;
@@ -126,7 +126,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // ButtonCancel
             // 
             this.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.ButtonCancel.Location = new System.Drawing.Point(216, 142);
+            this.ButtonCancel.Location = new System.Drawing.Point(195, 142);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(75, 23);
             this.ButtonCancel.TabIndex = 2;

@@ -49,6 +49,8 @@ namespace Demoder.PlanetMapViewer.Xna
         /// </summary>
         private Stopwatch timeSinceLastDraw = Stopwatch.StartNew();
 
+        private float mouseScrollSensitivity = 5;
+
         /// <summary>
         /// Determines wether or not the user is panning the map
         /// </summary>
@@ -194,11 +196,11 @@ namespace Demoder.PlanetMapViewer.Xna
             float newPos = this.Context.Camera.Center.X;
             if (value > 0)
             {
-                newPos += this.Context.UiElements.HScrollBar.SmallChange * SystemInformation.MouseWheelScrollLines;
+                newPos += this.Context.UiElements.HScrollBar.SmallChange * this.mouseScrollSensitivity;
             }
             else if (value < 0)
             {
-                newPos -= this.Context.UiElements.HScrollBar.SmallChange * SystemInformation.MouseWheelScrollLines;
+                newPos -= this.Context.UiElements.HScrollBar.SmallChange * this.mouseScrollSensitivity;
             }
             this.Context.Camera.CenterOnPixel(newPos, this.Context.Camera.Center.Y);
             this.ReportMousePosition();
@@ -214,12 +216,12 @@ namespace Demoder.PlanetMapViewer.Xna
             }
             if (ModifierKeys == System.Windows.Forms.Keys.Shift)
             {
-                var newPos = (this.Context.Camera.Center.X - (e.Delta * SystemInformation.MouseWheelScrollLines / 120 * this.Context.UiElements.HScrollBar.SmallChange));
+                var newPos = (this.Context.Camera.Center.X - (e.Delta * this.mouseScrollSensitivity / 120 * this.Context.UiElements.HScrollBar.SmallChange));
                 this.Context.Camera.CenterOnPixel(newPos, this.Context.Camera.Center.Y);
             }
             else
             {
-                var newPos = (this.Context.Camera.Center.Y - (e.Delta * SystemInformation.MouseWheelScrollLines / 120 * this.Context.UiElements.VScrollBar.SmallChange));
+                var newPos = (this.Context.Camera.Center.Y - (e.Delta * this.mouseScrollSensitivity / 120 * this.Context.UiElements.VScrollBar.SmallChange));
                 this.Context.Camera.CenterOnPixel(this.Context.Camera.Center.X, newPos);
             }
 
