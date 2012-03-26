@@ -1,11 +1,12 @@
 ﻿<Root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Project" Version="1" xsi:noNamespaceSchemaLocation="http://aodevs.com/xsd/Project.v1.xsd">
   <Name>Demoders PlanetMap Viewer</Name>
   <Tagline>
-    See ingame maps outside the game! Are you a multilogger? Demoders PlanetMap Viewer can track multiple characters simultaniously.
+    See ingame maps outside the game - With character tracking!
   </Tagline>
   <Description>
-    Demoders PlanetMap Viewer lets you explore planet maps for Anarchy Online without logging in. If you are logged in to the game, it will plot your character(s) on the planet map.[br]The long-term goal is to be a full substitute to the ingame planetmap viewer.[br]
-    [b]Features[/b]
+    Demoders PlanetMap Viewer lets you explore planet maps for Anarchy Online without logging in. If you are logged in to the game, it will plot your character(s) on the planet map.[br]
+    The long-term goal is to be a full substitute to the ingame planetmap viewer.[br]
+    [b]Features[/b][br]
     - Plot character marker on planet map for all locally running AO clients[br]
     - Smart camera tracking of multiple (selectable) characters[br]
     - [b]Overlay mode[/b] (F12)[br]
@@ -27,11 +28,7 @@
   </Games>
   <Pages>
     <Page Label="Known Issues">
-      [b]Overlay mode fails to stay on top of Anarchy Online[/b]: There's a workaround available. Open the options dialog (tools->options) and enable the "Force on top (bugfix)" checkbox.[br]
-      [b]No character tracking!?[/b][br] 
-      This is probably caused by the PlanetMap Viewer being run as a non-administrative account, as the character tracking implementation requires administrative privilieges.[br]
-      To force administrative privilieges, right-click the icon and chose "Run as administrator".[br]
-      PMV accepts running as a non-administrative user because some users may not be interested in character tracking.      
+      [b]Overlay mode fails to stay on top of Anarchy Online[/b]: There's a workaround available. Open the options dialog (File->Options) and enable the "Force on top (bugfix)" checkbox.[br]
     </Page>
     <Page Label="Credits">
       Created by Demoder (demoder@demoder.me)[br]
@@ -45,8 +42,11 @@
       Thanks to Vhab for creating the icon, and to Onack for giving permission to use AoRK for icon generation.[br]
       [br]
       Testing:[br]
-      Thanks to Iriche, Vhab, Phooy, Jandorith and Nesual for extensive testing.[br]
+      Thanks to Iriche, Jandorith, Nesual, Onack, Phooy and Vhab for extensive testing.[br]
     </Page>
+    <!--<Page Label ="Changelog">
+      [b]2012-03-27: v1.0, initial release.
+    </Page>-->
   </Pages>
   <Staff>
     <Member Position="Author" Name="Demoder" Server="Rimor"/>
@@ -56,19 +56,13 @@
     <Link Label="Bitbucket" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer"/>
   </Links>
   <Versions>
-    <LocalVersion Type="Stable" Value="1.0.0" Package="1.3.1"/>
+    <LocalVersion Type="Stable" Value="1.0.1" Package="1.0.1"/>
   </Versions>
   <Packages>
-    <!--
-    <Package Name="hg-trunk">
-      <Link Label="Nightly Builds" Url="http://build.vhabot.net/ccnet/server/win32/project/Vha.Chat/PackageList.aspx"/>
-      <Repository Type="Mercurial" Label="Source" Url="https://bitbucket.org/Vhab/vha.chat/src/default"/>
-    </Package>
-    -->
-    <Package Name="1.0.0" Date="2012-03-24">
+    <Package Name="1.0.1" Date="2012-03-27">
       <File Label="Binaries" Url=""/>
       <File Label="Setup" Url=""/>
-      <Repository Type="Subversion" Label="Source" Url=""/>
+      <Repository Type="Mercurial" Label="Source" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer"/>
     </Package>
   </Packages>
 </Root>

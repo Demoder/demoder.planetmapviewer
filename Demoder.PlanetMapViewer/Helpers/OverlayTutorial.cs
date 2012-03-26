@@ -81,6 +81,10 @@ namespace Demoder.PlanetMapViewer.Helpers
             int currentHeight = this.Context.UiElements.TileDisplay.Height / 3;
             int center = this.Context.UiElements.TileDisplay.Width / 2;
 
+            this.Context.FrameDrawer.SpriteBatchBegin(false);
+            this.Context.FrameDrawer.TextureTopMiddleOnPixel(this.Context.Content.Textures.ArrowUp, center, 0, Color.White, new Vector2(128, 128));
+            this.Context.SpriteBatch.End();
+
             this.Context.FrameDrawer.DrawTutorialStamp(center, currentHeight, 386, 140);
 
             #region Header
@@ -119,9 +123,7 @@ namespace Demoder.PlanetMapViewer.Helpers
 
             this.Context.FrameDrawer.DrawText(texts, false);
 
-            this.Context.FrameDrawer.SpriteBatchBegin(false);
-            this.Context.FrameDrawer.TextureTopMiddleOnPixel(this.Context.Content.Textures.ArrowUp, center, 0, Color.White, new Vector2(64, 64));
-            this.Context.SpriteBatch.End();
+            
             #endregion
 
         }

@@ -74,7 +74,6 @@ namespace Demoder.PlanetMapViewer.Forms
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tileDisplay1_vScrollBar = new System.Windows.Forms.VScrollBar();
             this.tileDisplay1_hScrollBar = new System.Windows.Forms.HScrollBar();
-            this.tileDisplay1 = new Demoder.PlanetMapViewer.Xna.TileDisplay();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.RadioButtonMapSelectionShadowlands = new System.Windows.Forms.RadioButton();
             this.RadioButtonMapSelectionRubika = new System.Windows.Forms.RadioButton();
@@ -100,6 +99,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exitOverlayModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tileDisplay1 = new Demoder.PlanetMapViewer.Xna.TileDisplay();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -136,14 +136,14 @@ namespace Demoder.PlanetMapViewer.Forms
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem1_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -296,16 +296,6 @@ namespace Demoder.PlanetMapViewer.Forms
             this.tileDisplay1_hScrollBar.Value = 1;
             this.tileDisplay1_hScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.tileDisplay1_ScrollBar_Scroll);
             // 
-            // tileDisplay1
-            // 
-            this.tileDisplay1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tileDisplay1.Location = new System.Drawing.Point(0, 0);
-            this.tileDisplay1.Name = "tileDisplay1";
-            this.tileDisplay1.Size = new System.Drawing.Size(605, 556);
-            this.tileDisplay1.TabIndex = 1;
-            this.tileDisplay1.Text = "PlanetMap";
-            this.tileDisplay1.OnDraw += new System.EventHandler(this.tileDisplay1_OnDraw);
-            // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.RadioButtonMapSelectionShadowlands);
@@ -372,7 +362,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.ButtonZoomOut.Name = "ButtonZoomOut";
             this.ButtonZoomOut.Size = new System.Drawing.Size(62, 23);
             this.ButtonZoomOut.TabIndex = 6;
-            this.ButtonZoomOut.Text = "Zoom out";
+            this.ButtonZoomOut.Text = "Zoom Out";
             this.ButtonZoomOut.UseVisualStyleBackColor = true;
             this.ButtonZoomOut.Click += new System.EventHandler(this.ButtonZoomOut_Click);
             // 
@@ -382,7 +372,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.ButtonZoomIn.Name = "ButtonZoomIn";
             this.ButtonZoomIn.Size = new System.Drawing.Size(62, 23);
             this.ButtonZoomIn.TabIndex = 5;
-            this.ButtonZoomIn.Text = "Zoom in";
+            this.ButtonZoomIn.Text = "Zoom In";
             this.ButtonZoomIn.UseVisualStyleBackColor = true;
             this.ButtonZoomIn.Click += new System.EventHandler(this.ButtonZoomIn_Click);
             // 
@@ -543,6 +533,16 @@ namespace Demoder.PlanetMapViewer.Forms
             this.exitOverlayModeToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.exitOverlayModeToolStripMenuItem.Text = "Exit Overlay Mode";
             this.exitOverlayModeToolStripMenuItem.Click += new System.EventHandler(this.exitOverlayModeToolStripMenuItem_Click);
+            // 
+            // tileDisplay1
+            // 
+            this.tileDisplay1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tileDisplay1.Location = new System.Drawing.Point(0, 0);
+            this.tileDisplay1.Name = "tileDisplay1";
+            this.tileDisplay1.Size = new System.Drawing.Size(605, 556);
+            this.tileDisplay1.TabIndex = 1;
+            this.tileDisplay1.Text = "PlanetMap";
+            this.tileDisplay1.OnDraw += new System.EventHandler(this.tileDisplay1_OnDraw);
             // 
             // MainWindow
             // 
