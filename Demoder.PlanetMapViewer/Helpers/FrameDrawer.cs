@@ -204,7 +204,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 this.Context.Content.Textures.TutorialFrame,
                 posX,
                 posY - 15,
-                Color.Black,
+                Color.White,
                 new Vector2(width, height)
                 );
             this.Context.SpriteBatch.End();

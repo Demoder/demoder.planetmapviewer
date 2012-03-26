@@ -68,7 +68,7 @@ namespace Demoder.PlanetMapViewer.Forms
             {
                 InitializeComponent();
                 this.splitContainer1.FixedPanel = FixedPanel.Panel2;
-                this.splitContainer1.SplitterDistance = 506;
+                this.splitContainer1.SplitterDistance = 605;
                 this.Context = this.tileDisplay1.Context;
             }
             catch (Exception ex)
@@ -426,6 +426,7 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             lock (this.Context.Camera)
             {
+
                 this.Context.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
 
                 this.Context.MapManager.CurrentLayer.Draw(this.Context);
