@@ -269,7 +269,11 @@ namespace Demoder.PlanetMapViewer.Forms
 
             // Make sure FPS is valid.
             var fps = generalSettings.FramesPerSecond;
-            if (fps > 30)
+#if DEBUG
+            if (fps > 999)
+#else
+            if (fps>30)
+#endif
             {
                 generalSettings.FramesPerSecond = 30;
                 generalSettings.Save();

@@ -206,8 +206,8 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Shadow = false,
                 Font = this.Context.Content.Fonts.GuiNormal,
                 Text = "You may exit overlay mode by pressing the close window\r\n"+
-                        "button at top right, or by opening the Overlay Menu and\r\n"+
-                        "selecting 'Exit Overlay Mode'.\r\n"+
+                        "button at top right, by opening the Overlay Menu and\r\n"+
+                        "selecting 'Exit Overlay Mode', or pressing [F12]\r\n" +
                         "\r\n"+
                         "Please exit overlay mode now."
             });

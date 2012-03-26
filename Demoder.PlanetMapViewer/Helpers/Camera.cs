@@ -164,7 +164,7 @@ namespace Demoder.PlanetMapViewer.Helpers
             this.Context.UiElements.HScrollBar.Minimum = -horModifier;
 
             this.Context.UiElements.HScrollBar.LargeChange = this.Context.UiElements.TileDisplay.Width;
-            this.Context.UiElements.HScrollBar.SmallChange = 8;
+            this.Context.UiElements.HScrollBar.SmallChange = this.Context.UiElements.TileDisplay.Width / 10;
             this.Context.UiElements.HScrollBar.Invalidate();
             #endregion
 
@@ -174,7 +174,7 @@ namespace Demoder.PlanetMapViewer.Helpers
             this.Context.UiElements.VScrollBar.Minimum = -verModifier;
 
             this.Context.UiElements.VScrollBar.LargeChange = this.Context.UiElements.TileDisplay.Height;
-            this.Context.UiElements.VScrollBar.SmallChange = 8;
+            this.Context.UiElements.VScrollBar.SmallChange = this.Context.UiElements.TileDisplay.Height / 10;
             this.Context.UiElements.VScrollBar.Invalidate();
             #endregion
 
