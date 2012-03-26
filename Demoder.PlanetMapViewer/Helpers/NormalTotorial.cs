@@ -178,7 +178,7 @@ namespace Demoder.PlanetMapViewer.Helpers
             int currentHeight = this.Context.UiElements.TileDisplay.Height / 3;
             int center = this.Context.UiElements.TileDisplay.Width / 2;
 
-            this.Context.FrameDrawer.DrawTutorialStamp(center, currentHeight, 400, 210);
+            this.Context.FrameDrawer.DrawTutorialStamp(center, currentHeight, 425, 210);
 
             #region Header
             texts.Add(new StringDefinition

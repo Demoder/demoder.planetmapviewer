@@ -61,7 +61,7 @@ namespace Demoder.PlanetMapViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("600, 480")]
+        [global::System.Configuration.DefaultSettingValueAttribute("800, 640")]
         public global::System.Drawing.Point WindowSize {
             get {
                 return ((global::System.Drawing.Point)(this["WindowSize"]));

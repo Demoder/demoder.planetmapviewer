@@ -12,7 +12,7 @@
       <Value Profile="(Default)">0, 0</Value>
     </Setting>
     <Setting Name="WindowSize" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">600, 480</Value>
+      <Value Profile="(Default)">800, 640</Value>
     </Setting>
     <Setting Name="OverlaymodeShowScrollbars" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
