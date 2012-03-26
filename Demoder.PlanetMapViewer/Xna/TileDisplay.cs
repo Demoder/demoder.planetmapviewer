@@ -45,10 +45,6 @@ namespace Demoder.PlanetMapViewer.Xna
         /// </summary>
         public static int FrameFrequency = 33;
         /// <summary>
-        /// Invalidates control so that the frame is forced to redraw.
-        /// </summary>
-        private System.Threading.Timer frameDrawTimer;
-        /// <summary>
         /// Used to limit FPS of the tileDisplay.
         /// </summary>
         private Stopwatch timeSinceLastDraw = Stopwatch.StartNew();
@@ -98,10 +94,11 @@ namespace Demoder.PlanetMapViewer.Xna
 
         private void InvalidateFrame(object state)
         {
+            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
             do
             {
                 var sw = Stopwatch.StartNew();
-                this.Invalidate();
+                this.Invoke((Action)delegate() { this.Invalidate(); });
 
                 var toSleep = (int)((1000 / TileDisplay.FrameFrequency) - sw.ElapsedMilliseconds);
                 if (toSleep > 0)
