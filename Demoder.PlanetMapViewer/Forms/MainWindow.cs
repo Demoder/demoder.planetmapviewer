@@ -59,6 +59,8 @@ namespace Demoder.PlanetMapViewer.Forms
         private thrd.Timer topMostTimer;
         #endregion
 
+        private string screenShotFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Demoders PlanetMap Viewer");
+
         #endregion
 
         #region Form setup
@@ -543,13 +545,19 @@ namespace Demoder.PlanetMapViewer.Forms
             gfxScreenshot.Dispose();
 
             int num = 0;
+            
             var nameFormat = "Screenshot_{0}.png";
-            while (File.Exists(String.Format(nameFormat, num)))
+            if (!Directory.Exists(this.screenShotFolder))
+            {
+                Directory.CreateDirectory(this.screenShotFolder);
+            }
+
+            while (File.Exists(Path.Combine(this.screenShotFolder,String.Format(nameFormat, num))))
             {
                 num++;
             }
 
-            bmpScreenshot.Save(String.Format(nameFormat, num), ImageFormat.Png);
+            bmpScreenshot.Save(Path.Combine(this.screenShotFolder, String.Format(nameFormat, num)), ImageFormat.Png);
         }
         #endregion
 
