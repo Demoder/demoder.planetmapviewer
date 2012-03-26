@@ -212,7 +212,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                         "\r\n" +
                         "You may enter Overlay Mode by going to\r\n"+
                         "the top menu and clicking view->Overlay Mode,\r\n" +
-                        "or by pressing [F12]\r\n" +
+                        "or by pressing [F12].\r\n" +
                         "\r\n" + 
                         "Please enter overlay mode now."
             });

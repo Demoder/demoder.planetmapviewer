@@ -49,7 +49,7 @@ namespace Demoder.PlanetMapViewer.Xna
         /// </summary>
         private Stopwatch timeSinceLastDraw = Stopwatch.StartNew();
 
-        private float mouseScrollSensitivity = 5;
+        private float mouseScrollSensitivity = 1;
 
         /// <summary>
         /// Determines wether or not the user is panning the map
@@ -62,7 +62,6 @@ namespace Demoder.PlanetMapViewer.Xna
         internal Context Context = new Context();
 
         private object drawLocker = new Object();
-
 
         #region Constructor / Initialization
         protected override void Initialize()

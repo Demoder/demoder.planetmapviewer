@@ -2,7 +2,7 @@
 
 Requirements
 	Operating system:		Microsoft Windows 7, Vista or XP.
-	User level: 			Standard user (Administrator required for character tracking)
+	User level: 			Administrator (due to character position tracking)
 	
 	Software components
 		.NET Framework 2.0, 3.0, or 3.5
@@ -50,7 +50,7 @@ Credits
 		Thanks to Vhab for creating the icon, and to Onack for giving permission to use AoRK for icon generation.
 
 	Testing:
-		Thanks to Iriche, Vhab, Phooy, Jandorith, Nesual and Onack for extensive testing.
+		Thanks to Iriche, Jandorith, Nesual, Onack, Phooy and Vhab for extensive testing.
 
 	[Insert credits here]
 	

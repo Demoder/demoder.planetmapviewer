@@ -54,6 +54,10 @@ namespace Demoder.PlanetMapViewer.Forms
             this.overlayModeShowExitButton.Checked = this.windowSettings.OverlaymodeShowControlbox;
             this.overlayModeWorkaroundTopmost.Checked = this.windowSettings.OverlaymodeTopmostWorkaround;
             this.disableTutorials.Checked = this.generalSettings.DisableTutorials;
+
+#if DEBUG
+            this.FPS.Maximum = 999;
+#endif
         }
 
         private void button1_Click(object sender, EventArgs e)
