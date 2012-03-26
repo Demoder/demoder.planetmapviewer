@@ -201,6 +201,7 @@ namespace Demoder.PlanetMapViewer.Xna
                 newPos -= this.Context.UiElements.HScrollBar.SmallChange * SystemInformation.MouseWheelScrollLines;
             }
             this.Context.Camera.CenterOnPixel(newPos, this.Context.Camera.Center.Y);
+            this.ReportMousePosition();
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
@@ -222,6 +223,7 @@ namespace Demoder.PlanetMapViewer.Xna
                 this.Context.Camera.CenterOnPixel(this.Context.Camera.Center.X, newPos);
             }
 
+            this.ReportMousePosition();
             base.OnMouseWheel(e);
         }
         #endregion
@@ -278,10 +280,7 @@ namespace Demoder.PlanetMapViewer.Xna
                 this.mousePosition.Y = e.Y;
             }
             var matrix = this.Context.Camera.TransformMatrix;
-            this.Context.UiElements.ParentForm.ToolStripStatusLabel1.Text = String.Format(
-                "Mouse: {0}x{1}",
-                e.X - matrix.Translation.X,
-                e.Y - matrix.Translation.Y);
+            this.ReportMousePosition();
 
             var mouseState = Mouse.GetState();
             if (!this.isPanningMap) { return; }
@@ -311,6 +310,16 @@ namespace Demoder.PlanetMapViewer.Xna
                 (int)(camPos.Y - deltaY));
 
             base.OnMouseMove(e);
+        }
+
+        private void ReportMousePosition()
+        {
+            var matrix = this.Context.Camera.TransformMatrix;
+            var mouseState = Mouse.GetState();
+            this.Context.UiElements.ParentForm.ToolStripStatusLabel1.Text = String.Format(
+                "Mouse: {0}x{1}",
+                mouseState.X - matrix.Translation.X,
+                mouseState.Y - matrix.Translation.Y);
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -345,6 +354,7 @@ namespace Demoder.PlanetMapViewer.Xna
             if (this.Context.Camera == null) { return; }
             //this.Invalidate();            
             this.Context.Camera.AdjustScrollbarsToLayer();
+            this.ReportMousePosition();
             base.OnResize(e);
         }
 
@@ -395,6 +405,7 @@ namespace Demoder.PlanetMapViewer.Xna
 
         private void PanMap(KeyEventArgs e)
         {
+            if (e.Control || e.Alt) { return; }
             if (this.Context == null) { return; }
             if (this.Context.Camera == null) { return; }
             var x = 0;
@@ -425,6 +436,7 @@ namespace Demoder.PlanetMapViewer.Xna
                 this.Context.Camera.CenterOnPixel(
                     this.Context.Camera.Center.X + this.Context.UiElements.HScrollBar.SmallChange * x,
                     this.Context.Camera.Center.Y + this.Context.UiElements.VScrollBar.SmallChange * y);
+                this.ReportMousePosition();
                 return;
             }
 
@@ -439,6 +451,7 @@ namespace Demoder.PlanetMapViewer.Xna
             this.TutorialZoomIn();
             if (this.Context.MapManager == null) { return; }
             this.Context.MapManager.ZoomIn();
+            this.ReportMousePosition();
         }
 
         public void ZoomOut()
@@ -447,6 +460,7 @@ namespace Demoder.PlanetMapViewer.Xna
             this.TutorialZoomOut();
             if (this.Context.MapManager == null) { return; }
             this.Context.MapManager.ZoomOut();
+            this.ReportMousePosition();
         }
 
         private void TutorialZoomIn()

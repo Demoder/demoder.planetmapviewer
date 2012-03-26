@@ -611,6 +611,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
             this.Context.MapManager.SelectMap(mapInfo.MapPath);
             this.Context.Camera.AdjustScrollbarsToLayer();
+            this.tileDisplay1.Focus();
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -643,21 +644,25 @@ namespace Demoder.PlanetMapViewer.Forms
             {
                 this.Context.MapManager.SelectShadowlandsMap();
             }
+            this.tileDisplay1.Focus();
         }
 
         private void ButtonZoomIn_Click(object sender, EventArgs e)
         {
             this.tileDisplay1.ZoomIn();
+            this.tileDisplay1.Focus();
         }
 
         private void ButtonZoomOut_Click(object sender, EventArgs e)
         {
             this.tileDisplay1.ZoomOut();
+            this.tileDisplay1.Focus();
         }
 
         private void RadioButtonCameraControlCheckChanged(object sender, EventArgs e)
         {
             this.ToggleCameraControl();
+            this.tileDisplay1.Focus();
         }
 
         private void ToggleCameraControl()
@@ -800,22 +805,22 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void followCharactersToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.RadioButtonCameraFollowCharacters.PerformClick();
+            this.RadioButtonCameraFollowCharacters.Select();
         }
 
         private void manualToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.RadioButtonCameraManual.PerformClick();
+            this.RadioButtonCameraManual.Select();
         }
 
         private void rubikaToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.RadioButtonMapSelectionRubika.PerformClick();
+            this.RadioButtonMapSelectionRubika.Select();
         }
 
         private void shadowlandsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.RadioButtonMapSelectionShadowlands.PerformClick();
+            this.RadioButtonMapSelectionShadowlands.Select();
         }
 
 
@@ -959,6 +964,21 @@ namespace Demoder.PlanetMapViewer.Forms
                 Properties.OverlayTutorial.Default.ResizeWindow = true;
                 Properties.OverlayTutorial.Default.Save();
             }
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void followCharacter_Click(object sender, EventArgs e)
+        {
+            this.tileDisplay1.Focus();
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.SaveScreenShot();
         }
     }
 
