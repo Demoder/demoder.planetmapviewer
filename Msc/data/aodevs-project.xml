@@ -5,17 +5,18 @@
   </Tagline>
   <Description>
     Demoders PlanetMap Viewer lets you explore planet maps for Anarchy Online without logging in. If you are logged in to the game, it will plot your character(s) on the planet map.[br]
-    The long-term goal is to be a full substitute to the ingame planetmap viewer.[br]
+    The long-term goal is to be a full substitute to the ingame planetmap viewer.[br][br]
     [b]Features[/b][br]
     - Plot character marker on planet map for all locally running AO clients[br]
-    - Smart camera tracking of multiple (selectable) characters[br]
-    - [b]Overlay mode[/b] (F12)[br]
+    - Smart camera tracking of multiple (selectable) characters[br][br]
+    [b]Overlay mode[/b] (F12)[br]
     [ulist]
     [*]Window will remain on top of other windows, such as Anarchy Online
     [*]Minimal footprint on screen real estate
     [*]An extensive menu becomes available upon right-click of the title bar
     [/ulist]
-    - [b]Fullscreen mode[/b] (F11)[br]
+	[br]
+    {b]Fullscreen mode[/b] (F11)[br]
     [ulist]
     [*]Optimal for running on a dedicated display
     [*]Window is maximized
@@ -34,14 +35,14 @@
       Created by Demoder (demoder@demoder.me)[br]
       See http://demoder.me/pmv/ for more information.[br]
       [br]
-      Map plotting algorithm:[br]
+      [b]Map plotting algorithm[/b][br]
       Thanks to Vhab for turning a huge amount of data points into a formula which is useable to do accurate plotting on the map.[br]
       Also thanks to Niniko for providing documentation on some of the concepts involved in this process.[br]
       [br]
-      Icon:[br]
+      [b]Icon[/b][br]
       Thanks to Vhab for creating the icon, and to Onack for giving permission to use AoRK for icon generation.[br]
       [br]
-      Testing:[br]
+      [b]Testing[/b][br]
       Thanks to Iriche, Jandorith, Nesual, Onack, Phooy and Vhab for extensive testing.[br]
     </Page>
     <!--<Page Label ="Changelog">
