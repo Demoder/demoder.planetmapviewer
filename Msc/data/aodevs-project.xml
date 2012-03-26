@@ -1,10 +1,10 @@
 ﻿<Root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Project" Version="1" xsi:noNamespaceSchemaLocation="http://aodevs.com/xsd/Project.v1.xsd">
-  <Name>Demoders PlanetMap Viewer</Name>
+  <Name>Demoder's PlanetMap Viewer</Name>
   <Tagline>
     See ingame maps outside the game - With character tracking!
   </Tagline>
   <Description>
-    Demoders PlanetMap Viewer lets you explore planet maps for Anarchy Online without logging in. If you are logged in to the game, it will plot your character(s) on the planet map.[br]
+    Demoder's PlanetMap Viewer lets you explore planet maps for Anarchy Online without logging in. If you are logged in to the game, it will plot your character(s) on the planet map.[br]
     The long-term goal is to be a full substitute to the ingame planetmap viewer.[br][br]
     [b]Features[/b][br]
     - Plot character marker on planet map for all locally running AO clients[br]
