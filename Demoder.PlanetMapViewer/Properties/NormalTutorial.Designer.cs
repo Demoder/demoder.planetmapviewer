@@ -13,11 +13,11 @@ namespace Demoder.PlanetMapViewer.Properties {
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "10.0.0.0")]
-    internal sealed partial class OverlayTutorial : global::System.Configuration.ApplicationSettingsBase {
+    internal sealed partial class NormalTutorial : global::System.Configuration.ApplicationSettingsBase {
         
-        private static OverlayTutorial defaultInstance = ((OverlayTutorial)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new OverlayTutorial())));
+        private static NormalTutorial defaultInstance = ((NormalTutorial)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new NormalTutorial())));
         
-        public static OverlayTutorial Default {
+        public static NormalTutorial Default {
             get {
                 return defaultInstance;
             }
@@ -26,36 +26,36 @@ namespace Demoder.PlanetMapViewer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool TitlebarMenu {
+        public bool ZoomIn {
             get {
-                return ((bool)(this["TitlebarMenu"]));
+                return ((bool)(this["ZoomIn"]));
             }
             set {
-                this["TitlebarMenu"] = value;
+                this["ZoomIn"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ResizeWindow {
+        public bool ZoomOut {
             get {
-                return ((bool)(this["ResizeWindow"]));
+                return ((bool)(this["ZoomOut"]));
             }
             set {
-                this["ResizeWindow"] = value;
+                this["ZoomOut"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ExitOverlayMode {
+        public bool OverlayMode {
             get {
-                return ((bool)(this["ExitOverlayMode"]));
+                return ((bool)(this["OverlayMode"]));
             }
             set {
-                this["ExitOverlayMode"] = value;
+                this["OverlayMode"] = value;
             }
         }
     }

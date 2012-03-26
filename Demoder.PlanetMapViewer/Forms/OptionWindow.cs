@@ -53,6 +53,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.overlayModeShowScrollbars.Checked = this.windowSettings.OverlaymodeShowScrollbars;
             this.overlayModeShowExitButton.Checked = this.windowSettings.OverlaymodeShowControlbox;
             this.overlayModeWorkaroundTopmost.Checked = this.windowSettings.OverlaymodeTopmostWorkaround;
+            this.disableTutorials.Checked = this.generalSettings.DisableTutorials;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -95,6 +96,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // Save settings
             this.mapSettings.AoPath = this.AoPath.Text;
 
+            this.generalSettings.DisableTutorials = this.disableTutorials.Checked;
             this.generalSettings.FramesPerSecond = (int)this.FPS.Value;
             TileDisplay.FrameFrequency = this.generalSettings.FramesPerSecond;
 

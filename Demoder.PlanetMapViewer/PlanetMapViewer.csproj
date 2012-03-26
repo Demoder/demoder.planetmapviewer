@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataClasses\StringDefinition.cs" />
+    <Compile Include="enums.cs" />
     <Compile Include="Forms\AboutBox1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,8 +111,15 @@
     <Compile Include="Helpers\Camera.cs" />
     <Compile Include="DataClasses\Context.cs" />
     <Compile Include="DataClasses\AoInfo.cs" />
+    <Compile Include="Helpers\NormalTotorial.cs" />
     <Compile Include="Helpers\FrameDrawer.cs" />
+    <Compile Include="Helpers\OverlayTutorial.cs" />
     <Compile Include="Helpers\Tutorial.cs" />
+    <Compile Include="Properties\NormalTutorial.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>NormalTutorial.settings</DependentUpon>
+    </Compile>
     <Compile Include="Properties\OverlayTutorial.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -179,6 +187,10 @@
     <None Include="app.config" />
     <None Include="app.manifest">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\NormalTutorial.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>NormalTutorial.Designer.cs</LastGenOutput>
     </None>
     <None Include="Properties\OverlayTutorial.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

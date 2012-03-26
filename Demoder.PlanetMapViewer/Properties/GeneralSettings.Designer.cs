@@ -46,5 +46,17 @@ namespace Demoder.PlanetMapViewer.Properties {
                 this["SettingVersion"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DisableTutorials {
+            get {
+                return ((bool)(this["DisableTutorials"]));
+            }
+            set {
+                this["DisableTutorials"] = value;
+            }
+        }
     }
 }

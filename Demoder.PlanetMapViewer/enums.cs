@@ -21,24 +21,26 @@
 * THE SOFTWARE.
 */
 
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Demoder.PlanetMapViewer.DataClasses;
 
-namespace Demoder.PlanetMapViewer.Helpers
+namespace Demoder.PlanetMapViewer
 {
-    public class Tutorial
+    public enum OverlayTutorialStage
     {
-        public Tutorial(Context context)
-        {
-            this.Overlay = new OverlayTutorial(context);
-            this.Normal = new NormalTutorial(context);
-        }
+        Completed,
+        TitlebarMenu,
+        ResizeWindow,
+        ExitOverlayMode
+    }
 
-        public OverlayTutorial Overlay;
-        public NormalTutorial Normal;
+    public enum NormalTutorialStage
+    {
+        Completed,
+        ZoomIn,
+        ZoomOut,
+        OverlayMode
     }
 }
