@@ -16,7 +16,7 @@
     [*]An extensive menu becomes available upon right-click of the title bar
     [/ulist]
 	[br]
-    {b]Fullscreen mode[/b] (F11)[br]
+    [b]Fullscreen mode[/b] (F11)[br]
     [ulist]
     [*]Optimal for running on a dedicated display
     [*]Window is maximized
@@ -29,7 +29,8 @@
   </Games>
   <Pages>
     <Page Label="Known Issues">
-      [b]Overlay mode fails to stay on top of Anarchy Online[/b]: There's a workaround available. Open the options dialog (File->Options) and enable the "Force on top (bugfix)" checkbox.[br]
+      [b]Overlay mode fails to stay on top of Anarchy Online[/b][br]
+	  There's a workaround available. Open the options dialog (File->Options) and enable the "Force on top (bugfix)" checkbox.[br]
     </Page>
     <Page Label="Credits">
       Created by Demoder (demoder@demoder.me)[br]
