@@ -317,7 +317,6 @@ namespace Demoder.PlanetMapViewer.Forms
             {
                 this.UpdateCharacterListDoWork();
             }
-
         }
 
         private void UpdateCharacterListDoWork()
