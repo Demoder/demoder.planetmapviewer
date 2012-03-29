@@ -33,7 +33,7 @@
 	  There's a workaround available. Open the options dialog (File->Options) and enable the "Force on top (bugfix)" checkbox.[br]
     </Page>
     <Page Label="Credits">
-      Created by Demoder (demoder@demoder.me)[br]
+      Created by Demoder (demoder -at- demoder.me)[br]
       See http://demoder.me/pmv/ for more information.[br]
       [br]
       [b]Map plotting algorithm[/b][br]
@@ -55,7 +55,8 @@
   </Staff>
   <Links>
     <Link Label="Website" Url="http://demoder.me/pmv/" />
-    <Link Label="Bitbucket" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer"/>
+	<Ling Label="Bugtracker" Url="http://redmine.demoder.me/projects/pmv/issues" />
+    <Link Label="Source &amp; Downloads" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer" />
   </Links>
   <Versions>
     <LocalVersion Type="Stable" Value="1.0.1" Package="1.0.1"/>
