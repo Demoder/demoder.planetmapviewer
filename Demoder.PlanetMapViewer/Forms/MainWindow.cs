@@ -217,7 +217,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void bgwVersionCheck_DoWork(object sender, DoWorkEventArgs e)
         {
-            var res = VersionInfo.GetInfo("PlanetMapViewer", new Version(Application.ProductVersion));
+            var res = VersionInfo.GetInfo("PlanetMapViewer");
             e.Result = res;
         }
         #endregion
