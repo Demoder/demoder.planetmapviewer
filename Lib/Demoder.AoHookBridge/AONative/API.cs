@@ -68,6 +68,14 @@ namespace Demoder.AoHookBridge.AONative
                   IntPtr interfacePtr,
                   [In, MarshalAs(UnmanagedType.LPStruct)]  Identity id1,
                   [In, MarshalAs(UnmanagedType.LPStruct)]  Identity id2);
+
+
+                // public: int __thiscall N3InterfaceModule_t::N3Msg_GetSkill(enum GameData::Stat_e,int)const 
+                [DllImport("Interfaces.dll", EntryPoint = "?N3Msg_GetSkill@N3InterfaceModule_t@@QBEHW4Stat_e@GameData@@H@Z", CallingConvention = CallingConvention.ThisCall)]
+                public static extern int GetSkill(
+                    IntPtr interfacePtr,
+                    int skill,
+                    int unknown);
             }
 
             public static class Client_t

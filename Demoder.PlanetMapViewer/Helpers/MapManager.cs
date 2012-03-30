@@ -71,30 +71,17 @@ namespace Demoder.PlanetMapViewer.Helpers
         public void Initialize()
         {
             // Locate maps
-            this.FindAvailableMaps(this.Context.Options.IsMapRubika);
+            this.FindAvailableMaps(this.Context.State.MapType);
 
-            // RK maps?
-            if (this.Context.Options.IsMapRubika)
-            {
-                if (this.SelectRubikaMap()) { return; }
-                // Couldn't find selected map. try finding substitute.
-                if (this.AvailablePlanetMaps.Count == 0)
-                {
-                    this.ShowMapNotFoundException("Rubi-ka");
-                    return;
-                }
-                this.SelectMap(this.AvailablePlanetMaps.First().Key);
-                return;
-            }
-            // Other maps
-            if (this.SelectShadowlandsMap()) { return; }
+            if (this.SelectMap(this.Context.State.MapType)) { return; }
             // Couldn't find selected map. try finding substitute.
             if (this.AvailablePlanetMaps.Count == 0)
             {
-                this.ShowMapNotFoundException("Shadowlands");
+                this.ShowMapNotFoundException(this.Context.State.MapType.ToString());
                 return;
             }
             this.SelectMap(this.AvailablePlanetMaps.First().Key);
+            return;
         }
 
         /// <summary>
@@ -114,26 +101,30 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         #region Management
 
-        public bool SelectRubikaMap()
+        public bool SelectMap(MapType mapType)
         {
-            var ret= this.SelectMap(this.settings.SelectedRubikaMap);
-            if (!ret && this.CurrentMap == null)
-            {
-                ret = this.SelectMap(@"normal\PlanetMapIndexNormal.txt");
-            }
-            return ret;
-        }
+            string map;
+            string defaultMap;
 
-        public bool SelectShadowlandsMap()
-        {
-            var ret= this.SelectMap(this.settings.SelectedShadowlandsMap);
-            if (!ret && this.CurrentMap == null)
+            switch (mapType)
             {
-                ret = this.SelectMap(@"Shadowlands\ShadowlandsMap.txt");
+                case MapType.Rubika:
+                    map = this.settings.SelectedRubikaMap;
+                    defaultMap = @"normal\PlanetMapIndexNormal.txt";
+                    break;
+                default:
+                case MapType.Shadowlands:
+                    map = this.settings.SelectedShadowlandsMap;
+                    defaultMap = @"Shadowlands\ShadowlandsMap.txt";
+                    break;
             }
-            return ret;
-        }
 
+            if (this.SelectMap(map))
+            {
+                return true;
+            }
+            return this.SelectMap(defaultMap);
+        }
 
         /// <summary>
         /// Select a map
@@ -154,9 +145,11 @@ namespace Demoder.PlanetMapViewer.Helpers
                     return false;
                 }
 
+                this.SaveCurrentMapZoomLevel();
 
-                this.CurrentMap = this.AvailablePlanetMaps[map];
-                this.CurrentLayerNum = 0;
+                this.CurrentMap = newMap;
+                SetCurrentMapZoomLevel(newMap);
+                
                 if (this.Context.Camera != null)
                 {
                     this.Context.Camera.CenterOnPixel(this.CurrentLayer.Size.X / 2, this.CurrentLayer.Size.Y / 2);
@@ -178,7 +171,37 @@ namespace Demoder.PlanetMapViewer.Helpers
             }
         }
 
-        public void FindAvailableMaps(bool isRubika)
+        private void SetCurrentMapZoomLevel(PlanetMap newMap)
+        {
+            if (newMap.Type == MapType.Rubika)
+            {
+                this.CurrentLayerNum = Math.Min(Properties.MapSettings.Default.SelectedRubikaMapLayer, newMap.Layers.Length - 1);
+            }
+            else
+            {
+                this.CurrentLayerNum = Math.Min(Properties.MapSettings.Default.SelectedShadowlandsMapLayer, newMap.Layers.Length - 1);
+            }
+        }
+
+        private void SaveCurrentMapZoomLevel()
+        {
+            // Save current map layer setting, if suitable.
+            if (this.CurrentMap == null) { return; }
+
+            if (this.CurrentMap.Type == MapType.Rubika)
+            {
+                Properties.MapSettings.Default.SelectedRubikaMapLayer = this.CurrentLayerNum;
+                Properties.MapSettings.Default.Save();
+            }
+
+            if (this.CurrentMap.Type == MapType.Shadowlands)
+            {
+                Properties.MapSettings.Default.SelectedShadowlandsMapLayer = this.CurrentLayerNum;
+                Properties.MapSettings.Default.Save();
+            }
+        }
+
+        public void FindAvailableMaps(MapType mapType)
         {
             lock (this.AvailablePlanetMaps)
             {
@@ -193,11 +216,10 @@ namespace Demoder.PlanetMapViewer.Helpers
                         if (map == null) { continue; }
                         if (String.IsNullOrEmpty(map.Name)) { continue; }
                         if (map.Layers.Length == 0) { continue; }
-                        if (map.Type == MapType.Rubika && !isRubika) { continue; }
-                        if (map.Type == MapType.Shadowlands && isRubika) { continue; }
+                        if (map.Type != mapType) { continue; }
                         var pathName = candidate.Remove(0, this.mapDirectory.Length + 1);
                         this.AvailablePlanetMaps.Add(pathName, map);
-                        this.Context.UiElements.MapList.Items.Add(new MapSelectionItem { MapName = map.Name.Trim('"', ' '), MapPath = pathName });
+                        this.Context.UiElements.MapList.Items.Add(new MapSelectionItem { MapName = map.Name.Trim('"', ' '), MapPath = pathName, Type=map.Type });
                     }
                     catch(Exception ex)
                     {

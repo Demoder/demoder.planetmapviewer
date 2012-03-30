@@ -97,6 +97,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 info.Position = new Vector3(e.X, e.Y, e.Z);
                 info.Zone.ID = e.ZoneID;
                 info.Zone.Name = e.ZoneName;
+                info.Zone.InShadowlands = e.InShadowlands;
                 info.LastModified.Restart();
             }
         }

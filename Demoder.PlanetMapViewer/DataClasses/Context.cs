@@ -39,7 +39,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
         public Context()
         {
             this.UiElements = new ContextUiElements();
-            this.Options = new ContextOptions();
+            this.State = new ContextOptions();
             this.Content = new XnaContent();
             this.FrameDrawer = new FrameDrawer(this);
             this.Tutorial = new Tutorial(this);
@@ -67,7 +67,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
         }
 
         public ContextUiElements UiElements { get; private set; }
-        public ContextOptions Options { get; private set; }
+        public ContextOptions State { get; private set; }
     }
 
     public class ContextUiElements
@@ -81,14 +81,34 @@ namespace Demoder.PlanetMapViewer.DataClasses
 
     public class ContextOptions
     {
-        public bool IsMapRubika = true;
+        /// <summary>
+        /// Which map type is currently selected, if any?
+        /// </summary>
+        public MapType MapType = MapType.Rubika;
+        /// <summary>
+        /// Is autoswitching between map types enabled?
+        /// </summary>
+        public bool MapTypeAutoSwitching = true;
         public CameraControl CameraControl = CameraControl.Character;
-        public bool IsOverlayMode = false;
+        /// <summary>
+        /// Current window mode
+        /// </summary>
+        public WindowMode WindowMode = WindowMode.Normal;
     }
 
     public enum CameraControl
     {
         Manual,
         Character
+    }
+
+    /// <summary>
+    /// Which mode is the application in?
+    /// </summary>
+    public enum WindowMode
+    {
+        Normal,
+        Fullscreen,
+        Overlay
     }
 }

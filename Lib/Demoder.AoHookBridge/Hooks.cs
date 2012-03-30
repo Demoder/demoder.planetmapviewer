@@ -84,12 +84,17 @@ namespace Demoder.AoHookBridge
                                         new Identity(Identity.Character, charID),
                                         pfIdentity,
                                         position);
+                                    
+                                    // Are we in shadowlands?
+                                    bool inShadowlands = AONative.API.Interfaces.N3InterfaceModule.GetSkill(n3interface, (int)CharacterSkill.ExpansionPlayfield, 0) == 1;
+
                                     // Send it across the bridge
                                     myInstance.SendBridgeEvent(new DynelPositionEventArgs(
                                         Identity.Character,
                                         charID,
                                         pfIdentity.ID,
                                         Marshal.PtrToStringAnsi(AONative.API.Interfaces.N3InterfaceModule.GetPFName(n3interface)),
+                                        inShadowlands,
                                         position.X,
                                         position.Y,
                                         position.Z));

@@ -58,5 +58,29 @@ namespace Demoder.PlanetMapViewer.Properties {
                 this["SelectedRubikaMap"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SelectedShadowlandsMapLayer {
+            get {
+                return ((int)(this["SelectedShadowlandsMapLayer"]));
+            }
+            set {
+                this["SelectedShadowlandsMapLayer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SelectedRubikaMapLayer {
+            get {
+                return ((int)(this["SelectedRubikaMapLayer"]));
+            }
+            set {
+                this["SelectedRubikaMapLayer"] = value;
+            }
+        }
     }
 }

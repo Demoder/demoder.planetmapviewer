@@ -187,7 +187,7 @@ namespace Demoder.PlanetMapViewer.Xna
             if (this.Context == null) { return; }
             if (this.Context.Camera == null) { return; }
 
-            if (this.Context.Options.CameraControl != CameraControl.Manual)
+            if (this.Context.State.CameraControl != CameraControl.Manual)
             {
                 this.Context.UiElements.ParentForm.RadioButtonCameraManual.Checked = true;
             }
@@ -466,7 +466,7 @@ namespace Demoder.PlanetMapViewer.Xna
 
         private void TutorialZoomIn()
         {
-            if (this.Context.Options.IsOverlayMode) { return; }
+            if (this.Context.State.WindowMode == WindowMode.Overlay) { return; }
             if (this.Context.Tutorial.Normal.CurrentStage == NormalTutorialStage.ZoomIn)
             {
                 Properties.NormalTutorial.Default.ZoomIn = true;
@@ -476,16 +476,12 @@ namespace Demoder.PlanetMapViewer.Xna
 
         private void TutorialZoomOut()
         {
-            if (this.Context.Options.IsOverlayMode) { return; }
+            if (this.Context.State.WindowMode == WindowMode.Overlay) { return; }
             if (this.Context.Tutorial.Normal.CurrentStage == NormalTutorialStage.ZoomOut)
             {
                 Properties.NormalTutorial.Default.ZoomOut = true;
                 Properties.NormalTutorial.Default.Save();
             }
         }
-
-
-
-        
     }
 }
