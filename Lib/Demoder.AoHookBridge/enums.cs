@@ -35,4 +35,9 @@ namespace Demoder.AoHookBridge
         HookStateChange = 16,
         DynelName = 32,
     }
+
+    public enum CharacterSkill : int
+    {
+        ExpansionPlayfield = 531
+    }
 }

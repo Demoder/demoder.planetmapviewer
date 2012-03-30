@@ -101,6 +101,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
     {
         public uint ID { get; set; }
         public string Name { get; set; }
+        public bool InShadowlands { get; set; }
     }
 
     public class CharacterInfo

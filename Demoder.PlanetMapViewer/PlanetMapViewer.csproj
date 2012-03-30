@@ -253,9 +253,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="aodevs-project.xml">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Building.txt" />
     <Content Include="Icon.ico" />
     <Content Include="License.txt" />

@@ -89,7 +89,8 @@ namespace Demoder.AoHook
             while (true)
             {
                 // Find candidates
-                var candidates = from process in Process.GetProcessesByName("client")
+                var candidates = from process in Process.GetProcesses()
+                                 where process.ProcessName.Equals("client", StringComparison.InvariantCultureIgnoreCase) || process.ProcessName.Equals("AnarchyOnline", StringComparison.InvariantCultureIgnoreCase)
                                  where !this.successfulHooks.ContainsKey(process.Id)    // Exclude already hooked processes
                                  where !this.failedHooks.ContainsKey(process.Id)        // Exclude processes we've failed to hook
                                  select process;
@@ -170,6 +171,7 @@ namespace Demoder.AoHook
                  e.ProcessId,
                  e.ZoneID,
                  e.ZoneName,
+                 e.InShadowlands,
                  e.X,
                  e.Y,
                  e.Z,
