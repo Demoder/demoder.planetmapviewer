@@ -33,4 +33,5 @@ namespace Demoder.AoHook
     public delegate void CharacterPositionEventDelegate(Provider sender, CharacterPositionEventArgs e);
     public delegate void HookStateChangeEventDelegate(Provider sender, HookStateChangeEventArgs e);
     public delegate void DynelNameEventDelegate(Provider sender, DynelNameEventArgs e);
+    public delegate void QuestLocationEventDelegate(Provider sender, QuestLocationEventArgs e);
 }

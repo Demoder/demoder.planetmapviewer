@@ -43,4 +43,30 @@ namespace Demoder.PlanetMapViewer
         ZoomOut,
         OverlayMode
     }
+
+    /// <summary>
+    /// Defines alignment of map item.
+    /// </summary>
+    [Flags]
+    public enum MapItemAlignment
+    {
+        Center = 0,
+        Top = 1,
+        Bottom = 2,
+        Left = 4,
+        Right = 8,
+    }
+
+    public enum MapItemType
+    {
+        Unknown = 0,
+        Texture = 1,
+        SpriteFont = 2
+    }
+
+    public enum DrawMode
+    {
+        World,
+        ViewPort
+    }
 }

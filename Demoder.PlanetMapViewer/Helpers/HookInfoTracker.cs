@@ -45,7 +45,22 @@ namespace Demoder.PlanetMapViewer.Helpers
             this.aoHookProvider.CharacterPositionEvent += HandleCharacterPositionEvent;
             this.aoHookProvider.HookStateChangeEvent += HandleHookStateChangeEvent;
             this.aoHookProvider.DynelNameEvent += HandleDynelNameEvent;
+            this.aoHookProvider.QuestLocationEvent += HandleQuestLocationEvent;
             this.aoHookProvider.HookAo();
+        }
+
+        void HandleQuestLocationEvent(Provider sender, AoHook.Events.QuestLocationEventArgs e)
+        {
+            lock (this.Processes)
+            {
+                var info = this.Processes[e.ProcessID];
+                var quest = info.Mission;
+                quest.ID = e.QuestID;
+                quest.WorldPosition = new Vector3(e.WorldPosX, e.WorldPosY, e.WorldPosZ);
+                quest.Zone.ID = e.ZoneID;
+                quest.ZonePosition = new Vector3(e.ZonePosX, e.ZonePosY, e.ZonePosZ);
+                info.LastModified.Restart();
+            }
         }
 
         private void HandleDynelNameEvent(Provider sender, Demoder.AoHook.Events.DynelNameEventArgs e)
@@ -94,10 +109,10 @@ namespace Demoder.PlanetMapViewer.Helpers
             lock (this.Processes)
             {
                 var info = this.Processes[e.ProcessID];
-                info.Position = new Vector3(e.X, e.Y, e.Z);
-                info.Zone.ID = e.ZoneID;
-                info.Zone.Name = e.ZoneName;
-                info.Zone.InShadowlands = e.InShadowlands;
+                info.Character.Position = new Vector3(e.X, e.Y, e.Z);
+                info.Character.Zone.ID = e.ZoneID;
+                info.Character.Zone.Name = e.ZoneName;
+                info.Character.InShadowlands = e.InShadowlands;
                 info.LastModified.Restart();
             }
         }

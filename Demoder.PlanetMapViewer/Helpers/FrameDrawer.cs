@@ -34,38 +34,75 @@ namespace Demoder.PlanetMapViewer.Helpers
     public class FrameDrawer
     {
         internal Context Context;
+        public bool IsBatchBegun { get; private set; }
+
         public FrameDrawer(Context context)
         {
             this.Context = context;
+            this.IsBatchBegun = false;
         }
+
+
+        public void Draw(IEnumerable<IMapItem> mapItems, DrawMode drawMode = DrawMode.World)
+        {
+            var bufferedItems = new List<IMapItem>();
+            MapItemType lastType = default(MapItemType);
+
+            foreach (var item in mapItems)
+            {
+                if (item.Type != lastType && bufferedItems.Count != 0)
+                {
+                    this.Draw(bufferedItems, drawMode, lastType);
+                    lastType = item.Type;
+                    bufferedItems.Clear();
+                }
+                bufferedItems.Add(item);
+                lastType = item.Type;
+            }
+            this.Draw(bufferedItems, drawMode, lastType);
+
+        }
+
+        public void Draw(IEnumerable<IMapItem> items, DrawMode drawMode, MapItemType itemType)
+        {
+            if (items.Count() == 0) { return; }
+            switch (itemType)
+            {
+                case MapItemType.Texture:
+                    this.DrawTexture(items, drawMode);
+                    break;
+                case MapItemType.SpriteFont:
+                    this.DrawText(items, drawMode);
+                    break;
+            }
+        }
+
 
         /// <summary>
         /// Draws text onto the tile display. NOTICE: Starts its own SpriteBatch!
         /// </summary>
         /// <param name="texts"></param>
         /// <param name="worldText">If set to true, positions are relative to map area. If set to false, positions are relative to viewport area.</param>
-        public void DrawText(IEnumerable<StringDefinition> texts, bool worldText=false)
+        public void DrawText(IEnumerable<IMapItem> items, DrawMode drawMode = DrawMode.World)
         {
             if (this.Context.SpriteBatch == null) { return; }
             try
             {
                 #region Shadow
-                this.SpriteBatchBegin(worldText);
+                this.SpriteBatchBegin(drawMode);
                 try
                 {
-                    foreach (var sd in texts)
+                    foreach (var item in items)
                     {
+                        if (item.Type != MapItemType.SpriteFont) { continue; }
+                        var sd = item as MapText;
                         if (sd.Font == null) { continue; }
                         if (!sd.Shadow) { continue; }
-                        var textSize = sd.StringMeasure;
-                        var fontPos = new Vector2(
-                                (float)Math.Floor(sd.CenterPosition.X - (textSize.X / 2)),
-                                (float)Math.Floor(sd.CenterPosition.Y + 2)
-                                );
+                        var textSize = sd.Size;
                         this.Context.SpriteBatch.DrawString(
                             sd.Font,
                             sd.Text,
-                            fontPos,
+                            GetRealPosition(item),
                             sd.ShadowColor
                             );
                     }
@@ -77,26 +114,24 @@ namespace Demoder.PlanetMapViewer.Helpers
                 }
                 finally
                 {
-                    this.Context.SpriteBatch.End();
+                    this.SpriteBatchEnd();
                 }
                 #endregion
 
                 #region Normal
-                this.SpriteBatchBegin(worldText);
+                this.SpriteBatchBegin(drawMode);
                 try
                 {
-                    foreach (var sd in texts)
+                    foreach (var item in items)
                     {
+                        if (item.Type != MapItemType.SpriteFont) { continue; }
+                        var sd = item as MapText;
                         if (sd.Font == null) { continue; }
-                        var textSize = sd.StringMeasure;
-                        var fontPos = new Vector2(
-                                (float)Math.Floor(sd.CenterPosition.X - textSize.X / 2) - 1,
-                                (float)Math.Floor(sd.CenterPosition.Y + 1)
-                                );
+                        var textSize = sd.Size;
                         this.Context.SpriteBatch.DrawString(
                             sd.Font,
                             sd.Text,
-                            fontPos,
+                            GetRealPosition(item),
                             sd.TextColor
                             );
                     }
@@ -108,7 +143,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 }
                 finally
                 {
-                    this.Context.SpriteBatch.End();
+                    this.SpriteBatchEnd();
                 }
                 #endregion
             }
@@ -118,96 +153,121 @@ namespace Demoder.PlanetMapViewer.Helpers
             }
         }
 
-        public void TextureCenterOnPixel(Texture2D tex, int x, int y, Microsoft.Xna.Framework.Color color, Vector2 size = default(Vector2))
+        /// <summary>
+        /// Figure out real position of texture, after taking alignment into account
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static Vector2 GetRealPosition(IMapItem item)
         {
-            try
+            Vector2 realPos = item.Position;
+            
+            // Adjust horizontal.
+            if (item.PositionAlignment.HasFlag(MapItemAlignment.Left))
             {
-                if (this.Context.SpriteBatch == null) { return; }
-                int width, height;
-                if (size != default(Vector2))
-                {
-                    width = (int)size.X;
-                    height = (int)size.Y;
-                }
-                else
-                {
-                    width = tex.Width;
-                    height = tex.Height;
-                }
-
-
-                this.Context.SpriteBatch.Draw(tex,
-                        new Microsoft.Xna.Framework.Rectangle(
-                            x - width / 2,
-                            y - height / 2,
-                            width,
-                            height),
-                             color);
+               // don't touch anything
             }
-            catch (Exception ex)
+            else if (item.PositionAlignment.HasFlag(MapItemAlignment.Right))
             {
-                this.Context.ErrorLog.Enqueue(ex.ToString());
+                // Shift position one texture size to the left,
+                // so that the position is located at the right
+                // side of the texture.
+                realPos.X -= item.Size.X;
             }
+            else
+            {
+                // Horizontal position should be centered.
+                realPos.X -= item.Size.X / 2;
+            }
+
+            // Adjust vertical
+            if (item.PositionAlignment.HasFlag(MapItemAlignment.Top))
+            {
+                // Don't do anything
+            }
+            else if (item.PositionAlignment.HasFlag(MapItemAlignment.Bottom))
+            {
+                // Shift position one texture size upwards,
+                // so that the position is located at the
+                // bottom of the texture.
+                realPos.Y -= item.Size.Y;
+            }
+            else
+            {
+                // Vertical position should be centered.
+                realPos.Y -= item.Size.Y / 2;
+            }
+            return new Vector2((int)Math.Round(realPos.X), (int)Math.Round(realPos.Y));
         }
 
-        public void TextureTopMiddleOnPixel(Texture2D tex, int x, int y, Microsoft.Xna.Framework.Color color, Vector2 size = default(Vector2))
+        public void DrawTexture(IEnumerable<IMapItem> items, DrawMode drawMode)
         {
             try
             {
-                if (this.Context.SpriteBatch == null) { return; }
-                int width, height;
-                if (size != default(Vector2))
-                {
-                    width = (int)size.X;
-                    height = (int)size.Y;
-                }
-                else
-                {
-                    width = tex.Width;
-                    height = tex.Height;
-                }
+                this.SpriteBatchBegin(drawMode);
 
-                this.Context.SpriteBatch.Draw(tex,
-                        new Microsoft.Xna.Framework.Rectangle(
-                            x - width / 2,
-                            y,
-                            width,
-                            height),
-                             color);
+                foreach (var item in items)
+                {
+                    if (item.Type != MapItemType.Texture) { continue; }
+                    var realPos = GetRealPosition(item);
+                    var tex = item as MapTexture;
+                    this.Context.SpriteBatch.Draw(
+                        tex.Texture,
+                        new Microsoft.Xna.Framework.Rectangle((int)realPos.X, (int)realPos.Y, (int)tex.Size.X, (int)tex.Size.Y),
+                        tex.Color);
+                }
             }
             catch (Exception ex)
             {
                 this.Context.ErrorLog.Enqueue(ex.ToString());
+            }
+            finally
+            {
+                this.SpriteBatchEnd();
             }
         }
 
         #region Spritebatch shortcuts
-        public void SpriteBatchBegin(bool matrixEnabled=true)
+        public bool SpriteBatchBegin(DrawMode mode = DrawMode.World)
         {
-            if (!matrixEnabled)
+            if (this.Context.SpriteBatch == null) { return false; }
+            this.SpriteBatchEnd();
+
+            if (mode == DrawMode.ViewPort)
             {
                 this.Context.SpriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend);
-                return;
+                this.IsBatchBegun = true;
+                return true;
             }
             this.Context.SpriteBatch.Begin(
                 SpriteSortMode.Texture,
                 BlendState.AlphaBlend,
                 null, null, null, null,
                 this.Context.Camera.TransformMatrix);
+            this.IsBatchBegun = true;
+            return true;
+        }
+
+        public void SpriteBatchEnd()
+        {
+            if (this.IsBatchBegun)
+            {
+                this.Context.SpriteBatch.End();
+                this.IsBatchBegun = false;
+            }
         }
         #endregion
 
-        public void DrawTutorialStamp(int posX, int posY, int width, int height)
+        public MapTexture GetTutorialStamp(int posX, int posY, int width, int height)
         {
-            this.Context.FrameDrawer.SpriteBatchBegin(false);
-            this.Context.FrameDrawer.TextureTopMiddleOnPixel(
-                this.Context.Content.Textures.TutorialFrame,
-                posX,
-                posY - 15,
-                Color.White,
-                new Vector2(width, height)
-                );
-            this.Context.SpriteBatch.End();
+            var tex = new MapTexture
+            {
+                Texture = this.Context.Content.Textures.TutorialFrame,
+                Position = new Vector2(posX, posY - 15),
+                Size = new Vector2(width, height)
+            };
+
+            return tex;
         }
     }
 }

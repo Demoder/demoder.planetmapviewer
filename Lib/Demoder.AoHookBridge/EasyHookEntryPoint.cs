@@ -52,6 +52,7 @@ namespace Demoder.AoHookBridge
 
         #region Hooks
         private LocalHook aoHookFrameProcess;
+        private LocalHook aoHookGetQuestWorldPos;
         #endregion
 
         private Queue<BridgeEventArgs> eventsQueue = new Queue<BridgeEventArgs>();
@@ -95,6 +96,13 @@ namespace Demoder.AoHookBridge
                     this
                     );
                 this.aoHookFrameProcess.ThreadACL.SetExclusiveACL(new int[] { 0 });
+
+                // Retrieve quest/mission locator information when uploaded to map
+                this.aoHookGetQuestWorldPos = LocalHook.Create(LocalHook.GetProcAddress("Interfaces.dll", "?N3Msg_GetQuestWorldPos@N3InterfaceModule_t@@QBE_NABVIdentity_t@@AAV2@AAVVector3_t@@2@Z"),
+                    new API.Interfaces.N3InterfaceModule.GetQuestWorldPosDelegate(Hooks.Interfaces.N3InterfaceModule.GetQuestWorldPos),
+                    this
+                    );
+                this.aoHookGetQuestWorldPos.ThreadACL.SetExclusiveACL(new int[] { 0 });
                 #endregion
             }
             catch (Exception ex)
@@ -148,6 +156,11 @@ namespace Demoder.AoHookBridge
                 {
                     this.aoHookFrameProcess.Dispose();
                 }
+                if (this.aoHookGetQuestWorldPos != null)
+                {
+                    this.aoHookGetQuestWorldPos.Dispose();
+                }
+
             }
             catch { }
 

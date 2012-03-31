@@ -76,6 +76,26 @@ namespace Demoder.AoHookBridge.AONative
                     IntPtr interfacePtr,
                     int skill,
                     int unknown);
+
+                // public: bool __thiscall N3InterfaceModule_t::N3Msg_GetQuestWorldPos(class Identity_t const &,class Identity_t &,class Vector3_t &,class Vector3_t &)const 
+                [DllImport("Interfaces.dll", EntryPoint = "?N3Msg_GetQuestWorldPos@N3InterfaceModule_t@@QBE_NABVIdentity_t@@AAV2@AAVVector3_t@@2@Z", CallingConvention = CallingConvention.ThisCall)]
+                public static extern bool GetQuestWorldPos(
+                    IntPtr interfacePtr,
+                    [In] Identity questIdentity,
+                    [Out]Identity zoneIdentity,
+                    [Out]Vector3 worldCoord,
+                    [Out]Vector3 zoneCoord
+                    );
+
+                #region Delegates
+                [UnmanagedFunctionPointer(CallingConvention.ThisCall, CharSet = CharSet.Unicode, SetLastError = true)]
+                public delegate bool GetQuestWorldPosDelegate(
+                    IntPtr interfacePtr,
+                    [In, MarshalAs(UnmanagedType.LPStruct)]Identity questIdentity,
+                    [Out] Identity zoneIdentity,
+                    [Out] Vector3 worldCoord,
+                    [Out] Vector3 zoneCoord);
+                #endregion
             }
 
             public static class Client_t
