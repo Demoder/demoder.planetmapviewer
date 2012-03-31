@@ -33,6 +33,7 @@ namespace Demoder.AoHook
         DebugEvent,
         CharacterPosition,
         HookStateChange,
-        DynelName
+        DynelName,
+        QuestLocation
     }
 }

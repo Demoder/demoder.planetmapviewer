@@ -408,7 +408,7 @@ namespace Demoder.PlanetMapViewer.Forms
                             var info = item as AoInfo;
 
                             // Track rk/sl characters
-                            if (info.Zone.InShadowlands)
+                            if (info.Character.InShadowlands)
                             {
                                 shadowlandsCharacters++;
                             }
@@ -417,9 +417,9 @@ namespace Demoder.PlanetMapViewer.Forms
                                 rubikaCharacters++;
                             }
 
-                            if (info.Zone.InShadowlands && this.Context.MapManager.CurrentMap.Type != MapType.Shadowlands) { continue; }
-                            
-                            var charPos = this.Context.MapManager.GetPosition(info.Zone.ID, info.Position.X, info.Position.Z);
+                            if (info.Character.InShadowlands && this.Context.MapManager.CurrentMap.Type != MapType.Shadowlands) { continue; }
+
+                            var charPos = this.Context.MapManager.GetPosition(info.Character.Zone.ID, info.Character.Position.X, info.Character.Position.Z);
                             if (charPos == Vector2.Zero) { continue; }
                             vectors.Add(charPos);
                         }
@@ -464,18 +464,10 @@ namespace Demoder.PlanetMapViewer.Forms
 
                 #region Draw character locators
                 // Retrieve all information related to character locators
-                var locators = this.GetCharacterLocators();
-
-                // Render the text
-                var strings = new List<StringDefinition>();
-                foreach (var loc in locators)
-                {
-                    strings.AddRange(loc.Strings);
-                }
-                this.Context.FrameDrawer.DrawText(strings, true);
-
-                // Render the markers
-                this.RenderCharacterLocators(locators);
+                var mapItems = this.GetCharacterLocators();
+                this.Context.FrameDrawer.Draw(mapItems);
+                mapItems = this.GetMissionLocators();
+                this.Context.FrameDrawer.Draw(mapItems);
                 #endregion
 
                 this.RenderTutorial();                
@@ -502,24 +494,28 @@ namespace Demoder.PlanetMapViewer.Forms
             }
         }
 
-        private CharacterLocatorInformation[] GetCharacterLocators()
+        private IMapItem[] GetCharacterLocators()
         {
-            var chrs = new List<CharacterLocatorInformation>();
+            var mapItems = new List<IMapItem>();
+            var mapTexts = new List<IMapItem>();
             if (this.Context.HookInfo == null || this.Context.HookInfo.Processes == null)
             {
-                return new CharacterLocatorInformation[0];
+                return new MapTexture[0];
             }
 
             lock (this.Context.HookInfo.Processes)
             {
                 foreach (var info in this.Context.HookInfo.Processes.Values)
                 {
-                    if (info == null || info.Zone == null || info.Position == null || info.Character == null || info.Character.Name == null) { continue; }
-                    var charLoc = new CharacterLocatorInformation();
-                    charLoc.CenterPosition = this.Context.MapManager.GetPosition(info.Zone.ID, info.Position.X, info.Position.Z);
-                    charLoc.Strings.Add(new StringDefinition
+                    if (info == null || info.Character == null || info.Character.Zone == null || info.Character.Position == null || info.Character.Name == null) { continue; }
+                    var charLoc = new MapTexture();
+                    charLoc.Texture = this.Context.Content.Textures.CharacterLocator;
+                    charLoc.Position = this.Context.MapManager.GetPosition(info.Character.Zone.ID, info.Character.Position.X, info.Character.Position.Z);
+                    charLoc.PositionAlignment = MapItemAlignment.Center;
+                    
+                    mapTexts.Add(new MapText
                     {
-                        CenterPosition = new Vector2(charLoc.CenterPosition.X, charLoc.CenterPosition.Y + (int)this.Context.Content.Textures.CharacterLocator.Height / 2),
+                        Position = new Vector2(charLoc.Position.X, charLoc.Position.Y + (int)charLoc.Texture.Height / 2 + 5),
                         Text = info.Character.Name,
                         TextColor = Microsoft.Xna.Framework.Color.White,
                         ShadowColor = Microsoft.Xna.Framework.Color.Black,
@@ -527,34 +523,51 @@ namespace Demoder.PlanetMapViewer.Forms
                         Font = this.Context.Content.Fonts.CharacterName
                     });
 
-                    chrs.Add(charLoc);
+                    mapItems.Add(charLoc);
                 }
             }
-            return chrs.ToArray();
+            mapItems.AddRange(mapTexts);
+            return mapItems.ToArray();
         }
 
-        public void RenderCharacterLocators(CharacterLocatorInformation[] characters)
+        private IMapItem[] GetMissionLocators()
         {
-            this.Context.FrameDrawer.SpriteBatchBegin();
-            try
+            var mapItems = new List<IMapItem>();
+            var mapTexts = new List<IMapItem>();
+            if (this.Context.HookInfo == null || this.Context.HookInfo.Processes == null)
             {
-                foreach (var c in characters)
+                return new MapTexture[0];
+            }
+
+            lock (this.Context.HookInfo.Processes)
+            {
+                foreach (var info in this.Context.HookInfo.Processes.Values)
                 {
-                    this.Context.FrameDrawer.TextureCenterOnPixel(
-                        this.Context.Content.Textures.CharacterLocator,
-                        (int)c.CenterPosition.X,
-                        (int)c.CenterPosition.Y,
-                        Microsoft.Xna.Framework.Color.White);
+                    // We need both mission locator info and character name info
+                    if (info == null) { continue; }
+                    if (info.Mission == null || info.Mission.Zone == null || info.Mission.ZonePosition == null || info.Mission.ZonePosition == default(Vector3)) { continue; }
+                    if (info.Character == null || info.Character.Name == null) { continue; }
+
+                    var mapItem = new MapTexture();
+                    mapItem.Texture = this.Context.Content.Textures.MissionLocator;
+                    mapItem.Position = this.Context.MapManager.GetPosition(info.Mission.Zone.ID, info.Mission.ZonePosition.X, info.Mission.ZonePosition.Z);
+                    
+                    mapItem.PositionAlignment = MapItemAlignment.Bottom | MapItemAlignment.Center;
+                    mapTexts.Add(new MapText
+                    {
+                        Position = new Vector2(mapItem.Position.X, mapItem.Position.Y + (int)mapItem.Texture.Height / 2 + 5),
+                        Text = info.Character.Name,
+                        TextColor = Microsoft.Xna.Framework.Color.White,
+                        ShadowColor = Microsoft.Xna.Framework.Color.Black,
+                        Shadow = true,
+                        Font = this.Context.Content.Fonts.CharacterName
+                    });
+
+                    mapItems.Add(mapItem);
                 }
             }
-            catch (Exception ex)
-            {
-                this.Context.ErrorLog.Enqueue(ex.ToString());
-            }
-            finally
-            {
-                this.Context.SpriteBatch.End();
-            }
+            mapItems.AddRange(mapTexts);
+            return mapItems.ToArray();
         }
 
         FormWindowState oldState = FormWindowState.Normal;

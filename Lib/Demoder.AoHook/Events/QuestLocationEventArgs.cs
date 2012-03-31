@@ -1,5 +1,5 @@
 ﻿/*
-* Demoder.AoHookBridge
+* Demoder.AoHook
 * Copyright (C) 2012 Demoder (demoder@demoder.me)
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,34 +24,36 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Runtime.InteropServices;
 
-namespace Demoder.AoHookBridge.AONative
+namespace Demoder.AoHook.Events
 {
-    [StructLayout(LayoutKind.Sequential)]
     [Serializable]
-    public class Vector3
+    public class QuestLocationEventArgs : HookEventArgs
     {
-        public float X; 
-        public float Y; 
-        public float Z;
+        public uint QuestID { get; private set; }
+        public uint ZoneID { get; private set; }
+        
+        public float WorldPosX { get; private set; }
+        public float WorldPosY { get; private set; }
+        public float WorldPosZ { get; private set; }
 
-        public static Vector3 Copy(Vector3 source)
+        public float ZonePosX { get; private set; }
+        public float ZonePosY { get; private set; }
+        public float ZonePosZ { get; private set; }
+        
+        public QuestLocationEventArgs(AoHookBridge.Events.QuestLocationEventArgs e)
+            : base(e.ProcessId, HookEventType.QuestLocation, e.Time)
         {
-            return new Vector3
-            {
-                X = source.X,
-                Y = source.Y,
-                Z = source.Z
-            };
-        }
+            this.QuestID = e.QuestID;
+            this.ZoneID = e.ZoneID;
 
-        public override string ToString()
-        {
-            return String.Format("X: {0} Y: {1} Z: {2}",
-                this.X,
-                this.Y,
-                this.Z);
+            this.WorldPosX = e.WorldPos.X;
+            this.WorldPosY = e.WorldPos.Y;
+            this.WorldPosZ = e.WorldPos.Z;
+
+            this.ZonePosX = e.ZonePos.X;
+            this.ZonePosY = e.ZonePos.Y;
+            this.ZonePosZ = e.ZonePos.Z;
         }
     }
 }

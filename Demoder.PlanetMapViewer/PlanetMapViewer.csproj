@@ -92,7 +92,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataClasses\StringDefinition.cs" />
+    <Compile Include="DataClasses\IMapItem.cs" />
+    <Compile Include="DataClasses\MapText.cs" />
     <Compile Include="enums.cs" />
     <Compile Include="Forms\AboutBox1.cs">
       <SubType>Form</SubType>
@@ -100,7 +101,7 @@
     <Compile Include="Forms\AboutBox1.Designer.cs">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataClasses\CharacterLocatorInformation.cs" />
+    <Compile Include="DataClasses\MapTexture.cs" />
     <Compile Include="Forms\ErrorLog.cs">
       <SubType>Form</SubType>
     </Compile>

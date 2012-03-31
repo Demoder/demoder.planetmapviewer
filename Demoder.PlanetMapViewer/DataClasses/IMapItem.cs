@@ -1,5 +1,5 @@
 ﻿/*
-* Demoder.AoHookBridge
+* Demoder.PlanetMapViewer
 * Copyright (C) 2012 Demoder (demoder@demoder.me)
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,35 +23,30 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using System.Runtime.InteropServices;
+using Microsoft.Xna.Framework;
 
-namespace Demoder.AoHookBridge.AONative
+namespace Demoder.PlanetMapViewer.DataClasses
 {
-    [StructLayout(LayoutKind.Sequential)]
-    [Serializable]
-    public class Vector3
+    /// <summary>
+    /// Defines a map item
+    /// </summary>
+    public interface IMapItem
     {
-        public float X; 
-        public float Y; 
-        public float Z;
+        MapItemType Type { get; }
+        /// <summary>
+        /// Where on the texture is Position located?
+        /// </summary>
+        MapItemAlignment PositionAlignment { get; }
+        /// <summary>
+        /// Item position on the map
+        /// </summary>
+        Vector2 Position { get; }
+        /// <summary>
+        /// Item size
+        /// </summary>
+        Vector2 Size { get; }
 
-        public static Vector3 Copy(Vector3 source)
-        {
-            return new Vector3
-            {
-                X = source.X,
-                Y = source.Y,
-                Z = source.Z
-            };
-        }
-
-        public override string ToString()
-        {
-            return String.Format("X: {0} Y: {1} Z: {2}",
-                this.X,
-                this.Y,
-                this.Z);
-        }
     }
 }

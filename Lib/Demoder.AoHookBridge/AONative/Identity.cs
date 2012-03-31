@@ -53,6 +53,7 @@ namespace Demoder.AoHookBridge.AONative
         Bartender:  Type: 50000 ID: 424330364
      */
     [StructLayout(LayoutKind.Sequential)]
+    [Serializable]
     public class Identity
     {
         #region Known types
@@ -64,6 +65,10 @@ namespace Demoder.AoHookBridge.AONative
         /// Defines the type for identifying a playfield
         /// </summary>
         public const uint Playfield = 40016;
+        /// <summary>
+        /// Defines the type for identifying a quest/mission
+        /// </summary>
+        public const uint Quest = 56003;
         #endregion
 
         public Identity(){}
