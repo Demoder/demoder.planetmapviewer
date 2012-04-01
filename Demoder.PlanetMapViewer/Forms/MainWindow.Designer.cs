@@ -76,6 +76,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.tileDisplay1_hScrollBar = new System.Windows.Forms.HScrollBar();
             this.tileDisplay1 = new Demoder.PlanetMapViewer.Xna.TileDisplay();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.RadioButtonMapSelectionAuto = new System.Windows.Forms.RadioButton();
             this.RadioButtonMapSelectionShadowlands = new System.Windows.Forms.RadioButton();
             this.RadioButtonMapSelectionRubika = new System.Windows.Forms.RadioButton();
             this.mapComboBox = new System.Windows.Forms.ComboBox();
@@ -94,6 +95,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.followCharactersToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.manualToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.OverlayTitleContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.autoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.selectCharactersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -136,14 +138,14 @@ namespace Demoder.PlanetMapViewer.Forms
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem1_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -308,20 +310,33 @@ namespace Demoder.PlanetMapViewer.Forms
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.RadioButtonMapSelectionAuto);
             this.groupBox4.Controls.Add(this.RadioButtonMapSelectionShadowlands);
             this.groupBox4.Controls.Add(this.RadioButtonMapSelectionRubika);
             this.groupBox4.Controls.Add(this.mapComboBox);
             this.groupBox4.Location = new System.Drawing.Point(3, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(168, 71);
+            this.groupBox4.Size = new System.Drawing.Size(168, 118);
             this.groupBox4.TabIndex = 10000;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Map Selection";
             // 
+            // RadioButtonMapSelectionAuto
+            // 
+            this.RadioButtonMapSelectionAuto.AutoSize = true;
+            this.RadioButtonMapSelectionAuto.Checked = true;
+            this.RadioButtonMapSelectionAuto.Location = new System.Drawing.Point(8, 65);
+            this.RadioButtonMapSelectionAuto.Name = "RadioButtonMapSelectionAuto";
+            this.RadioButtonMapSelectionAuto.Size = new System.Drawing.Size(47, 17);
+            this.RadioButtonMapSelectionAuto.TabIndex = 4;
+            this.RadioButtonMapSelectionAuto.TabStop = true;
+            this.RadioButtonMapSelectionAuto.Text = "Auto";
+            this.RadioButtonMapSelectionAuto.UseVisualStyleBackColor = true;
+            // 
             // RadioButtonMapSelectionShadowlands
             // 
             this.RadioButtonMapSelectionShadowlands.AutoSize = true;
-            this.RadioButtonMapSelectionShadowlands.Location = new System.Drawing.Point(73, 19);
+            this.RadioButtonMapSelectionShadowlands.Location = new System.Drawing.Point(8, 42);
             this.RadioButtonMapSelectionShadowlands.Name = "RadioButtonMapSelectionShadowlands";
             this.RadioButtonMapSelectionShadowlands.Size = new System.Drawing.Size(89, 17);
             this.RadioButtonMapSelectionShadowlands.TabIndex = 3;
@@ -332,12 +347,10 @@ namespace Demoder.PlanetMapViewer.Forms
             // RadioButtonMapSelectionRubika
             // 
             this.RadioButtonMapSelectionRubika.AutoSize = true;
-            this.RadioButtonMapSelectionRubika.Checked = true;
             this.RadioButtonMapSelectionRubika.Location = new System.Drawing.Point(8, 19);
             this.RadioButtonMapSelectionRubika.Name = "RadioButtonMapSelectionRubika";
             this.RadioButtonMapSelectionRubika.Size = new System.Drawing.Size(63, 17);
             this.RadioButtonMapSelectionRubika.TabIndex = 2;
-            this.RadioButtonMapSelectionRubika.TabStop = true;
             this.RadioButtonMapSelectionRubika.Text = "Rubi-Ka";
             this.RadioButtonMapSelectionRubika.UseVisualStyleBackColor = true;
             this.RadioButtonMapSelectionRubika.CheckedChanged += new System.EventHandler(this.RadioMapTypeCheckedChanged);
@@ -346,7 +359,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // 
             this.mapComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.mapComboBox.FormattingEnabled = true;
-            this.mapComboBox.Location = new System.Drawing.Point(3, 42);
+            this.mapComboBox.Location = new System.Drawing.Point(2, 91);
             this.mapComboBox.Name = "mapComboBox";
             this.mapComboBox.Size = new System.Drawing.Size(159, 21);
             this.mapComboBox.Sorted = true;
@@ -359,7 +372,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.groupBox2.Controls.Add(this.ButtonZoomIn);
             this.groupBox2.Controls.Add(this.RadioButtonCameraManual);
             this.groupBox2.Controls.Add(this.RadioButtonCameraFollowCharacters);
-            this.groupBox2.Location = new System.Drawing.Point(3, 80);
+            this.groupBox2.Location = new System.Drawing.Point(3, 127);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(168, 97);
             this.groupBox2.TabIndex = 10000;
@@ -413,7 +426,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.followCharacter);
-            this.groupBox1.Location = new System.Drawing.Point(3, 183);
+            this.groupBox1.Location = new System.Drawing.Point(3, 230);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(168, 106);
             this.groupBox1.TabIndex = 10000;
@@ -495,6 +508,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.regionToolStripMenuItem,
             this.rubikaToolStripMenuItem1,
             this.shadowlandsToolStripMenuItem1,
+            this.autoToolStripMenuItem,
             this.toolStripSeparator3,
             this.selectCharactersToolStripMenuItem,
             this.selectMapToolStripMenuItem,
@@ -504,9 +518,16 @@ namespace Demoder.PlanetMapViewer.Forms
             this.OverlayTitleContextMenuStrip.Name = "contextMenuStrip1";
             this.OverlayTitleContextMenuStrip.ShowCheckMargin = true;
             this.OverlayTitleContextMenuStrip.ShowImageMargin = false;
-            this.OverlayTitleContextMenuStrip.Size = new System.Drawing.Size(192, 242);
+            this.OverlayTitleContextMenuStrip.Size = new System.Drawing.Size(192, 286);
             this.OverlayTitleContextMenuStrip.Text = "Overlay Mode";
             this.OverlayTitleContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.OverlayTitleContextMenuStrip_Opening);
+            // 
+            // autoToolStripMenuItem
+            // 
+            this.autoToolStripMenuItem.Name = "autoToolStripMenuItem";
+            this.autoToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.autoToolStripMenuItem.Text = "&Auto";
+            this.autoToolStripMenuItem.Click += new System.EventHandler(this.autoToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
@@ -627,6 +648,8 @@ namespace Demoder.PlanetMapViewer.Forms
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.RadioButton RadioButtonMapSelectionAuto;
+        private System.Windows.Forms.ToolStripMenuItem autoToolStripMenuItem;
     }
 }
 

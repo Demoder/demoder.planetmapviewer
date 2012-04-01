@@ -77,16 +77,16 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         private void ZoomIn()
         {
-            var texts = new List<StringDefinition>();
+            var items = new List<IMapItem>();
             int currentHeight = this.Context.UiElements.TileDisplay.Height / 3;
             int center = this.Context.UiElements.TileDisplay.Width / 2;
 
-            this.Context.FrameDrawer.DrawTutorialStamp(center, currentHeight, 500, 200);
+            items.Add(this.Context.FrameDrawer.GetTutorialStamp(center, currentHeight, 500, 200));
 
             #region Header
-            texts.Add(new StringDefinition
+            items.Add(new MapText
             {
-                CenterPosition = new Vector2(
+                Position = new Vector2(
                     center,
                     currentHeight),
                 TextColor = Color.Red,
@@ -94,16 +94,14 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Text = "Tutorial: Zooming In",
                 Font = this.Context.Content.Fonts.GuiXLarge
             });
-            currentHeight += (int)texts.Last().StringMeasure.Y;
+            currentHeight += (int)items.Last().Size.Y;
 
-            this.Context.FrameDrawer.DrawText(texts, false);
-            texts.Clear();
             #endregion
 
             #region Content
-            texts.Add(new StringDefinition
+            items.Add(new MapText
             {
-                CenterPosition = new Vector2(
+                Position = new Vector2(
                     center,
                     currentHeight),
                 TextColor = Color.White,
@@ -117,24 +115,23 @@ namespace Demoder.PlanetMapViewer.Helpers
                 "\r\n" +
                 "Please zoom in now."
             });
-            currentHeight += (int)texts.Last().StringMeasure.Y;
-
-            this.Context.FrameDrawer.DrawText(texts, false);
+            currentHeight += (int)items.Last().Size.Y;
             #endregion
+            this.Context.FrameDrawer.Draw(items);
         }
 
         private void ZoomOut()
         {
-            var texts = new List<StringDefinition>();
+            var items = new List<IMapItem>();
             int currentHeight = this.Context.UiElements.TileDisplay.Height / 3;
             int center = this.Context.UiElements.TileDisplay.Width / 2;
 
-            this.Context.FrameDrawer.DrawTutorialStamp(center, currentHeight, 500, 200);
+            items.Add(this.Context.FrameDrawer.GetTutorialStamp(center, currentHeight, 500, 200));
 
             #region Header
-            texts.Add(new StringDefinition
+            items.Add(new MapText
             {
-                CenterPosition = new Vector2(
+                Position = new Vector2(
                     center,
                     currentHeight),
                 TextColor = Color.Red,
@@ -142,16 +139,13 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Text = "Tutorial: Zooming Out",
                 Font = this.Context.Content.Fonts.GuiXLarge
             });
-            currentHeight += (int)texts.Last().StringMeasure.Y;
-
-            this.Context.FrameDrawer.DrawText(texts, false);
-            texts.Clear();
+            currentHeight += (int)items.Last().Size.Y;
             #endregion
 
             #region Content
-            texts.Add(new StringDefinition
+            items.Add(new MapText
             {
-                CenterPosition = new Vector2(
+                Position = new Vector2(
                     center,
                     currentHeight),
                 TextColor = Color.White,
@@ -166,24 +160,23 @@ namespace Demoder.PlanetMapViewer.Helpers
                 "\r\n" +
                 "Please zoom out now."
             });
-            currentHeight += (int)texts.Last().StringMeasure.Y;
-
-            this.Context.FrameDrawer.DrawText(texts, false);
+            currentHeight += (int)items.Last().Size.Y;
             #endregion
+            this.Context.FrameDrawer.Draw(items);
         }
 
         private void OverlayMode()
         {
-            var texts = new List<StringDefinition>();
+            var items = new List<IMapItem>();
             int currentHeight = this.Context.UiElements.TileDisplay.Height / 3;
             int center = this.Context.UiElements.TileDisplay.Width / 2;
 
-            this.Context.FrameDrawer.DrawTutorialStamp(center, currentHeight, 425, 210);
+            items.Add(this.Context.FrameDrawer.GetTutorialStamp(center, currentHeight, 425, 210));
 
             #region Header
-            texts.Add(new StringDefinition
+            items.Add(new MapText
             {
-                CenterPosition = new Vector2(
+                Position = new Vector2(
                     center,
                     currentHeight),
                 TextColor = Color.Red,
@@ -191,16 +184,13 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Text = "Tutorial: Overlay Mode",
                 Font = this.Context.Content.Fonts.GuiXLarge
             });
-            currentHeight += (int)texts.Last().StringMeasure.Y;
-
-            this.Context.FrameDrawer.DrawText(texts, false);
-            texts.Clear();
+            currentHeight += (int)items.Last().Size.Y;
             #endregion
 
             #region Content
-            texts.Add(new StringDefinition
+            items.Add(new MapText
             {
-                CenterPosition = new Vector2(
+                Position = new Vector2(
                     center,
                     currentHeight),
                 TextColor = Color.White,
@@ -216,12 +206,10 @@ namespace Demoder.PlanetMapViewer.Helpers
                         "\r\n" + 
                         "Please enter overlay mode now."
             });
-            currentHeight += (int)texts.Last().StringMeasure.Y;
-
-            this.Context.FrameDrawer.DrawText(texts, false);
+            currentHeight += (int)items.Last().Size.Y;
             #endregion
-        }
 
-        
+            this.Context.FrameDrawer.Draw(items);
+        }        
     }
 }

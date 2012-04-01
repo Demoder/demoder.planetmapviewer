@@ -33,22 +33,39 @@ namespace Demoder.PlanetMapViewer.DataClasses
     /// <summary>
     /// Stores information about text and its position on the map
     /// </summary>
-    public class StringDefinition
+    public class MapText : IMapItem
     {
-        public Vector2 CenterPosition;
+        #region IMapItem
+        public MapItemType Type { get { return MapItemType.SpriteFont; } }
+        public MapItemAlignment PositionAlignment { get; set; }
+        public Vector2 Position {get; set;}
+        public Vector2 Size
+        {
+            get
+            {
+                if (this.Font == null) { return default(Vector2); }
+                return this.Font.MeasureString(this.Text);
+            }
+        }
+        #endregion
+
+        public MapText()
+        {
+            this.Position = default(Vector2);
+            this.PositionAlignment = default(MapItemAlignment);
+        }
+
         public string Text;
         public Color ShadowColor = Color.Black;
         public Color TextColor = Color.White;
         public SpriteFont Font = null;
         public bool Shadow = true;
-        public Vector2 StringMeasure
-        {
-            get
-            {
-                if (this.Font == null) { return default(Vector2); }
 
-                return this.Font.MeasureString(this.Text);
-            }
+        public bool IsRelativePosition
+        {
+            get { throw new NotImplementedException(); }
         }
+
+        
     }
 }

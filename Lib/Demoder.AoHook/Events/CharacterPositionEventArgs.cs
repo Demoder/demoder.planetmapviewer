@@ -32,14 +32,16 @@ namespace Demoder.AoHook.Events
     {
         public uint ZoneID { get; private set; }
         public string ZoneName { get; private set; }
+        public bool InShadowlands { get; private set; }
         public float X { get; private set; }
         public float Y { get; private set; }
         public float Z { get; private set; }
 
-        internal CharacterPositionEventArgs(int processID, uint zoneId, string zoneName, float x, float y, float z, DateTime time = default(DateTime)) : base(processID, HookEventType.CharacterPosition, time)
+        internal CharacterPositionEventArgs(int processID, uint zoneId, string zoneName, bool inShadowlands, float x, float y, float z, DateTime time = default(DateTime)) : base(processID, HookEventType.CharacterPosition, time)
         {
             this.ZoneID = zoneId;
             this.ZoneName = zoneName;
+            this.InShadowlands = inShadowlands;
             this.X = x;
             this.Y = y;
             this.Z = z;

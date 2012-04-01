@@ -41,7 +41,7 @@ namespace Demoder.AoHookBridge
         public static class Interfaces
         {
             public static class Client_t
-            {               
+            {
                 public static void AoFrameProcess(IntPtr clientPtr)
                 {
                     var myInstance = HookRuntimeInfo.Callback as EasyHookEntryPoint;
@@ -84,12 +84,17 @@ namespace Demoder.AoHookBridge
                                         new Identity(Identity.Character, charID),
                                         pfIdentity,
                                         position);
+
+                                    // Are we in shadowlands?
+                                    bool inShadowlands = AONative.API.Interfaces.N3InterfaceModule.GetSkill(n3interface, (int)CharacterSkill.ExpansionPlayfield, 0) == 1;
+
                                     // Send it across the bridge
                                     myInstance.SendBridgeEvent(new DynelPositionEventArgs(
                                         Identity.Character,
                                         charID,
                                         pfIdentity.ID,
                                         Marshal.PtrToStringAnsi(AONative.API.Interfaces.N3InterfaceModule.GetPFName(n3interface)),
+                                        inShadowlands,
                                         position.X,
                                         position.Y,
                                         position.Z));
@@ -131,7 +136,38 @@ namespace Demoder.AoHookBridge
                     }
                 }
             }
+
+            public static class N3InterfaceModule
+            {
+                public static bool GetQuestWorldPos(IntPtr interfacePtr, Identity identityMission, Identity identityZone, Vector3 worldCoord, Vector3 zoneCoord)
+                {
+                    bool ret = false;
+                    var myInstance = HookRuntimeInfo.Callback as EasyHookEntryPoint;
+                    try
+                    {
+                        ret = AONative.API.Interfaces.N3InterfaceModule.GetQuestWorldPos(interfacePtr, identityMission, identityZone, worldCoord, zoneCoord);
+                        if (myInstance == null) { return ret; }
+
+                        // Insert code to send bridge event here
+                        myInstance.SendBridgeEvent(
+                            new QuestLocationEventArgs(
+                                identityMission.ID,
+                                identityZone.ID,
+                                worldCoord,
+                                zoneCoord));
+                    }
+                    catch (Exception ex)
+                    {
+                        if (myInstance != null)
+                        {
+                            myInstance.Debug(true, "GetWorldPos Exception: {0}", ex.ToString());
+                        }
+                    }
+                    return ret;
+                }
+            }
         }
+        
 
         public static class BridgeHelperMethods
         {

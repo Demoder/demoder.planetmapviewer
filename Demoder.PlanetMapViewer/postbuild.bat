@@ -9,6 +9,13 @@ copy Readme.txt ..\Rel\Installer\
 copy License.txt ..\Rel\Installer\
 
 rem ##############
+rem # Build dir
+rem ##############
+copy /Y ..\Msc\dlls\*.dll bin\%2\
+copy /Y ..\Msc\dlls\*.exe bin\%2\
+copy /Y ..\Lib\Demoder.AoHookBridge\bin\%2\Demoder.AoHookBridge.dll bin\%2\
+
+rem ##############
 rem # Package
 rem ###############
 del /F /Q ..\Rel\Package

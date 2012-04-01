@@ -1,5 +1,5 @@
 ﻿/*
-* Demoder.AoHookBridge
+* Demoder.PlanetMapViewer
 * Copyright (C) 2012 Demoder (demoder@demoder.me)
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,35 +23,45 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using System.Runtime.InteropServices;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace Demoder.AoHookBridge.AONative
+namespace Demoder.PlanetMapViewer.DataClasses
 {
-    [StructLayout(LayoutKind.Sequential)]
-    [Serializable]
-    public class Vector3
+    /// <summary>
+    /// Stores information about a charcter locator, and associated text
+    /// </summary>
+    public class MapTexture : IMapItem
     {
-        public float X; 
-        public float Y; 
-        public float Z;
-
-        public static Vector3 Copy(Vector3 source)
+        private Vector2 size;
+        #region IMapItem
+        public MapItemType Type { get { return MapItemType.Texture; } }
+        public Vector2 Position { get; set; }
+        public MapItemAlignment PositionAlignment { get; set; }
+        public Vector2 Size
         {
-            return new Vector3
+            get
             {
-                X = source.X,
-                Y = source.Y,
-                Z = source.Z
-            };
+                if (this.size != default(Vector2)) { return this.size; }
+                if (this.Texture == null) { return default(Vector2); }
+                return new Vector2(this.Texture.Width, this.Texture.Height);
+            }
+            set
+            {
+                this.size = value;
+            }
+        }
+        #endregion
+       
+        public MapTexture()
+        {
+            this.Position = default(Vector2);
+            this.PositionAlignment = default(MapItemAlignment);
         }
 
-        public override string ToString()
-        {
-            return String.Format("X: {0} Y: {1} Z: {2}",
-                this.X,
-                this.Y,
-                this.Z);
-        }
+        public Texture2D Texture { get; set; }
+        public Color Color = Color.White;
     }
 }

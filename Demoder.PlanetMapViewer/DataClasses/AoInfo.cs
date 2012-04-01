@@ -37,19 +37,8 @@ namespace Demoder.PlanetMapViewer.DataClasses
         /// </summary>
         public int ProcessID { get; private set; }
 
-        public CharacterInfo Character { get; set; }
-
-        /// <summary>
-        /// Position of character within current zone
-        /// </summary>
-        public Vector3 Position { get; internal set; }
-
-        /// <summary>
-        /// Current character is in this zone
-        /// </summary>
-        public ZoneInfo Zone { get; private set; }
-
-
+        public PlayerInfo Character { get; private set; }
+        public QuestInfo Mission { get; private set; }
 
         /// <summary>
         /// Time since last mofification to information in this data structure
@@ -74,10 +63,11 @@ namespace Demoder.PlanetMapViewer.DataClasses
         public AoInfo(int processID)
         {
             this.ProcessID = processID;
-            this.Position = Vector3.Zero;
-            this.Zone = new ZoneInfo();
-            this.Character = new CharacterInfo();
+            this.Character = new PlayerInfo();
+            this.Character.Position = Vector3.Zero;
+            this.Character.Zone = new ZoneInfo();
             this.LastModified = Stopwatch.StartNew();
+            this.Mission = new QuestInfo();
         }
 
         public override string ToString()
@@ -97,15 +87,26 @@ namespace Demoder.PlanetMapViewer.DataClasses
         }
     }
 
+    public class PlayerInfo
+    {
+        public uint ID;
+        public string Name;
+        public ZoneInfo Zone = new ZoneInfo();
+        public Vector3 Position = new Vector3();
+        public bool InShadowlands = false;
+    }
+
+    public class QuestInfo
+    {
+        public uint ID;
+        public ZoneInfo Zone = new ZoneInfo();
+        public Vector3 ZonePosition = new Vector3();
+        public Vector3 WorldPosition = new Vector3();
+    }
+
     public class ZoneInfo
     {
         public uint ID { get; set; }
         public string Name { get; set; }
-    }
-
-    public class CharacterInfo
-    {
-        public uint ID;
-        public string Name;
     }
 }

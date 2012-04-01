@@ -1,5 +1,5 @@
 ﻿/*
-* Demoder.PlanetMapViewer
+* Demoder.AoHookBridge
 * Copyright (C) 2012 Demoder (demoder@demoder.me)
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,18 +23,25 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
+using Demoder.AoHookBridge.AONative;
 
-namespace Demoder.PlanetMapViewer.DataClasses
+namespace Demoder.AoHookBridge.Events
 {
-    /// <summary>
-    /// Stores information about a charcter locator, and associated text
-    /// </summary>
-    public class CharacterLocatorInformation
+    [Serializable]
+    public class QuestLocationEventArgs : BridgeEventArgs
     {
-        public Vector2 CenterPosition;
-        public List<StringDefinition> Strings = new List<StringDefinition>();
+        public uint QuestID { get; private set; }
+        public uint ZoneID { get; private set; }
+        public Vector3 WorldPos { get; private set; }
+        public Vector3 ZonePos { get; private set; }
+
+        public QuestLocationEventArgs(uint questId, uint zoneId, Vector3 worldPos, Vector3 zonePos) : base(BridgeEventType.QuestLocation)
+        {
+            this.QuestID = questId;
+            this.ZoneID = zoneId;
+            this.WorldPos = worldPos;
+            this.ZonePos = zonePos;
+        }
     }
 }
