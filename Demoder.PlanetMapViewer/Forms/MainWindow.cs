@@ -60,7 +60,7 @@ namespace Demoder.PlanetMapViewer.Forms
         #endregion
 
         private string screenShotFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Demoders PlanetMap Viewer");
-
+        private BackgroundWorker bgwVersionCheck = new BackgroundWorker();
         #endregion
 
         #region Form setup
@@ -217,7 +217,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void bgwVersionCheck_DoWork(object sender, DoWorkEventArgs e)
         {
-            var res = VersionInfo.GetInfo("PlanetMapViewer", new Version(Application.ProductVersion));
+            var res = VersionInfo.GetInfo("PlanetMapViewer");
             e.Result = res;
         }
         #endregion
@@ -256,11 +256,13 @@ namespace Demoder.PlanetMapViewer.Forms
             if (windowSettings.WindowFullscreen)
             {
                 this.fullscreenToolStripMenuItem.Checked = true;
+                this.Context.State.WindowMode = WindowMode.Fullscreen;
                 this.ToggleFullscreenSetting();
             }
             else
             {
                 this.WindowState = windowSettings.WindowState;
+                this.Context.State.WindowMode = WindowMode.Normal;
                 if (this.WindowState == FormWindowState.Normal)
                 {
                     this.Width = windowSettings.WindowSize.X;
@@ -317,7 +319,6 @@ namespace Demoder.PlanetMapViewer.Forms
             {
                 this.UpdateCharacterListDoWork();
             }
-
         }
 
         private void UpdateCharacterListDoWork()
@@ -378,7 +379,7 @@ namespace Demoder.PlanetMapViewer.Forms
         private void Logic()
         {
             if (this.Context.Camera == null) { return; }
-            switch (this.Context.Options.CameraControl)
+            switch (this.Context.State.CameraControl)
             {
                 case CameraControl.Character:
                     this.MoveCameraToCharacter();
@@ -396,6 +397,8 @@ namespace Demoder.PlanetMapViewer.Forms
             {
                 int textureSize = this.Context.MapManager.CurrentLayer.TextureSize;
                 var vectors = new List<Vector2>();
+                int shadowlandsCharacters = 0;
+                int rubikaCharacters = 0;
                 this.followCharacter.Invoke((Action)delegate()
                 {
                     lock (this.Context.HookInfo.Processes)
@@ -403,9 +406,35 @@ namespace Demoder.PlanetMapViewer.Forms
                         foreach (var item in this.followCharacter.CheckedItems)
                         {
                             var info = item as AoInfo;
-                            var charPos = this.Context.MapManager.GetPosition(info.Zone.ID, info.Position.X, info.Position.Z);
+
+                            // Track rk/sl characters
+                            if (info.Character.InShadowlands)
+                            {
+                                shadowlandsCharacters++;
+                            }
+                            else
+                            {
+                                rubikaCharacters++;
+                            }
+
+                            if (info.Character.InShadowlands && this.Context.MapManager.CurrentMap.Type != MapType.Shadowlands) { continue; }
+
+                            var charPos = this.Context.MapManager.GetPosition(info.Character.Zone.ID, info.Character.Position.X, info.Character.Position.Z);
                             if (charPos == Vector2.Zero) { continue; }
                             vectors.Add(charPos);
+                        }
+                        if (this.Context.State.MapTypeAutoSwitching)
+                        {
+                            if (rubikaCharacters > shadowlandsCharacters && this.Context.MapManager.CurrentMap.Type != MapType.Rubika)
+                            {
+                                this.Context.MapManager.FindAvailableMaps(MapType.Rubika);
+                                this.Context.MapManager.SelectMap(MapType.Rubika);
+                            }
+                            else if (shadowlandsCharacters > rubikaCharacters && this.Context.MapManager.CurrentMap.Type != MapType.Shadowlands)
+                            {
+                                this.Context.MapManager.FindAvailableMaps(MapType.Shadowlands);
+                                this.Context.MapManager.SelectMap(MapType.Shadowlands);
+                            }
                         }
                     }
                 });
@@ -428,7 +457,6 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             lock (this.Context.Camera)
             {
-
                 this.Context.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
 
                 this.Context.MapManager.CurrentLayer.Draw(this.Context);
@@ -436,18 +464,10 @@ namespace Demoder.PlanetMapViewer.Forms
 
                 #region Draw character locators
                 // Retrieve all information related to character locators
-                var locators = this.GetCharacterLocators();
-
-                // Render the text
-                var strings = new List<StringDefinition>();
-                foreach (var loc in locators)
-                {
-                    strings.AddRange(loc.Strings);
-                }
-                this.Context.FrameDrawer.DrawText(strings, true);
-
-                // Render the markers
-                this.RenderCharacterLocators(locators);
+                var mapItems = this.GetCharacterLocators();
+                this.Context.FrameDrawer.Draw(mapItems);
+                mapItems = this.GetMissionLocators();
+                this.Context.FrameDrawer.Draw(mapItems);
                 #endregion
 
                 this.RenderTutorial();                
@@ -460,7 +480,7 @@ namespace Demoder.PlanetMapViewer.Forms
         /// <returns>true if tutorial was rendered, false otherwise</returns>
         private bool RenderTutorial()
         {
-            if (this.Context.Options.IsOverlayMode)
+            if (this.Context.State.WindowMode == WindowMode.Overlay)
             {
                 if (this.Context.Tutorial.Overlay.CurrentStage == OverlayTutorialStage.Completed) { return false; }
                 this.Context.Tutorial.Overlay.DrawTutorial();
@@ -474,24 +494,28 @@ namespace Demoder.PlanetMapViewer.Forms
             }
         }
 
-        private CharacterLocatorInformation[] GetCharacterLocators()
+        private IMapItem[] GetCharacterLocators()
         {
-            var chrs = new List<CharacterLocatorInformation>();
+            var mapItems = new List<IMapItem>();
+            var mapTexts = new List<IMapItem>();
             if (this.Context.HookInfo == null || this.Context.HookInfo.Processes == null)
             {
-                return new CharacterLocatorInformation[0];
+                return new MapTexture[0];
             }
 
             lock (this.Context.HookInfo.Processes)
             {
                 foreach (var info in this.Context.HookInfo.Processes.Values)
                 {
-                    if (info == null || info.Zone == null || info.Position == null || info.Character == null || info.Character.Name == null) { continue; }
-                    var charLoc = new CharacterLocatorInformation();
-                    charLoc.CenterPosition = this.Context.MapManager.GetPosition(info.Zone.ID, info.Position.X, info.Position.Z);
-                    charLoc.Strings.Add(new StringDefinition
+                    if (info == null || info.Character == null || info.Character.Zone == null || info.Character.Position == null || info.Character.Name == null) { continue; }
+                    var charLoc = new MapTexture();
+                    charLoc.Texture = this.Context.Content.Textures.CharacterLocator;
+                    charLoc.Position = this.Context.MapManager.GetPosition(info.Character.Zone.ID, info.Character.Position.X, info.Character.Position.Z);
+                    charLoc.PositionAlignment = MapItemAlignment.Center;
+                    
+                    mapTexts.Add(new MapText
                     {
-                        CenterPosition = new Vector2(charLoc.CenterPosition.X, charLoc.CenterPosition.Y + (int)this.Context.Content.Textures.CharacterLocator.Height / 2),
+                        Position = new Vector2(charLoc.Position.X, charLoc.Position.Y + (int)charLoc.Texture.Height / 2 + 5),
                         Text = info.Character.Name,
                         TextColor = Microsoft.Xna.Framework.Color.White,
                         ShadowColor = Microsoft.Xna.Framework.Color.Black,
@@ -499,34 +523,51 @@ namespace Demoder.PlanetMapViewer.Forms
                         Font = this.Context.Content.Fonts.CharacterName
                     });
 
-                    chrs.Add(charLoc);
+                    mapItems.Add(charLoc);
                 }
             }
-            return chrs.ToArray();
+            mapItems.AddRange(mapTexts);
+            return mapItems.ToArray();
         }
 
-        public void RenderCharacterLocators(CharacterLocatorInformation[] characters)
+        private IMapItem[] GetMissionLocators()
         {
-            this.Context.FrameDrawer.SpriteBatchBegin();
-            try
+            var mapItems = new List<IMapItem>();
+            var mapTexts = new List<IMapItem>();
+            if (this.Context.HookInfo == null || this.Context.HookInfo.Processes == null)
             {
-                foreach (var c in characters)
+                return new MapTexture[0];
+            }
+
+            lock (this.Context.HookInfo.Processes)
+            {
+                foreach (var info in this.Context.HookInfo.Processes.Values)
                 {
-                    this.Context.FrameDrawer.TextureCenterOnPixel(
-                        this.Context.Content.Textures.CharacterLocator,
-                        (int)c.CenterPosition.X,
-                        (int)c.CenterPosition.Y,
-                        Microsoft.Xna.Framework.Color.White);
+                    // We need both mission locator info and character name info
+                    if (info == null) { continue; }
+                    if (info.Mission == null || info.Mission.Zone == null || info.Mission.ZonePosition == null || info.Mission.ZonePosition == default(Vector3)) { continue; }
+                    if (info.Character == null || info.Character.Name == null) { continue; }
+
+                    var mapItem = new MapTexture();
+                    mapItem.Texture = this.Context.Content.Textures.MissionLocator;
+                    mapItem.Position = this.Context.MapManager.GetPosition(info.Mission.Zone.ID, info.Mission.ZonePosition.X, info.Mission.ZonePosition.Z);
+                    
+                    mapItem.PositionAlignment = MapItemAlignment.Bottom | MapItemAlignment.Center;
+                    mapTexts.Add(new MapText
+                    {
+                        Position = new Vector2(mapItem.Position.X, mapItem.Position.Y + (int)mapItem.Texture.Height / 2 + 5),
+                        Text = info.Character.Name,
+                        TextColor = Microsoft.Xna.Framework.Color.White,
+                        ShadowColor = Microsoft.Xna.Framework.Color.Black,
+                        Shadow = true,
+                        Font = this.Context.Content.Fonts.CharacterName
+                    });
+
+                    mapItems.Add(mapItem);
                 }
             }
-            catch (Exception ex)
-            {
-                this.Context.ErrorLog.Enqueue(ex.ToString());
-            }
-            finally
-            {
-                this.Context.SpriteBatch.End();
-            }
+            mapItems.AddRange(mapTexts);
+            return mapItems.ToArray();
         }
 
         FormWindowState oldState = FormWindowState.Normal;
@@ -580,7 +621,15 @@ namespace Demoder.PlanetMapViewer.Forms
         // Fullscreen
         private void MenuViewFullscreen(object sender, EventArgs e)
         {
-            ToggleFullscreenSetting();
+            if (fullscreenToolStripMenuItem.Checked)
+            {
+                this.Context.State.WindowMode = WindowMode.Fullscreen;
+            }
+            else
+            {
+                this.Context.State.WindowMode = WindowMode.Normal;
+            }
+            this.ToggleFullscreenSetting();
         }
         #endregion
 
@@ -607,13 +656,13 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void mapComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.Context.Options.IsMapRubika = this.RadioButtonMapSelectionRubika.Checked;
             if (this.Context.MapManager == null) { return; }
             this.Context.UiElements.VScrollBar.Value = 0;
             this.Context.UiElements.HScrollBar.Value = 0;
 
             var mapInfo = (this.mapComboBox.SelectedItem as MapSelectionItem);
-            if (this.Context.Options.IsMapRubika)
+            if (mapInfo == null) { return; }
+            if (mapInfo.Type == MapType.Rubika)
             {
                 Properties.MapSettings.Default.SelectedRubikaMap = mapInfo.MapPath;
             }
@@ -633,7 +682,7 @@ namespace Demoder.PlanetMapViewer.Forms
             a.ShowDialog();
         }
 
-        private BackgroundWorker bgwVersionCheck = new BackgroundWorker();
+       
         private void checkVersionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (this.bgwVersionCheck.IsBusy)
@@ -646,17 +695,48 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void RadioMapTypeCheckedChanged(object sender, EventArgs e)
         {
-            this.Context.Options.IsMapRubika = this.RadioButtonMapSelectionRubika.Checked;
+            // User clicking on a RadioButton will send two statechange messages.
+            // One for the unchecked and one for the checked RadioButton.
+            // We only need to process one of the events.
+            if (!((RadioButton)sender).Checked)
+            {
+                return;
+            }
+
+            // Automatic selection
+            if (this.RadioButtonMapSelectionAuto.Checked)
+            {
+                this.Context.State.MapTypeAutoSwitching = true;
+                return;
+            }
+
+            // RK selected
+            if (this.RadioButtonMapSelectionRubika.Checked)
+            {
+                this.Context.State.MapType = MapType.Rubika;
+            }
+            // SL selected
+            else if (this.RadioButtonMapSelectionShadowlands.Checked)
+            {
+                this.Context.State.MapType = MapType.Shadowlands;
+            }
+            
+            this.SelectMap();
+            this.Context.State.MapTypeAutoSwitching = false;
+            return;
+        }
+
+        private void SelectMap()
+        {
             if (this.Context.MapManager == null) { return; }
-            this.Context.MapManager.FindAvailableMaps(this.Context.Options.IsMapRubika);
-            if (this.Context.Options.IsMapRubika)
+
+            if (this.RadioButtonMapSelectionAuto.Checked == true)
             {
-                this.Context.MapManager.SelectRubikaMap();
+                return;
             }
-            else
-            {
-                this.Context.MapManager.SelectShadowlandsMap();
-            }
+
+            this.Context.MapManager.FindAvailableMaps(this.Context.State.MapType);
+            this.Context.MapManager.SelectMap(this.Context.State.MapType);
             this.tileDisplay1.Focus();
         }
 
@@ -682,11 +762,11 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             if (this.RadioButtonCameraFollowCharacters.Checked)
             {
-                this.Context.Options.CameraControl = CameraControl.Character;
+                this.Context.State.CameraControl = CameraControl.Character;
             }
             else if (this.RadioButtonCameraManual.Checked)
             {
-                this.Context.Options.CameraControl = CameraControl.Manual;
+                this.Context.State.CameraControl = CameraControl.Manual;
             }
         }
 
@@ -757,7 +837,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
                 this.ControlBox = Properties.WindowSettings.Default.OverlaymodeShowControlbox;
                 this.splitContainer1.Panel2Collapsed = true;
-                this.Context.Options.IsOverlayMode = true;
+                this.Context.State.WindowMode = WindowMode.Overlay;
 
                 if (this.Context.Tutorial.Normal.CurrentStage == NormalTutorialStage.OverlayMode)
                 {
@@ -787,7 +867,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.tileDisplay1_vScrollBar.Visible = true;
 
                 this.ControlBox = true;
-                this.Context.Options.IsOverlayMode = false;
+                this.Context.State.WindowMode = WindowMode.Normal;
 
                 if (this.Context.Tutorial.Overlay.CurrentStage == OverlayTutorialStage.ExitOverlayMode)
                 {
@@ -835,7 +915,10 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             this.RadioButtonMapSelectionShadowlands.Select();
         }
-
+        private void autoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.RadioButtonMapSelectionAuto.Select();
+        }
 
 
         private void OverlayTitleContextMenuStrip_Opening(object sender, CancelEventArgs e)
@@ -854,6 +937,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 // Region
                 this.followCharactersToolStripMenuItem1.Checked = this.RadioButtonCameraFollowCharacters.Checked;
                 this.manualToolStripMenuItem1.Checked = this.RadioButtonCameraManual.Checked;
+                this.autoToolStripMenuItem.Checked = this.RadioButtonMapSelectionAuto.Checked;
 
                 #region Map selection
                 {
@@ -971,7 +1055,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void MainWindow_Resize(object sender, EventArgs e)
         {
-            if (!this.Context.Options.IsOverlayMode) { return; }
+            if (this.Context.State.WindowMode != WindowMode.Overlay) { return; }
             if (this.Context.Tutorial.Overlay.CurrentStage == OverlayTutorialStage.ResizeWindow)
             {
                 Properties.OverlayTutorial.Default.ResizeWindow = true;
@@ -993,12 +1077,15 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             this.SaveScreenShot();
         }
+
+        
     }
 
     public class MapSelectionItem
     {
         public string MapPath;
         public string MapName;
+        public MapType Type;
 
         public override string ToString()
         {

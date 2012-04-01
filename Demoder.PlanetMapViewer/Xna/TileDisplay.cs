@@ -81,6 +81,7 @@ namespace Demoder.PlanetMapViewer.Xna
                 this.Context.ContentManager = new ContentManager(Services, "Content");
                 // Load textures
                 this.Context.Content.Textures.CharacterLocator = this.Context.ContentManager.Load<Texture2D>(@"Textures\GFX_GUI_PLANETMAP_PLAYER_MARKER");
+                this.Context.Content.Textures.MissionLocator = this.Context.ContentManager.Load<Texture2D>(@"Textures\GFX_GUI_PLANETMAP_MISSION_MARKER2");
                 this.Context.Content.Textures.ArrowUp = this.Context.ContentManager.Load<Texture2D>(@"Textures\ArrowUp");
                 this.Context.Content.Textures.TutorialFrame = this.Context.ContentManager.Load<Texture2D>(@"Textures\TutorialFrame");
 
@@ -142,17 +143,20 @@ namespace Demoder.PlanetMapViewer.Xna
 
                         this.OnDraw(this, null);
 #if DEBUG
-                    {
-                        this.Context.SpriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend);
-                        var fontPos = new Vector2(10, 10);
-                        this.Context.SpriteBatch.DrawString(
-                            this.Context.Content.Fonts.CharacterName,
-                            String.Format("FPS: {0}", 1000 / (this.timeSinceLastDraw.ElapsedMilliseconds + curSwVal)),
-                            fontPos,
-                            Microsoft.Xna.Framework.Color.Pink
-                            );
-                        this.Context.SpriteBatch.End();
-                    }
+                        {
+                            var items = new List<IMapItem>();
+                            items.Add(new MapText
+                            {
+                                Position = new Vector2(10, 10),
+                                PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
+                                Font = this.Context.Content.Fonts.GuiSmall,
+                                Text = String.Format("FPS: {0}", 1000 / (this.timeSinceLastDraw.ElapsedMilliseconds + curSwVal)),
+                                TextColor = Color.Pink,
+                                ShadowColor = Color.Purple
+
+                            });
+                            this.Context.FrameDrawer.Draw(items.ToArray(), DrawMode.ViewPort);
+                        }
 #endif
                     }
                 }
@@ -187,7 +191,7 @@ namespace Demoder.PlanetMapViewer.Xna
             if (this.Context == null) { return; }
             if (this.Context.Camera == null) { return; }
 
-            if (this.Context.Options.CameraControl != CameraControl.Manual)
+            if (this.Context.State.CameraControl != CameraControl.Manual)
             {
                 this.Context.UiElements.ParentForm.RadioButtonCameraManual.Checked = true;
             }
@@ -466,7 +470,7 @@ namespace Demoder.PlanetMapViewer.Xna
 
         private void TutorialZoomIn()
         {
-            if (this.Context.Options.IsOverlayMode) { return; }
+            if (this.Context.State.WindowMode == WindowMode.Overlay) { return; }
             if (this.Context.Tutorial.Normal.CurrentStage == NormalTutorialStage.ZoomIn)
             {
                 Properties.NormalTutorial.Default.ZoomIn = true;
@@ -476,16 +480,12 @@ namespace Demoder.PlanetMapViewer.Xna
 
         private void TutorialZoomOut()
         {
-            if (this.Context.Options.IsOverlayMode) { return; }
+            if (this.Context.State.WindowMode == WindowMode.Overlay) { return; }
             if (this.Context.Tutorial.Normal.CurrentStage == NormalTutorialStage.ZoomOut)
             {
                 Properties.NormalTutorial.Default.ZoomOut = true;
                 Properties.NormalTutorial.Default.Save();
             }
         }
-
-
-
-        
     }
 }

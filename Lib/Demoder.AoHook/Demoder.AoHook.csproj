@@ -12,6 +12,7 @@
     <AssemblyName>Demoder.AoHook</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -67,6 +68,7 @@
     <Compile Include="Events\DynelNameEventArgs.cs" />
     <Compile Include="Events\HookEventArgs.cs" />
     <Compile Include="Events\HookStateChangeEventArgs.cs" />
+    <Compile Include="Events\QuestLocationEventArgs.cs" />
     <Compile Include="PersistentInfo.cs" />
     <Compile Include="Provider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

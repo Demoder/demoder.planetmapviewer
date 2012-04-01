@@ -59,6 +59,7 @@ namespace Demoder.AoHook
         public event CharacterPositionEventDelegate CharacterPositionEvent;
         public event HookStateChangeEventDelegate HookStateChangeEvent;
         public event DynelNameEventDelegate DynelNameEvent;
+        public event QuestLocationEventDelegate QuestLocationEvent;
 
         #endregion
         /// <summary>
@@ -89,7 +90,8 @@ namespace Demoder.AoHook
             while (true)
             {
                 // Find candidates
-                var candidates = from process in Process.GetProcessesByName("client")
+                var candidates = from process in Process.GetProcesses()
+                                 where process.ProcessName.Equals("client", StringComparison.InvariantCultureIgnoreCase) || process.ProcessName.Equals("AnarchyOnline", StringComparison.InvariantCultureIgnoreCase)
                                  where !this.successfulHooks.ContainsKey(process.Id)    // Exclude already hooked processes
                                  where !this.failedHooks.ContainsKey(process.Id)        // Exclude processes we've failed to hook
                                  select process;
@@ -149,6 +151,9 @@ namespace Demoder.AoHook
                 case BridgeEventType.HookStateChange:
                     this.outgoingEvents.Enqueue(new hEvents.HookStateChangeEventArgs(e as bEvents.HookStateChangeEventArgs));
                     break;
+                case BridgeEventType.QuestLocation:
+                    this.outgoingEvents.Enqueue(new hEvents.QuestLocationEventArgs(e as bEvents.QuestLocationEventArgs));
+                    break;
             }
         }
 
@@ -170,6 +175,7 @@ namespace Demoder.AoHook
                  e.ProcessId,
                  e.ZoneID,
                  e.ZoneName,
+                 e.InShadowlands,
                  e.X,
                  e.Y,
                  e.Z,
@@ -191,24 +197,23 @@ namespace Demoder.AoHook
         #region Send events
         private void SendEvents(hEvents.HookEventArgs e)
         {
-            if (e is hEvents.DebugEventArgs)
+            switch (e.Type)
             {
-                this.SendEvent(this.DebugEvent, e);
-                return;
-            }
-            if (e is hEvents.CharacterPositionEventArgs)
-            {
-                this.SendEvent(this.CharacterPositionEvent, e);
-                return;
-            }
-            if (e is hEvents.HookStateChangeEventArgs)
-            {
-                this.SendEvent(this.HookStateChangeEvent, e);
-                return;
-            }
-            if (e is hEvents.DynelNameEventArgs)
-            {
-                this.SendEvent(this.DynelNameEvent, e);
+                case HookEventType.CharacterPosition:
+                    this.SendEvent(this.CharacterPositionEvent, e);
+                    return;
+                case HookEventType.DynelName:
+                    this.SendEvent(this.DynelNameEvent, e);
+                    return;
+                case HookEventType.DebugEvent:
+                    this.SendEvent(this.DebugEvent, e);
+                    return;
+                case HookEventType.HookStateChange:
+                    this.SendEvent(this.HookStateChangeEvent, e);
+                    return;
+                case HookEventType.QuestLocation:
+                    this.SendEvent(this.QuestLocationEvent, e);
+                    break;
             }
         }
 

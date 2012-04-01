@@ -45,6 +45,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
     public class XnaContentTextures
     {
         public Texture2D CharacterLocator;
+        public Texture2D MissionLocator;
         public Texture2D ArrowUp;
         public Texture2D TutorialFrame;
     }

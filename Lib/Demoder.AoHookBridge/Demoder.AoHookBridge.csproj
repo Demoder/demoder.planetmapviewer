@@ -58,7 +58,7 @@
   <ItemGroup>
     <Reference Include="EasyHook, Version=2.5.0.0, Culture=neutral, PublicKeyToken=4b580fca19d0b0c5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\EasyHookContainer\EasyHook.dll</HintPath>
+      <HintPath>..\..\Msc\dlls\EasyHook.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Runtime.Remoting" />
@@ -71,6 +71,7 @@
     <Compile Include="DataStore.cs" />
     <Compile Include="Events\DynelNameEventArgs.cs" />
     <Compile Include="Events\HookStateChangeEventArgs.cs" />
+    <Compile Include="Events\QuestLocationEventArgs.cs" />
     <Compile Include="Hooks.cs" />
     <Compile Include="delegates.cs" />
     <Compile Include="EasyHookEntryPoint.cs" />

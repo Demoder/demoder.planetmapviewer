@@ -77,20 +77,27 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         private void TitlebarMenu()
         {
-            var texts = new List<StringDefinition>();
+            var items = new List<IMapItem>();
             int currentHeight = this.Context.UiElements.TileDisplay.Height / 3;
             int center = this.Context.UiElements.TileDisplay.Width / 2;
 
-            this.Context.FrameDrawer.SpriteBatchBegin(false);
-            this.Context.FrameDrawer.TextureTopMiddleOnPixel(this.Context.Content.Textures.ArrowUp, center, 0, Color.White, new Vector2(128, 128));
-            this.Context.SpriteBatch.End();
+            {
+                var tex = new MapTexture
+                {
+                    Texture = this.Context.Content.Textures.ArrowUp,
+                    PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Center,
+                    Size = new Vector2(128, 128),
+                    Position = new Vector2(center, 0)
+                };
+                items.Add(tex);
+            }
 
-            this.Context.FrameDrawer.DrawTutorialStamp(center, currentHeight, 386, 140);
+            items.Add(this.Context.FrameDrawer.GetTutorialStamp(center, currentHeight, 386, 140));
 
             #region Header
-            texts.Add(new StringDefinition
+            items.Add(new MapText
             {
-                CenterPosition = new Vector2(
+                Position = new Vector2(
                     center,
                     currentHeight),
                 TextColor = Color.Red,
@@ -98,16 +105,14 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Text = "Tutorial: Overlay Menu",
                 Font = this.Context.Content.Fonts.GuiXLarge
             });
-            currentHeight += (int)texts.Last().StringMeasure.Y;
+            currentHeight += (int)items.Last().Size.Y;
 
-            this.Context.FrameDrawer.DrawText(texts, false);
-            texts.Clear();
             #endregion
 
             #region Content
-            texts.Add(new StringDefinition
+            items.Add(new MapText
             {
-                CenterPosition = new Vector2(
+                Position = new Vector2(
                     center,
                     currentHeight),
                 TextColor = Color.White,
@@ -119,27 +124,23 @@ namespace Demoder.PlanetMapViewer.Helpers
                         "\r\n" +
                         "Please open the Overlay Menu now."
             });
-            currentHeight += (int)texts.Last().StringMeasure.Y;
-
-            this.Context.FrameDrawer.DrawText(texts, false);
-
-            
+            currentHeight += (int)items.Last().Size.Y;
             #endregion
-
+            this.Context.FrameDrawer.Draw(items);
         }
 
         private void ResizeWindow()
         {
-            var texts = new List<StringDefinition>();
+            var items = new List<IMapItem>();
             int currentHeight = this.Context.UiElements.TileDisplay.Height / 3;
             int center = this.Context.UiElements.TileDisplay.Width / 2;
 
-            this.Context.FrameDrawer.DrawTutorialStamp(center, currentHeight, 386, 128);
+            items.Add(this.Context.FrameDrawer.GetTutorialStamp(center, currentHeight, 386, 128));
 
             #region Header
-            texts.Add(new StringDefinition
+            items.Add(new MapText
             {
-                CenterPosition = new Vector2(
+                Position = new Vector2(
                     center,
                     currentHeight),
                 TextColor = Color.Red,
@@ -147,16 +148,13 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Text = "Tutorial: Window Size",
                 Font = this.Context.Content.Fonts.GuiXLarge
             });
-            currentHeight += (int)texts.Last().StringMeasure.Y;
-
-            this.Context.FrameDrawer.DrawText(texts, false);
-            texts.Clear();
+            currentHeight += (int)items.Last().Size.Y;
             #endregion
 
             #region Content
-            texts.Add(new StringDefinition
+            items.Add(new MapText
             {
-                CenterPosition = new Vector2(
+                Position = new Vector2(
                     center,
                     currentHeight),
                 TextColor = Color.White,
@@ -167,24 +165,24 @@ namespace Demoder.PlanetMapViewer.Helpers
                         "\r\n" +
                         "Please resize the window now."
             });
-            currentHeight += (int)texts.Last().StringMeasure.Y;
-
-            this.Context.FrameDrawer.DrawText(texts, false);
+            currentHeight += (int)items.Last().Size.Y;
             #endregion
+
+            this.Context.FrameDrawer.Draw(items);
         }
 
         private void ExitOverlayMode()
         {
-            var texts = new List<StringDefinition>();
+            var items = new List<IMapItem>();
             int currentHeight = this.Context.UiElements.TileDisplay.Height / 3;
             int center = this.Context.UiElements.TileDisplay.Width / 2;
 
-            this.Context.FrameDrawer.DrawTutorialStamp(center, currentHeight, 500, 180);
+            items.Add(this.Context.FrameDrawer.GetTutorialStamp(center, currentHeight, 500, 180));
 
             #region Header
-            texts.Add(new StringDefinition
+            items.Add(new MapText
             {
-                CenterPosition = new Vector2(
+                Position = new Vector2(
                     center,
                     currentHeight),
                 TextColor = Color.Red,
@@ -192,16 +190,13 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Text = "Tutorial: Exiting Overlay Mode",
                 Font = this.Context.Content.Fonts.GuiXLarge
             });
-            currentHeight += (int)texts.Last().StringMeasure.Y;
-
-            this.Context.FrameDrawer.DrawText(texts, false);
-            texts.Clear();
+            currentHeight += (int)items.Last().Size.Y;
             #endregion
 
             #region Content
-            texts.Add(new StringDefinition
+            items.Add(new MapText
             {
-                CenterPosition = new Vector2(
+                Position = new Vector2(
                     center,
                     currentHeight),
                 TextColor = Color.White,
@@ -213,10 +208,9 @@ namespace Demoder.PlanetMapViewer.Helpers
                         "\r\n"+
                         "Please exit overlay mode now."
             });
-            currentHeight += (int)texts.Last().StringMeasure.Y;
-
-            this.Context.FrameDrawer.DrawText(texts, false);
+            currentHeight += (int)items.Last().Size.Y;
             #endregion
+            this.Context.FrameDrawer.Draw(items);
         }
     }
 }
