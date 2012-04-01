@@ -243,10 +243,13 @@ namespace Demoder.PlanetMapViewer.Helpers
                             currentLayer.AddFilePos(int.Parse(words[1]));
                         }
                     }
-
                 }
-                
             }
+            if (map.CoordsFile == null)
+            {
+                map.CoordsFile = Xml.Deserialize<MapCoords>(new FileInfo(Path.Combine(mapDir, "MapCoordinates.xml")), false);
+            }
+
             map.Layers = layers.ToArray();
             return map;
         }
