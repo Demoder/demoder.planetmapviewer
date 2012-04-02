@@ -1,3 +1,4 @@
+!include "MUI2.nsh"
 ; A little bit of useful information
 Name "Demoder.PlanetMapViewer ${ASSEMBLY_VERSION}"
 VIAddVersionKey "ProductName" "Demoder.PlanetMapViewer ${ASSEMBLY_VERSION} Installer"
@@ -10,11 +11,19 @@ VIProductVersion ${ASSEMBLY_VERSION}
 ; The file to write
 OutFile "..\Rel\Installer\Setup.exe"
 
-; The default installation directory
-InstallDir "$PROGRAMFILES\Demoders PlanetMap Viewer"
-
 ; Request application privileges for Windows Vista
 RequestExecutionLevel admin
+
+
+InstallDir "$PROGRAMFILES\Demoders PlanetMap Viewer"
+
+; The default installation directory
+;ReadRegString $0 HKLM "SOFTWARE\Demoder\PlanetMapViewer" "InstallDir"
+;StrCmp $0 "" SetDefaultInstallDir SetExistingInstallDir
+;    SetDefaultInstallDir:
+;        InstallDir "$PROGRAMFILES\Demoders PlanetMap Viewer"
+;    SetExistingInstallDir:
+;        InstallDir $0
 
 ;--------------------------------
 ; Pages
@@ -33,11 +42,11 @@ Section "Prequesites (required)"
     SectionIn RO
     SetOutPath $INSTDIR\Redist  
   
-  ; .NET 4.0 full
-  ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\" "Install"
+  ; .NET 4.0 Client Profile
+  ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Client\" "Install"
   IntCmp $0 1 +4 ;If this value is 1, skip executing
-    File "..\Dep\dotNetFx40_Full_setup.exe"
-    ExecWait '"$INSTDIR\Redist\dotNetFx40_Full_setup.exe" /passive /promptrestart'
+    File "..\Dep\dotNetFx40_Client_setup.exe"
+    ExecWait '"$INSTDIR\Redist\dotNetFx40_Client_setup.exe" /passive /promptrestart'
   
   ; .NET 3.5
   ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\NET Framework Setup\NDP\v3.5\" "Install"
