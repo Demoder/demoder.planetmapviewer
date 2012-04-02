@@ -55,7 +55,7 @@
   </Staff>
   <Links>
     <Link Label="Website" Url="http://demoder.me/pmv/" />
-	<Ling Label="Bugtracker" Url="http://redmine.demoder.me/projects/pmv/issues" />
+	<Link Label="Bugtracker" Url="http://redmine.demoder.me/projects/pmv/issues" />
     <Link Label="Source &amp; Downloads" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer" />
   </Links>
   <Versions>
