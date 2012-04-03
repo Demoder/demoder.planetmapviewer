@@ -1,0 +1,4 @@
+﻿To automatically build the installer, modify PlanetMapViewer project build event settings:
+Pre-build event command line: "$(ProjectDir)\prebuild.bat" "$(ProjectDir)" $(ConfigurationName)
+Post-build event command line: "$(ProjectDir)\postbuild.bat" "$(ProjectDir)" $(ConfigurationName)
+Run the post-build event: On successful build
