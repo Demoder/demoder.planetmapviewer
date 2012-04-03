@@ -222,6 +222,10 @@ namespace Demoder.PlanetMapViewer.Xna
                 var newPos = (this.Context.Camera.Center.X - (e.Delta * this.mouseScrollSensitivity / 120 * this.Context.UiElements.HScrollBar.SmallChange));
                 this.Context.Camera.CenterOnPixel(newPos, this.Context.Camera.Center.Y);
             }
+            else if (ModifierKeys == System.Windows.Forms.Keys.Control)
+            {
+                this.Context.UiElements.ParentForm.MagnificationSlider.Value += (int)(e.Delta * this.mouseScrollSensitivity / 120 * this.Context.UiElements.ParentForm.MagnificationSlider.SmallChange);
+            }
             else
             {
                 var newPos = (this.Context.Camera.Center.Y - (e.Delta * this.mouseScrollSensitivity / 120 * this.Context.UiElements.VScrollBar.SmallChange));
