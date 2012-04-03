@@ -83,8 +83,6 @@ namespace Demoder.PlanetMapViewer.Forms
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.ButtonZoomOut = new System.Windows.Forms.Button();
             this.ButtonZoomIn = new System.Windows.Forms.Button();
-            this.RadioButtonCameraManual = new System.Windows.Forms.RadioButton();
-            this.RadioButtonCameraFollowCharacters = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.followCharacter = new System.Windows.Forms.CheckedListBox();
             this.regionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -102,6 +100,8 @@ namespace Demoder.PlanetMapViewer.Forms
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exitOverlayModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.CameraFollowCharacer = new System.Windows.Forms.Button();
+            this.CameraFollowMission = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -138,14 +138,14 @@ namespace Demoder.PlanetMapViewer.Forms
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem1_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -208,33 +208,33 @@ namespace Demoder.PlanetMapViewer.Forms
             // checkVersionToolStripMenuItem
             // 
             this.checkVersionToolStripMenuItem.Name = "checkVersionToolStripMenuItem";
-            this.checkVersionToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.checkVersionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.checkVersionToolStripMenuItem.Text = "Update...";
             this.checkVersionToolStripMenuItem.Click += new System.EventHandler(this.checkVersionToolStripMenuItem_Click);
             // 
             // readmeToolStripMenuItem
             // 
             this.readmeToolStripMenuItem.Name = "readmeToolStripMenuItem";
-            this.readmeToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.readmeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.readmeToolStripMenuItem.Text = "Readme";
             this.readmeToolStripMenuItem.Click += new System.EventHandler(this.readmeToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(119, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(149, 6);
             // 
             // errorLogToolStripMenuItem
             // 
             this.errorLogToolStripMenuItem.Name = "errorLogToolStripMenuItem";
-            this.errorLogToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.errorLogToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.errorLogToolStripMenuItem.Text = "Error Log";
             this.errorLogToolStripMenuItem.Click += new System.EventHandler(this.errorLogToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "&About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -368,10 +368,10 @@ namespace Demoder.PlanetMapViewer.Forms
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.CameraFollowMission);
+            this.groupBox2.Controls.Add(this.CameraFollowCharacer);
             this.groupBox2.Controls.Add(this.ButtonZoomOut);
             this.groupBox2.Controls.Add(this.ButtonZoomIn);
-            this.groupBox2.Controls.Add(this.RadioButtonCameraManual);
-            this.groupBox2.Controls.Add(this.RadioButtonCameraFollowCharacters);
             this.groupBox2.Location = new System.Drawing.Point(3, 127);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(168, 97);
@@ -398,30 +398,6 @@ namespace Demoder.PlanetMapViewer.Forms
             this.ButtonZoomIn.Text = "Zoom In";
             this.ButtonZoomIn.UseVisualStyleBackColor = true;
             this.ButtonZoomIn.Click += new System.EventHandler(this.ButtonZoomIn_Click);
-            // 
-            // RadioButtonCameraManual
-            // 
-            this.RadioButtonCameraManual.AutoSize = true;
-            this.RadioButtonCameraManual.Location = new System.Drawing.Point(6, 42);
-            this.RadioButtonCameraManual.Name = "RadioButtonCameraManual";
-            this.RadioButtonCameraManual.Size = new System.Drawing.Size(60, 17);
-            this.RadioButtonCameraManual.TabIndex = 6;
-            this.RadioButtonCameraManual.Text = "Manual";
-            this.RadioButtonCameraManual.UseVisualStyleBackColor = true;
-            this.RadioButtonCameraManual.CheckedChanged += new System.EventHandler(this.RadioButtonCameraControlCheckChanged);
-            // 
-            // RadioButtonCameraFollowCharacters
-            // 
-            this.RadioButtonCameraFollowCharacters.AutoSize = true;
-            this.RadioButtonCameraFollowCharacters.Checked = true;
-            this.RadioButtonCameraFollowCharacters.Location = new System.Drawing.Point(6, 19);
-            this.RadioButtonCameraFollowCharacters.Name = "RadioButtonCameraFollowCharacters";
-            this.RadioButtonCameraFollowCharacters.Size = new System.Drawing.Size(115, 17);
-            this.RadioButtonCameraFollowCharacters.TabIndex = 4;
-            this.RadioButtonCameraFollowCharacters.TabStop = true;
-            this.RadioButtonCameraFollowCharacters.Text = "Follow Character(s)";
-            this.RadioButtonCameraFollowCharacters.UseVisualStyleBackColor = true;
-            this.RadioButtonCameraFollowCharacters.CheckedChanged += new System.EventHandler(this.RadioButtonCameraControlCheckChanged);
             // 
             // groupBox1
             // 
@@ -565,6 +541,26 @@ namespace Demoder.PlanetMapViewer.Forms
             this.exitOverlayModeToolStripMenuItem.Text = "Exit Overlay Mode";
             this.exitOverlayModeToolStripMenuItem.Click += new System.EventHandler(this.exitOverlayModeToolStripMenuItem_Click);
             // 
+            // CameraFollowCharacer
+            // 
+            this.CameraFollowCharacer.Location = new System.Drawing.Point(6, 19);
+            this.CameraFollowCharacer.Name = "CameraFollowCharacer";
+            this.CameraFollowCharacer.Size = new System.Drawing.Size(75, 23);
+            this.CameraFollowCharacer.TabIndex = 7;
+            this.CameraFollowCharacer.Text = "Character";
+            this.CameraFollowCharacer.UseVisualStyleBackColor = true;
+            this.CameraFollowCharacer.Click += new System.EventHandler(this.CameraFollowCharacer_Click);
+            // 
+            // CameraFollowMission
+            // 
+            this.CameraFollowMission.Location = new System.Drawing.Point(86, 19);
+            this.CameraFollowMission.Name = "CameraFollowMission";
+            this.CameraFollowMission.Size = new System.Drawing.Size(75, 23);
+            this.CameraFollowMission.TabIndex = 8;
+            this.CameraFollowMission.Text = "Mission";
+            this.CameraFollowMission.UseVisualStyleBackColor = true;
+            this.CameraFollowMission.Click += new System.EventHandler(this.CameraFollowMission_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -592,7 +588,6 @@ namespace Demoder.PlanetMapViewer.Forms
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.OverlayTitleContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -620,8 +615,6 @@ namespace Demoder.PlanetMapViewer.Forms
         private System.Windows.Forms.GroupBox groupBox4;
         internal System.Windows.Forms.RadioButton RadioButtonMapSelectionRubika;
         internal System.Windows.Forms.RadioButton RadioButtonMapSelectionShadowlands;
-        internal System.Windows.Forms.RadioButton RadioButtonCameraFollowCharacters;
-        internal System.Windows.Forms.RadioButton RadioButtonCameraManual;
         private System.Windows.Forms.Button ButtonZoomOut;
         private System.Windows.Forms.Button ButtonZoomIn;
         private System.Windows.Forms.ToolStripMenuItem readmeToolStripMenuItem;
@@ -650,6 +643,8 @@ namespace Demoder.PlanetMapViewer.Forms
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.RadioButton RadioButtonMapSelectionAuto;
         private System.Windows.Forms.ToolStripMenuItem autoToolStripMenuItem;
+        private System.Windows.Forms.Button CameraFollowMission;
+        private System.Windows.Forms.Button CameraFollowCharacer;
     }
 }
 

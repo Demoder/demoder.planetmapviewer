@@ -89,6 +89,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Position = new Vector2(
                     center,
                     currentHeight),
+                PositionAlignment = MapItemAlignment.Top,
                 TextColor = Color.Red,
                 Shadow = false,
                 Text = "Tutorial: Zooming In",
@@ -104,6 +105,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Position = new Vector2(
                     center,
                     currentHeight),
+                PositionAlignment = MapItemAlignment.Top,
                 TextColor = Color.White,
                 Shadow = false,
                 Font = this.Context.Content.Fonts.GuiNormal,
@@ -117,7 +119,7 @@ namespace Demoder.PlanetMapViewer.Helpers
             });
             currentHeight += (int)items.Last().Size.Y;
             #endregion
-            this.Context.FrameDrawer.Draw(items);
+            this.Context.FrameDrawer.Draw(items, DrawMode.ViewPort);
         }
 
         private void ZoomOut()
@@ -127,13 +129,14 @@ namespace Demoder.PlanetMapViewer.Helpers
             int center = this.Context.UiElements.TileDisplay.Width / 2;
 
             items.Add(this.Context.FrameDrawer.GetTutorialStamp(center, currentHeight, 500, 200));
-
+            
             #region Header
             items.Add(new MapText
             {
                 Position = new Vector2(
                     center,
                     currentHeight),
+                PositionAlignment = MapItemAlignment.Top,
                 TextColor = Color.Red,
                 Shadow = false,
                 Text = "Tutorial: Zooming Out",
@@ -148,6 +151,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Position = new Vector2(
                     center,
                     currentHeight),
+                PositionAlignment = MapItemAlignment.Top,
                 TextColor = Color.White,
                 Shadow = false,
                 Font = this.Context.Content.Fonts.GuiNormal,
@@ -162,7 +166,7 @@ namespace Demoder.PlanetMapViewer.Helpers
             });
             currentHeight += (int)items.Last().Size.Y;
             #endregion
-            this.Context.FrameDrawer.Draw(items);
+            this.Context.FrameDrawer.Draw(items, DrawMode.ViewPort);
         }
 
         private void OverlayMode()
@@ -179,6 +183,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Position = new Vector2(
                     center,
                     currentHeight),
+                PositionAlignment = MapItemAlignment.Top,
                 TextColor = Color.Red,
                 Shadow = false,
                 Text = "Tutorial: Overlay Mode",
@@ -193,6 +198,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Position = new Vector2(
                     center,
                     currentHeight),
+                PositionAlignment = MapItemAlignment.Top,
                 TextColor = Color.White,
                 Shadow = false,
                 Font = this.Context.Content.Fonts.GuiNormal,
@@ -209,7 +215,7 @@ namespace Demoder.PlanetMapViewer.Helpers
             currentHeight += (int)items.Last().Size.Y;
             #endregion
 
-            this.Context.FrameDrawer.Draw(items);
+            this.Context.FrameDrawer.Draw(items, DrawMode.ViewPort);
         }        
     }
 }

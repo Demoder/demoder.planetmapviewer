@@ -90,7 +90,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.Context.UiElements.MapList = this.mapComboBox;
                 this.Context.UiElements.ParentForm = this;
 
-                this.Context.HookInfo = new HookInfoTracker();
+                this.Context.HookInfo = new HookInfoTracker(this.Context);
                 this.updateCharacterListTimer = new thrd.Timer(this.UpdateCharacterList, null, 1000, 2000);
 
                 // Check if we should attempt to upgrade settings
@@ -635,7 +635,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void tileDisplay1_ScrollBar_Scroll(object sender, ScrollEventArgs e)
         {
-            this.RadioButtonCameraManual.Checked = true;
+            this.Context.State.CameraControl = CameraControl.Manual;
         }
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -750,24 +750,6 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             this.tileDisplay1.ZoomOut();
             this.tileDisplay1.Focus();
-        }
-
-        private void RadioButtonCameraControlCheckChanged(object sender, EventArgs e)
-        {
-            this.ToggleCameraControl();
-            this.tileDisplay1.Focus();
-        }
-
-        private void ToggleCameraControl()
-        {
-            if (this.RadioButtonCameraFollowCharacters.Checked)
-            {
-                this.Context.State.CameraControl = CameraControl.Character;
-            }
-            else if (this.RadioButtonCameraManual.Checked)
-            {
-                this.Context.State.CameraControl = CameraControl.Manual;
-            }
         }
 
         private void readmeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -898,12 +880,12 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void followCharactersToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.RadioButtonCameraFollowCharacters.Select();
+            this.Context.State.CameraControl = CameraControl.Character;
         }
 
         private void manualToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.RadioButtonCameraManual.Select();
+            this.Context.State.CameraControl = CameraControl.Manual;
         }
 
         private void rubikaToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -930,14 +912,14 @@ namespace Demoder.PlanetMapViewer.Forms
                     Properties.OverlayTutorial.Default.TitlebarMenu = true;
                     Properties.OverlayTutorial.Default.Save();
                 }
-                // Camera Controls
+                // Region
                 this.rubikaToolStripMenuItem1.Checked = this.RadioButtonMapSelectionRubika.Checked;
                 this.shadowlandsToolStripMenuItem1.Checked = this.RadioButtonMapSelectionShadowlands.Checked;
-
-                // Region
-                this.followCharactersToolStripMenuItem1.Checked = this.RadioButtonCameraFollowCharacters.Checked;
-                this.manualToolStripMenuItem1.Checked = this.RadioButtonCameraManual.Checked;
                 this.autoToolStripMenuItem.Checked = this.RadioButtonMapSelectionAuto.Checked;
+
+                // Camera controls
+                this.followCharactersToolStripMenuItem1.Checked = this.Context.State.CameraControl == CameraControl.Character;
+                this.manualToolStripMenuItem1.Checked = this.Context.State.CameraControl == CameraControl.Manual;
 
                 #region Map selection
                 {
@@ -1021,7 +1003,7 @@ namespace Demoder.PlanetMapViewer.Forms
                     var item = sender as ToolStripMenuItem;
                     if (!item.Checked)
                     {
-                        this.RadioButtonCameraFollowCharacters.Select();
+                        this.Context.State.CameraControl = CameraControl.Character;
                     }
                     this.followCharacter.SetItemChecked(this.followCharacter.Items.IndexOf(item.Tag), !item.Checked);
 
@@ -1078,7 +1060,48 @@ namespace Demoder.PlanetMapViewer.Forms
             this.SaveScreenShot();
         }
 
+        private void CameraFollowCharacer_Click(object sender, EventArgs e)
+        {
+            this.Context.State.CameraControl = CameraControl.Character;
+        }
+
+        private void CameraFollowMission_Click(object sender, EventArgs e)
+        {
+            this.Context.State.CameraControl = CameraControl.Manual;
+            // Insert code to move camera to mission marker here.
+            this.MoveCameraToMission();
+        }
+
+        private void MoveCameraToMission()
+        {
+            try
+            {
+                var vectors = new List<Vector2>();
+                this.followCharacter.Invoke((Action)delegate()
+                {
+                    lock (this.Context.HookInfo.Processes)
+                    {
+                        foreach (var item in this.followCharacter.CheckedItems)
+                        {
+                            var info = item as AoInfo;
+
+                            var questPos = this.Context.MapManager.GetPosition(info.Mission.Zone.ID, info.Mission.ZonePosition.X, info.Mission.ZonePosition.Z);
+                            if (questPos == Vector2.Zero) { continue; }
+                            vectors.Add(questPos);
+                        }
+                    }
+                });
+                if (vectors.Count == 0) { return; }
+
+                this.Context.Camera.CenterOnVectors(vectors.ToArray());
+            }
+            catch (Exception ex)
+            {
+                this.Context.ErrorLog.Enqueue(ex.ToString());
+                this.ShowExceptionError(ex);
+            }
         
+        }        
     }
 
     public class MapSelectionItem
