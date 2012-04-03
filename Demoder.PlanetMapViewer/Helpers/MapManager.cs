@@ -212,7 +212,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 {
                     try
                     {
-                        var map = PlanetMap.FromFile(this.mapDirectory, candidate);
+                        var map = PlanetMap.FromFile(this.mapDirectory, candidate, this.Context);
                         if (map == null) { continue; }
                         if (String.IsNullOrEmpty(map.Name)) { continue; }
                         if (map.Layers.Length == 0) { continue; }
@@ -232,7 +232,7 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         public void Load(string map)
         {
-            this.CurrentMap = PlanetMap.FromFile(this.mapDirectory, map);
+            this.CurrentMap = PlanetMap.FromFile(this.mapDirectory, map, this.Context);
         }
 
         public bool ZoomIn()
