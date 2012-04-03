@@ -92,6 +92,8 @@ namespace Demoder.PlanetMapViewer.Xna
                 this.Context.Content.Fonts.GuiLarge = this.Context.ContentManager.Load<SpriteFont>(@"Fonts\GuiLarge");
                 this.Context.Content.Fonts.GuiXLarge = this.Context.ContentManager.Load<SpriteFont>(@"Fonts\GuiXLarge");
 
+                this.Context.Content.Fonts.MapSmall = this.Context.ContentManager.Load<SpriteFont>(@"Fonts\MapSmall");
+
                 this.Context.Content.Loaded = true;
                 ThreadPool.QueueUserWorkItem(new WaitCallback(this.InvalidateFrame));
             }
@@ -151,8 +153,8 @@ namespace Demoder.PlanetMapViewer.Xna
                                 PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
                                 Font = this.Context.Content.Fonts.GuiSmall,
                                 Text = String.Format("FPS: {0}", 1000 / (this.timeSinceLastDraw.ElapsedMilliseconds + curSwVal)),
-                                TextColor = Color.Pink,
-                                ShadowColor = Color.Purple
+                                TextColor = Color.White,
+                                ShadowColor = Color.Black
 
                             });
                             this.Context.FrameDrawer.Draw(items.ToArray(), DrawMode.ViewPort);
