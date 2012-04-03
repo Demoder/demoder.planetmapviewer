@@ -99,10 +99,13 @@ namespace Demoder.PlanetMapViewer.Helpers
                         if (sd.Font == null) { continue; }
                         if (!sd.Shadow) { continue; }
                         var textSize = sd.Size;
+                        var pos = GetRealPosition(item);
+                        pos.X++;
+                        pos.Y++;
                         this.Context.SpriteBatch.DrawString(
                             sd.Font,
                             sd.Text,
-                            GetRealPosition(item),
+                            pos,
                             sd.ShadowColor
                             );
                     }
