@@ -247,7 +247,18 @@ namespace Demoder.PlanetMapViewer.Helpers
             }
             if (map.CoordsFile == null)
             {
-                map.CoordsFile = Xml.Deserialize<MapCoords>(new FileInfo(Path.Combine(mapDir, "MapCoordinates.xml")), false);
+                try
+                {
+                    map.CoordsFile = Xml.Deserialize<MapCoords>(new FileInfo(Path.Combine(mapDir, "MapCoordinates.xml")), false);
+                }
+                catch { }
+            }
+
+            // Is it still invalid?
+            if (map.CoordsFile == null)
+            {
+                var ms = new MemoryStream(ASCIIEncoding.UTF8.GetBytes(Properties.Resources.MapCoordinates));
+                map.CoordsFile = Xml.Deserialize<MapCoords>(ms,true);
             }
 
             map.Layers = layers.ToArray();
