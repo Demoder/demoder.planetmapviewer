@@ -40,6 +40,7 @@ namespace Demoder.PlanetMapViewer.Helpers
         public MapType Type { get; private set; }
         public MapCoords CoordsFile;
         public PlanetMapLayer[] Layers;
+        internal Context Context { get; private set; }
 
         #region Accessors
         public int MinX { get { return 31022; } }
@@ -107,8 +108,8 @@ namespace Demoder.PlanetMapViewer.Helpers
 
             // Find pixel coord
             return new Vector2(
-                (float)Math.Round(pixelX),
-                (float)Math.Round(pixelY));
+                (float)Math.Round(pixelX * this.Context.State.Magnification),
+                (float)Math.Round(pixelY * this.Context.State.Magnification));
             #endregion
         }
 
@@ -125,7 +126,7 @@ namespace Demoder.PlanetMapViewer.Helpers
             var layerInfo = this.Layers[layer];
 
 
-            var pixelPos = new Vector2(x, y);
+            var pixelPos = new Vector2(x / this.Context.State.Magnification, y / this.Context.State.Magnification);
             #endregion
             float relativeX = pixelPos.X - layerInfo.MapRect.X;
             relativeX /= layerInfo.MapRect.Width - layerInfo.MapRect.X;
@@ -151,13 +152,6 @@ namespace Demoder.PlanetMapViewer.Helpers
             return reversePos;
         }
 
-        private class TmpZoneInfo
-        {
-            public uint Zone;
-            public float X;
-            public float Y;
-        }
-
         #region Static methods
         /// <summary>
         /// 
@@ -165,9 +159,10 @@ namespace Demoder.PlanetMapViewer.Helpers
         /// <param name="mapDir">Full path to map directory (cd_image/textures/Planetmap/)</param>
         /// <param name="mapFile">Full path to map file (AoRK/AoRK.txt)</param>
         /// <returns></returns>
-        public static PlanetMap FromFile(string mapDir, string mapFile)
+        public static PlanetMap FromFile(string mapDir, string mapFile, Context context)
         {
             var map = new PlanetMap();
+            map.Context = context;
             var layers = new List<PlanetMapLayer>();
 
             PlanetMapLayer currentLayer = null;
@@ -245,6 +240,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                     }
                 }
             }
+
             if (map.CoordsFile == null)
             {
                 try
@@ -319,6 +315,8 @@ namespace Demoder.PlanetMapViewer.Helpers
             var graphicsDevice = context.GraphicsDevice;
             var display = context.UiElements.TileDisplay;
 
+            var txz = this.TextureSize * context.State.Magnification;
+
             batch.Begin(
                     SpriteSortMode.Texture,
                     BlendState.AlphaBlend,
@@ -327,14 +325,14 @@ namespace Demoder.PlanetMapViewer.Helpers
             try
             {
                 Vector2 minPos = camera.Position;
-                minPos.X /= this.TextureSize;
-                minPos.Y /= this.TextureSize;
+                minPos.X /= txz;
+                minPos.Y /= txz;
 
                 Vector2 maxPos = new Vector2(minPos.X, minPos.Y);
 
 
-                maxPos.X += (display.Width / this.TextureSize) + 2;
-                maxPos.Y += (display.Height / this.TextureSize) + 2;
+                maxPos.X += (display.Width / txz) + 2;
+                maxPos.Y += (display.Height / txz) + 2;
 
                 maxPos.X = Math.Min(maxPos.X, this.Tiles.X);
                 maxPos.Y = Math.Min(maxPos.Y, this.Tiles.Y);
@@ -356,7 +354,9 @@ namespace Demoder.PlanetMapViewer.Helpers
                                 this.binFile.Read(b, 0, size);
 
                                 var ms = new MemoryStream(b);
-                                this.textureMap[y, x] = Texture2D.FromStream(graphicsDevice, ms);
+                                var tex = Texture2D.FromStream(graphicsDevice, ms);
+                                
+                                this.textureMap[y, x] = tex;
                             }
                             catch (Exception ex)
                             {
@@ -377,10 +377,10 @@ namespace Demoder.PlanetMapViewer.Helpers
       
                         batch.Draw(this.textureMap[y, x],
                             new Rectangle(
-                                x * this.TextureSize,
-                                y * this.TextureSize,
-                                this.TextureSize,
-                                this.TextureSize),
+                                (int)(x * txz),
+                                (int)(y * txz),
+                                (int)(txz),
+                                (int)(txz)),
                                 Color.White);
                     }
                 }
