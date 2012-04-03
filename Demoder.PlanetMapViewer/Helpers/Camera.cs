@@ -75,6 +75,22 @@ namespace Demoder.PlanetMapViewer.Helpers
         {
             if (this.Context.MapManager == null) { return; }
             if (this.Context.MapManager.CurrentLayer == null) { return; }
+
+            if (this.Context.UiElements.HScrollBar.InvokeRequired)
+            {
+                this.Context.UiElements.HScrollBar.Invoke((Action)delegate()
+                {
+                    this.RealCenterOnPixel(x, y);
+                });
+            }
+            else
+            {
+                RealCenterOnPixel(x, y);
+            }
+        }
+
+        private void RealCenterOnPixel(int x, int y)
+        {
             lock (this)
             {
                 // Sanitize numbers
@@ -94,7 +110,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                     this.Context.UiElements.HScrollBar.Value = (int)pos.X;
                     this.Context.UiElements.VScrollBar.Value = (int)pos.Y;
                 }
-                catch(Exception ex) 
+                catch (Exception ex)
                 {
                     this.Context.ErrorLog.Enqueue(ex.ToString());
                 }

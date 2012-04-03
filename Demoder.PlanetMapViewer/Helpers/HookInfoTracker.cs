@@ -36,11 +36,13 @@ namespace Demoder.PlanetMapViewer.Helpers
     public class HookInfoTracker
     {
         private Provider aoHookProvider;
+        internal Context Context { get; private set; }
         public Dictionary<int, AoInfo> Processes = new Dictionary<int, AoInfo>();
 
 
-        public HookInfoTracker()
+        public HookInfoTracker(Context context)
         {
+            this.Context = context;
             this.aoHookProvider = new Provider();
             this.aoHookProvider.CharacterPositionEvent += HandleCharacterPositionEvent;
             this.aoHookProvider.HookStateChangeEvent += HandleHookStateChangeEvent;
@@ -60,6 +62,14 @@ namespace Demoder.PlanetMapViewer.Helpers
                 quest.Zone.ID = e.ZoneID;
                 quest.ZonePosition = new Vector3(e.ZonePosX, e.ZonePosY, e.ZonePosZ);
                 info.LastModified.Restart();
+
+                // Center camera on mission coord.
+                if (quest.ZonePosition != default(Vector3))
+                {
+                    this.Context.State.CameraControl = CameraControl.Manual;
+                    var pos = this.Context.MapManager.GetPosition(quest.Zone.ID, quest.ZonePosition.X, quest.ZonePosition.Z);
+                    this.Context.Camera.CenterOnPixel(pos.X, pos.Y);
+                }
             }
         }
 

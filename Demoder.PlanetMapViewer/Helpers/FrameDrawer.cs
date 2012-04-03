@@ -264,7 +264,8 @@ namespace Demoder.PlanetMapViewer.Helpers
             {
                 Texture = this.Context.Content.Textures.TutorialFrame,
                 Position = new Vector2(posX, posY - 15),
-                Size = new Vector2(width, height)
+                Size = new Vector2(width, height),
+                PositionAlignment = MapItemAlignment.Top
             };
 
             return tex;

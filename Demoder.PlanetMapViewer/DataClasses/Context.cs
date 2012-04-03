@@ -99,7 +99,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
     public enum CameraControl
     {
         Manual,
-        Character
+        Character,
     }
 
     /// <summary>

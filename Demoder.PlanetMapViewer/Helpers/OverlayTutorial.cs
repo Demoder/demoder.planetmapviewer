@@ -100,6 +100,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Position = new Vector2(
                     center,
                     currentHeight),
+                PositionAlignment = MapItemAlignment.Top,
                 TextColor = Color.Red,
                 Shadow = false,
                 Text = "Tutorial: Overlay Menu",
@@ -115,6 +116,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Position = new Vector2(
                     center,
                     currentHeight),
+                PositionAlignment = MapItemAlignment.Top,
                 TextColor = Color.White,
                 Shadow = false,
                 Font = this.Context.Content.Fonts.GuiNormal,
@@ -126,7 +128,7 @@ namespace Demoder.PlanetMapViewer.Helpers
             });
             currentHeight += (int)items.Last().Size.Y;
             #endregion
-            this.Context.FrameDrawer.Draw(items);
+            this.Context.FrameDrawer.Draw(items, DrawMode.ViewPort);
         }
 
         private void ResizeWindow()
@@ -143,6 +145,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Position = new Vector2(
                     center,
                     currentHeight),
+                PositionAlignment = MapItemAlignment.Top,
                 TextColor = Color.Red,
                 Shadow = false,
                 Text = "Tutorial: Window Size",
@@ -157,6 +160,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Position = new Vector2(
                     center,
                     currentHeight),
+                PositionAlignment = MapItemAlignment.Top,
                 TextColor = Color.White,
                 Shadow = false,
                 Font = this.Context.Content.Fonts.GuiNormal,
@@ -168,7 +172,7 @@ namespace Demoder.PlanetMapViewer.Helpers
             currentHeight += (int)items.Last().Size.Y;
             #endregion
 
-            this.Context.FrameDrawer.Draw(items);
+            this.Context.FrameDrawer.Draw(items, DrawMode.ViewPort);
         }
 
         private void ExitOverlayMode()
@@ -185,6 +189,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Position = new Vector2(
                     center,
                     currentHeight),
+                PositionAlignment = MapItemAlignment.Top,
                 TextColor = Color.Red,
                 Shadow = false,
                 Text = "Tutorial: Exiting Overlay Mode",
@@ -199,6 +204,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Position = new Vector2(
                     center,
                     currentHeight),
+                PositionAlignment = MapItemAlignment.Top,
                 TextColor = Color.White,
                 Shadow = false,
                 Font = this.Context.Content.Fonts.GuiNormal,
@@ -210,7 +216,7 @@ namespace Demoder.PlanetMapViewer.Helpers
             });
             currentHeight += (int)items.Last().Size.Y;
             #endregion
-            this.Context.FrameDrawer.Draw(items);
+            this.Context.FrameDrawer.Draw(items, DrawMode.ViewPort);
         }
     }
 }

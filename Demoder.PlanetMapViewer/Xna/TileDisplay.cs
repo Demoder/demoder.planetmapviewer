@@ -193,7 +193,7 @@ namespace Demoder.PlanetMapViewer.Xna
 
             if (this.Context.State.CameraControl != CameraControl.Manual)
             {
-                this.Context.UiElements.ParentForm.RadioButtonCameraManual.Checked = true;
+                this.Context.State.CameraControl = CameraControl.Manual;
             }
 
             float newPos = this.Context.Camera.Center.X;
@@ -213,10 +213,8 @@ namespace Demoder.PlanetMapViewer.Xna
         {
             if (this.Context == null) { return; }
             var button = e.Button;
-            if (!this.Context.UiElements.ParentForm.RadioButtonCameraManual.Checked)
-            {
-                this.Context.UiElements.ParentForm.RadioButtonCameraManual.Checked = true;
-            }
+            this.Context.State.CameraControl = CameraControl.Manual;
+
             if (ModifierKeys == System.Windows.Forms.Keys.Shift)
             {
                 var newPos = (this.Context.Camera.Center.X - (e.Delta * this.mouseScrollSensitivity / 120 * this.Context.UiElements.HScrollBar.SmallChange));
@@ -291,14 +289,14 @@ namespace Demoder.PlanetMapViewer.Xna
             if (!this.isPanningMap) { return; }
             var deltaX = e.X - this.mousePosition.X;
             var deltaY = e.Y - this.mousePosition.Y;
-            // Are we in manual control mode?
-            if (!this.Context.UiElements.ParentForm.RadioButtonCameraManual.Checked)
+            
+            if (this.Context.State.CameraControl != CameraControl.Manual)
             {
                 // If we're not already in manual control mode, require some delta. 
                 // Prevents accidential scrolling.
                 if (Math.Abs(deltaX) > 15 || Math.Abs(deltaY) > 15)
                 {
-                    this.Context.UiElements.ParentForm.RadioButtonCameraManual.Checked = true;
+                    this.Context.State.CameraControl = CameraControl.Manual;
                 }
                 // Otherwise, discard the scroll.
                 else
@@ -306,6 +304,7 @@ namespace Demoder.PlanetMapViewer.Xna
                     return;
                 }
             }
+
             this.mousePosition.X = e.X;
             this.mousePosition.Y = e.Y;
 
