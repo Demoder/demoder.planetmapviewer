@@ -76,7 +76,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.tileDisplay1_hScrollBar = new System.Windows.Forms.HScrollBar();
             this.tileDisplay1 = new Demoder.PlanetMapViewer.Xna.TileDisplay();
             this.magnificationLabel = new System.Windows.Forms.Label();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.MagnificationSlider = new System.Windows.Forms.TrackBar();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.RadioButtonMapSelectionAuto = new System.Windows.Forms.RadioButton();
             this.RadioButtonMapSelectionShadowlands = new System.Windows.Forms.RadioButton();
@@ -110,7 +110,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MagnificationSlider)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -272,7 +272,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.magnificationLabel);
-            this.splitContainer1.Panel2.Controls.Add(this.trackBar1);
+            this.splitContainer1.Panel2.Controls.Add(this.MagnificationSlider);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox4);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
@@ -322,18 +322,18 @@ namespace Demoder.PlanetMapViewer.Forms
             this.magnificationLabel.TabIndex = 10002;
             this.magnificationLabel.Text = "100";
             // 
-            // trackBar1
+            // MagnificationSlider
             // 
-            this.trackBar1.LargeChange = 25;
-            this.trackBar1.Location = new System.Drawing.Point(5, 355);
-            this.trackBar1.Maximum = 200;
-            this.trackBar1.Minimum = 25;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(166, 45);
-            this.trackBar1.SmallChange = 5;
-            this.trackBar1.TabIndex = 10001;
-            this.trackBar1.Value = 100;
-            this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
+            this.MagnificationSlider.LargeChange = 25;
+            this.MagnificationSlider.Location = new System.Drawing.Point(5, 355);
+            this.MagnificationSlider.Maximum = 200;
+            this.MagnificationSlider.Minimum = 25;
+            this.MagnificationSlider.Name = "MagnificationSlider";
+            this.MagnificationSlider.Size = new System.Drawing.Size(166, 45);
+            this.MagnificationSlider.SmallChange = 5;
+            this.MagnificationSlider.TabIndex = 10001;
+            this.MagnificationSlider.Value = 100;
+            this.MagnificationSlider.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
             // 
             // groupBox4
             // 
@@ -612,7 +612,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MagnificationSlider)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -672,9 +672,9 @@ namespace Demoder.PlanetMapViewer.Forms
         private System.Windows.Forms.ToolStripMenuItem autoToolStripMenuItem;
         private System.Windows.Forms.Button CameraFollowMission;
         private System.Windows.Forms.Button CameraFollowCharacer;
-        private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.Label magnificationLabel;
         private System.Windows.Forms.ToolStripMenuItem missionToolStripMenuItem;
+        internal System.Windows.Forms.TrackBar MagnificationSlider;
     }
 }
 

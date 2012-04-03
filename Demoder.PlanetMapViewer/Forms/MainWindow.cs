@@ -1105,8 +1105,8 @@ namespace Demoder.PlanetMapViewer.Forms
         private void trackBar1_ValueChanged(object sender, EventArgs e)
         {
             var pos = this.Context.Camera.RelativePosition();
-            this.Context.State.Magnification = this.trackBar1.Value / 100f;
-            this.magnificationLabel.Text = this.trackBar1.Value.ToString() + "%";
+            this.Context.State.Magnification = this.MagnificationSlider.Value / 100f;
+            this.magnificationLabel.Text = this.MagnificationSlider.Value.ToString() + "%";
             this.Context.Camera.AdjustScrollbarsToLayer();
             this.Context.Camera.CenterOnRelativePosition(pos);
         }     
