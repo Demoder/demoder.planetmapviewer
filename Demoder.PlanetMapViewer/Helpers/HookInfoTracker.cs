@@ -53,6 +53,7 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         void HandleQuestLocationEvent(Provider sender, AoHook.Events.QuestLocationEventArgs e)
         {
+            Vector2 cameraPosition = Vector2.Zero;
             lock (this.Processes)
             {
                 var info = this.Processes[e.ProcessID];
@@ -67,9 +68,13 @@ namespace Demoder.PlanetMapViewer.Helpers
                 if (quest.ZonePosition != default(Vector3))
                 {
                     this.Context.State.CameraControl = CameraControl.Manual;
-                    var pos = this.Context.MapManager.GetPosition(quest.Zone.ID, quest.ZonePosition.X, quest.ZonePosition.Z);
-                    this.Context.Camera.CenterOnPixel(pos.X, pos.Y);
+                    cameraPosition = this.Context.MapManager.GetPosition(quest.Zone.ID, quest.ZonePosition.X, quest.ZonePosition.Z);
                 }
+            }
+
+            if (cameraPosition != Vector2.Zero)
+            {
+                this.Context.Camera.CenterOnPixel(cameraPosition.X, cameraPosition.Y);
             }
         }
 
