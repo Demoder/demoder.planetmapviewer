@@ -59,5 +59,19 @@ namespace Demoder.PlanetMapViewer.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; ?&gt;&lt;root&gt;
+        ///  &lt;Playfield id=&quot;505&quot; name=&quot;Avalon&quot; x=&quot;35214&quot; xscale=&quot;1.00000&quot; z=&quot;44566&quot; zscale=&quot;1.00000&quot;/&gt;
+        ///  &lt;Playfield id=&quot;540&quot; name=&quot;Old Athen&quot; x=&quot;39621&quot; xscale=&quot;1.00000&quot; z=&quot;40670&quot; zscale=&quot;1.00000&quot;/&gt;
+        ///  &lt;Playfield id=&quot;545&quot; name=&quot;West Athen&quot; x=&quot;39122&quot; xscale=&quot;1.00000&quot; z=&quot;40646&quot; zscale=&quot;1.00000&quot;/&gt;
+        ///  &lt;Playfield id=&quot;550&quot; name=&quot;Athen Shire&quot; x=&quot;37085&quot; xscale=&quot;1.00000&quot; z=&quot;39823&quot; zscale=&quot;1.00000&quot;/&gt;
+        ///  &lt;Playfield id=&quot;551&quot; name=&quot;Wailing Wastes&quot; x=&quot;37078&quot; xscale=&quot;1.00000&quot; z=&quot;41004&quot; zscale=&quot;1.00000&quot;/ [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string MapCoordinates {
+            get {
+                return ResourceManager.GetString("MapCoordinates", resourceCulture);
+            }
+        }
     }
 }
