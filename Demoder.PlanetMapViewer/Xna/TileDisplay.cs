@@ -224,7 +224,12 @@ namespace Demoder.PlanetMapViewer.Xna
             }
             else if (ModifierKeys == System.Windows.Forms.Keys.Control)
             {
-                this.Context.UiElements.ParentForm.MagnificationSlider.Value += (int)(e.Delta * this.mouseScrollSensitivity / 120 * this.Context.UiElements.ParentForm.MagnificationSlider.SmallChange);
+                float newVal = this.Context.UiElements.ParentForm.MagnificationSlider.Value;
+                newVal += (e.Delta / 120 * this.Context.UiElements.ParentForm.MagnificationSlider.SmallChange);
+                newVal /= 25;
+                newVal = ((int)newVal) * 25;
+
+                this.Context.UiElements.ParentForm.MagnificationSlider.Value = (int)MathHelper.Clamp(newVal, this.Context.UiElements.ParentForm.MagnificationSlider.Minimum, this.Context.UiElements.ParentForm.MagnificationSlider.Maximum);
             }
             else
             {
