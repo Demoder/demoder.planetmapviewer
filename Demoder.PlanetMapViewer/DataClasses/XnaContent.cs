@@ -59,5 +59,12 @@ namespace Demoder.PlanetMapViewer.DataClasses
         public SpriteFont GuiXLarge;
 
         public SpriteFont MapSmall;
+        public SpriteFont MapSmallB;
+
+        public SpriteFont MapNormal;
+        public SpriteFont MapNormalB;
+
+        public SpriteFont MapLarge;
+        public SpriteFont MapLargeB;
     }
 }

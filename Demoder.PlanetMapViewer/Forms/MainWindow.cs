@@ -1102,14 +1102,15 @@ namespace Demoder.PlanetMapViewer.Forms
         
         }
 
-        private void trackBar1_ValueChanged(object sender, EventArgs e)
+        private void MagnificationSlider_ValueChanged(object sender, EventArgs e)
         {
             var pos = this.Context.Camera.RelativePosition();
             this.Context.State.Magnification = this.MagnificationSlider.Value / 100f;
             this.magnificationLabel.Text = this.MagnificationSlider.Value.ToString() + "%";
             this.Context.Camera.AdjustScrollbarsToLayer();
             this.Context.Camera.CenterOnRelativePosition(pos);
-        }     
+            this.tileDisplay1.Focus();
+        }
     }
 
     public class MapSelectionItem
