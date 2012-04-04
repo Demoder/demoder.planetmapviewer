@@ -883,11 +883,11 @@ namespace Demoder.PlanetMapViewer.Forms
             this.Context.State.CameraControl = CameraControl.Character;
         }
 
-        private void manualToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void missionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Context.State.CameraControl = CameraControl.Manual;
-        }
-
+            this.MoveCameraToMission();
+        }   
         private void rubikaToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             this.RadioButtonMapSelectionRubika.Select();
@@ -919,7 +919,6 @@ namespace Demoder.PlanetMapViewer.Forms
 
                 // Camera controls
                 this.followCharactersToolStripMenuItem1.Checked = this.Context.State.CameraControl == CameraControl.Character;
-                this.manualToolStripMenuItem1.Checked = this.Context.State.CameraControl == CameraControl.Manual;
 
                 #region Map selection
                 {
@@ -1101,7 +1100,17 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.ShowExceptionError(ex);
             }
         
-        }        
+        }
+
+        private void MagnificationSlider_ValueChanged(object sender, EventArgs e)
+        {
+            var pos = this.Context.Camera.RelativePosition();
+            this.Context.State.Magnification = this.MagnificationSlider.Value / 100f;
+            this.magnificationLabel.Text = this.MagnificationSlider.Value.ToString() + "%";
+            this.Context.Camera.AdjustScrollbarsToLayer();
+            this.Context.Camera.CenterOnRelativePosition(pos);
+            this.tileDisplay1.Focus();
+        }
     }
 
     public class MapSelectionItem
