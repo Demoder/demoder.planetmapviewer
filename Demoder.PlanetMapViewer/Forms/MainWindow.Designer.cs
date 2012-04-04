@@ -74,6 +74,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tileDisplay1_vScrollBar = new System.Windows.Forms.VScrollBar();
             this.tileDisplay1_hScrollBar = new System.Windows.Forms.HScrollBar();
+            this.tileDisplay1 = new Demoder.PlanetMapViewer.Xna.TileDisplay();
             this.magnificationLabel = new System.Windows.Forms.Label();
             this.MagnificationSlider = new System.Windows.Forms.TrackBar();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -103,7 +104,6 @@ namespace Demoder.PlanetMapViewer.Forms
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exitOverlayModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tileDisplay1 = new Demoder.PlanetMapViewer.Xna.TileDisplay();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -303,6 +303,16 @@ namespace Demoder.PlanetMapViewer.Forms
             this.tileDisplay1_hScrollBar.Value = 1;
             this.tileDisplay1_hScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.tileDisplay1_ScrollBar_Scroll);
             // 
+            // tileDisplay1
+            // 
+            this.tileDisplay1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tileDisplay1.Location = new System.Drawing.Point(0, 0);
+            this.tileDisplay1.Name = "tileDisplay1";
+            this.tileDisplay1.Size = new System.Drawing.Size(605, 556);
+            this.tileDisplay1.TabIndex = 1;
+            this.tileDisplay1.Text = "PlanetMap";
+            this.tileDisplay1.OnDraw += new System.EventHandler(this.tileDisplay1_OnDraw);
+            // 
             // magnificationLabel
             // 
             this.magnificationLabel.AutoSize = true;
@@ -325,7 +335,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.MagnificationSlider.TickFrequency = 25;
             this.MagnificationSlider.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.MagnificationSlider.Value = 100;
-            this.MagnificationSlider.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
+            this.MagnificationSlider.ValueChanged += new System.EventHandler(this.MagnificationSlider_ValueChanged);
             // 
             // groupBox4
             // 
@@ -578,16 +588,6 @@ namespace Demoder.PlanetMapViewer.Forms
             this.exitOverlayModeToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.exitOverlayModeToolStripMenuItem.Text = "Exit Overlay Mode";
             this.exitOverlayModeToolStripMenuItem.Click += new System.EventHandler(this.exitOverlayModeToolStripMenuItem_Click);
-            // 
-            // tileDisplay1
-            // 
-            this.tileDisplay1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tileDisplay1.Location = new System.Drawing.Point(0, 0);
-            this.tileDisplay1.Name = "tileDisplay1";
-            this.tileDisplay1.Size = new System.Drawing.Size(605, 556);
-            this.tileDisplay1.TabIndex = 1;
-            this.tileDisplay1.Text = "PlanetMap";
-            this.tileDisplay1.OnDraw += new System.EventHandler(this.tileDisplay1_OnDraw);
             // 
             // MainWindow
             // 

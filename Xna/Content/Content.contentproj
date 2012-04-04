@@ -39,6 +39,7 @@
       <Name>CharacterName</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
+      <SubType>Designer</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -104,8 +105,44 @@
     <Compile Include="Fonts\MapSmall.spritefont">
       <Name>MapSmall</Name>
       <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
+      <Processor>FontTextureProcessor</Processor>
       <SubType>Designer</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Fonts\MapNormal.spritefont">
+      <Name>MapNormal</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontTextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Fonts\MapLarge.spritefont">
+      <Name>MapLarge</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontTextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Fonts\MapSmallB.spritefont">
+      <SubType>Designer</SubType>
+      <Name>MapSmallB</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontTextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Fonts\MapNormalB.spritefont">
+      <Name>MapNormalB</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontTextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Fonts\MapLargeB.spritefont">
+      <Name>MapLargeB</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontTextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
