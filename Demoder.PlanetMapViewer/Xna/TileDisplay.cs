@@ -92,6 +92,13 @@ namespace Demoder.PlanetMapViewer.Xna
                 this.Context.Content.Fonts.GuiLarge = this.Context.ContentManager.Load<SpriteFont>(@"Fonts\GuiLarge");
                 this.Context.Content.Fonts.GuiXLarge = this.Context.ContentManager.Load<SpriteFont>(@"Fonts\GuiXLarge");
 
+                this.Context.Content.Fonts.MapSmall = this.Context.ContentManager.Load<SpriteFont>(@"Fonts\MapSmall");
+                this.Context.Content.Fonts.MapSmallB = this.Context.ContentManager.Load<SpriteFont>(@"Fonts\MapSmallB");
+                this.Context.Content.Fonts.MapNormal = this.Context.ContentManager.Load<SpriteFont>(@"Fonts\MapNormal");
+                this.Context.Content.Fonts.MapNormalB = this.Context.ContentManager.Load<SpriteFont>(@"Fonts\MapNormalB");
+                this.Context.Content.Fonts.MapLarge= this.Context.ContentManager.Load<SpriteFont>(@"Fonts\MapLarge");
+                this.Context.Content.Fonts.MapLargeB = this.Context.ContentManager.Load<SpriteFont>(@"Fonts\MapLargeB");
+                
                 this.Context.Content.Loaded = true;
                 ThreadPool.QueueUserWorkItem(new WaitCallback(this.InvalidateFrame));
             }
@@ -144,17 +151,128 @@ namespace Demoder.PlanetMapViewer.Xna
                         this.OnDraw(this, null);
 #if DEBUG
                         {
+                            var curVertPos = 10;
                             var items = new List<IMapItem>();
                             items.Add(new MapText
                             {
-                                Position = new Vector2(10, 10),
+                                Position = new Vector2(10, curVertPos),
                                 PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
                                 Font = this.Context.Content.Fonts.GuiSmall,
                                 Text = String.Format("FPS: {0}", 1000 / (this.timeSinceLastDraw.ElapsedMilliseconds + curSwVal)),
-                                TextColor = Color.Pink,
-                                ShadowColor = Color.Purple
-
+                                TextColor = Color.White,
+                                ShadowColor = Color.Black
                             });
+                            /*
+                            curVertPos += (int)items.Last().Size.Y;
+                            items.Add(new MapText
+                            {
+                                Position = new Vector2(10, curVertPos),
+                                PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
+                                Font = this.Context.Content.Fonts.GuiSmall,
+                                Text = "This is GuiSmall",
+                                TextColor = Color.White,
+                                ShadowColor = Color.Black
+                            });
+
+                            curVertPos += (int)items.Last().Size.Y;
+                            items.Add(new MapText
+                            {
+                                Position = new Vector2(10, curVertPos),
+                                PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
+                                Font = this.Context.Content.Fonts.GuiNormal,
+                                Text = "This is GuiNormal",
+                                TextColor = Color.White,
+                                ShadowColor = Color.Black
+                            });
+
+                            curVertPos += (int)items.Last().Size.Y;
+                            items.Add(new MapText
+                            {
+                                Position = new Vector2(10, curVertPos),
+                                PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
+                                Font = this.Context.Content.Fonts.GuiLarge,
+                                Text = "This is GuiLarge",
+                                TextColor = Color.White,
+                                ShadowColor = Color.Black
+                            });
+
+                            curVertPos += (int)items.Last().Size.Y;
+                            items.Add(new MapText
+                            {
+                                Position = new Vector2(10, curVertPos),
+                                PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
+                                Font = this.Context.Content.Fonts.GuiXLarge,
+                                Text = "This is GuiXLarge",
+                                TextColor = Color.White,
+                                ShadowColor = Color.Black
+                            });
+
+                            curVertPos += (int)items.Last().Size.Y;
+                            items.Add(new MapText
+                            {
+                                Position = new Vector2(10, curVertPos),
+                                PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
+                                Font = this.Context.Content.Fonts.MapSmall,
+                                Text = "This is MapSmall",
+                                TextColor = Color.White,
+                                ShadowColor = Color.Black
+                            });
+
+                            curVertPos += (int)items.Last().Size.Y;
+                            items.Add(new MapText
+                            {
+                                Position = new Vector2(10, curVertPos),
+                                PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
+                                Font = this.Context.Content.Fonts.MapSmallB,
+                                Text = "This is MapSmallB",
+                                TextColor = Color.White,
+                                ShadowColor = Color.Black
+                            });
+
+                            curVertPos += (int)items.Last().Size.Y;
+                            items.Add(new MapText
+                            {
+                                Position = new Vector2(10, curVertPos),
+                                PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
+                                Font = this.Context.Content.Fonts.MapNormal,
+                                Text = "This is MapNormal",
+                                TextColor = Color.White,
+                                ShadowColor = Color.Black
+                            });
+
+                            curVertPos += (int)items.Last().Size.Y;
+                            items.Add(new MapText
+                            {
+                                Position = new Vector2(10, curVertPos),
+                                PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
+                                Font = this.Context.Content.Fonts.MapNormalB,
+                                Text = "This is MapNormalB",
+                                TextColor = Color.White,
+                                ShadowColor = Color.Black
+                            });
+
+                            curVertPos += (int)items.Last().Size.Y;
+                            items.Add(new MapText
+                            {
+                                Position = new Vector2(10, curVertPos),
+                                PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
+                                Font = this.Context.Content.Fonts.MapLarge,
+                                Text = "This is MapLarge",
+                                TextColor = Color.White,
+                                ShadowColor = Color.Black
+                            });
+
+                            curVertPos += (int)items.Last().Size.Y;
+                            items.Add(new MapText
+                            {
+                                Position = new Vector2(10, curVertPos),
+                                PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
+                                Font = this.Context.Content.Fonts.MapLargeB,
+                                Text = "This is MapLargeB",
+                                TextColor = Color.White,
+                                ShadowColor = Color.Black
+                            });
+                            */
                             this.Context.FrameDrawer.Draw(items.ToArray(), DrawMode.ViewPort);
                         }
 #endif
@@ -219,6 +337,15 @@ namespace Demoder.PlanetMapViewer.Xna
             {
                 var newPos = (this.Context.Camera.Center.X - (e.Delta * this.mouseScrollSensitivity / 120 * this.Context.UiElements.HScrollBar.SmallChange));
                 this.Context.Camera.CenterOnPixel(newPos, this.Context.Camera.Center.Y);
+            }
+            else if (ModifierKeys == System.Windows.Forms.Keys.Control)
+            {
+                float newVal = this.Context.UiElements.ParentForm.MagnificationSlider.Value;
+                newVal += (e.Delta / 120 * this.Context.UiElements.ParentForm.MagnificationSlider.SmallChange);
+                newVal /= 5;
+                newVal = ((int)newVal) * 5;
+
+                this.Context.UiElements.ParentForm.MagnificationSlider.Value = (int)MathHelper.Clamp(newVal, this.Context.UiElements.ParentForm.MagnificationSlider.Minimum, this.Context.UiElements.ParentForm.MagnificationSlider.Maximum);
             }
             else
             {

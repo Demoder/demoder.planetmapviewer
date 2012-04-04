@@ -260,6 +260,7 @@
     <Content Include="Readme.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\MapCoordinates.xml" />
     <Content Include="Xna\Readme.txt" />
   </ItemGroup>
   <ItemGroup />

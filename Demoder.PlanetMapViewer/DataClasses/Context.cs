@@ -39,7 +39,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
         public Context()
         {
             this.UiElements = new ContextUiElements();
-            this.State = new ContextOptions();
+            this.State = new ContextState();
             this.Content = new XnaContent();
             this.FrameDrawer = new FrameDrawer(this);
             this.Tutorial = new Tutorial(this);
@@ -67,7 +67,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
         }
 
         public ContextUiElements UiElements { get; private set; }
-        public ContextOptions State { get; private set; }
+        public ContextState State { get; private set; }
     }
 
     public class ContextUiElements
@@ -79,7 +79,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
         public TileDisplay TileDisplay;
     }
 
-    public class ContextOptions
+    public class ContextState
     {
         /// <summary>
         /// Which map type is currently selected, if any?
@@ -94,6 +94,11 @@ namespace Demoder.PlanetMapViewer.DataClasses
         /// Current window mode
         /// </summary>
         public WindowMode WindowMode = WindowMode.Normal;
+
+        /// <summary>
+        /// Percent magnification. 2 = twice size, 0.5=half size.
+        /// </summary>
+        public float Magnification = 1;
     }
 
     public enum CameraControl

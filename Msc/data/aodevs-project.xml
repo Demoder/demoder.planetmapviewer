@@ -63,8 +63,8 @@
   </Versions>
   <Packages>
     <Package Name="1.0.1" Date="2012-03-27">
+  	  <File Label="Setup" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/downloads/Demoders%20PlanetMap%20Viewer%20v1.0.1%20Setup.zip"/>
       <File Label="Binaries" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/downloads/Demoders%20PlanetMap%20Viewer%20v1.0.1.zip"/>
-      <File Label="Setup" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/downloads/Demoders%20PlanetMap%20Viewer%201.0.1%20Setup.zip"/>
       <Repository Type="Mercurial" Label="Source" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer"/>
     </Package>
   </Packages>

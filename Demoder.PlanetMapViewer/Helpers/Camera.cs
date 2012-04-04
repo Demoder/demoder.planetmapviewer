@@ -96,8 +96,8 @@ namespace Demoder.PlanetMapViewer.Helpers
                 // Sanitize numbers
                 x = Math.Max(x, 0);
                 y = Math.Max(y, 0);
-                x = Math.Min(x, this.Context.MapManager.CurrentLayer.Size.X);
-                y = Math.Min(y, this.Context.MapManager.CurrentLayer.Size.Y);
+                x = (int)Math.Min(x, this.Context.MapManager.CurrentLayer.Size.X * this.Context.State.Magnification);
+                y = (int)Math.Min(y, this.Context.MapManager.CurrentLayer.Size.Y * this.Context.State.Magnification);
 
                 // Set position
                 this.centerPosition.X = (int)Math.Floor((float)x);
@@ -176,7 +176,7 @@ namespace Demoder.PlanetMapViewer.Helpers
 
             #region Horizontal scrollbar
             int horModifier = this.Context.UiElements.TileDisplay.Width / 2;
-            this.Context.UiElements.HScrollBar.Maximum = (int)this.Context.MapManager.CurrentLayer.Size.X + horModifier;
+            this.Context.UiElements.HScrollBar.Maximum = (int)(this.Context.MapManager.CurrentLayer.Size.X * this.Context.State.Magnification) + horModifier;
             this.Context.UiElements.HScrollBar.Minimum = -horModifier;
 
             this.Context.UiElements.HScrollBar.LargeChange = this.Context.UiElements.TileDisplay.Width;
@@ -186,31 +186,13 @@ namespace Demoder.PlanetMapViewer.Helpers
 
             #region Vertical scrollbar
             var verModifier = this.Context.UiElements.TileDisplay.Height / 2;
-            this.Context.UiElements.VScrollBar.Maximum = this.Context.MapManager.CurrentLayer.Size.Y + verModifier;
+            this.Context.UiElements.VScrollBar.Maximum = (int)(this.Context.MapManager.CurrentLayer.Size.Y * this.Context.State.Magnification)+ verModifier;
             this.Context.UiElements.VScrollBar.Minimum = -verModifier;
 
             this.Context.UiElements.VScrollBar.LargeChange = this.Context.UiElements.TileDisplay.Height;
             this.Context.UiElements.VScrollBar.SmallChange = this.Context.UiElements.TileDisplay.Height / 10;
             this.Context.UiElements.VScrollBar.Invalidate();
             #endregion
-
-            if (this.Context.UiElements.VScrollBar.Value > this.Context.UiElements.VScrollBar.Maximum)
-            {
-                this.Context.UiElements.VScrollBar.Value = this.Context.UiElements.VScrollBar.Maximum;
-            }
-            if (this.Context.UiElements.VScrollBar.Value < this.Context.UiElements.VScrollBar.Minimum)
-            {
-                this.Context.UiElements.VScrollBar.Value = this.Context.UiElements.VScrollBar.Minimum;
-            }
-
-            if (this.Context.UiElements.HScrollBar.Value > this.Context.UiElements.HScrollBar.Maximum)
-            {
-                this.Context.UiElements.HScrollBar.Value = this.Context.UiElements.HScrollBar.Maximum;
-            }
-            if (this.Context.UiElements.HScrollBar.Value < this.Context.UiElements.HScrollBar.Minimum)
-            {
-                this.Context.UiElements.HScrollBar.Value = this.Context.UiElements.HScrollBar.Minimum;
-            }   
         }
     }
 }
