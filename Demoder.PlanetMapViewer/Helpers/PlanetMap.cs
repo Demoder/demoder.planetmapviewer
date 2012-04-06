@@ -321,6 +321,9 @@ namespace Demoder.PlanetMapViewer.Helpers
                     BlendState.AlphaBlend,
                     null, null, null, null,
                     camera.TransformMatrix);
+            // Point is best for zooming out
+            // Linear is for zooming in
+            graphicsDevice.SamplerStates[0] = new SamplerState { Filter = TextureFilter.MinPointMagLinearMipLinear };
             try
             {
                 Vector2 minPos = camera.Position;
