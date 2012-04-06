@@ -75,6 +75,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.tileDisplay1_vScrollBar = new System.Windows.Forms.VScrollBar();
             this.tileDisplay1_hScrollBar = new System.Windows.Forms.HScrollBar();
             this.tileDisplay1 = new Demoder.PlanetMapViewer.Xna.TileDisplay();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.magnificationLabel = new System.Windows.Forms.Label();
             this.MagnificationSlider = new System.Windows.Forms.TrackBar();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -104,19 +105,18 @@ namespace Demoder.PlanetMapViewer.Forms
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exitOverlayModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MagnificationSlider)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.OverlayTitleContextMenuStrip.SuspendLayout();
-            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -313,6 +313,17 @@ namespace Demoder.PlanetMapViewer.Forms
             this.tileDisplay1.TabIndex = 1;
             this.tileDisplay1.Text = "PlanetMap";
             this.tileDisplay1.OnDraw += new System.EventHandler(this.tileDisplay1_OnDraw);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.magnificationLabel);
+            this.groupBox3.Controls.Add(this.MagnificationSlider);
+            this.groupBox3.Location = new System.Drawing.Point(3, 342);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(168, 67);
+            this.groupBox3.TabIndex = 10003;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Magnification";
             // 
             // magnificationLabel
             // 
@@ -588,17 +599,6 @@ namespace Demoder.PlanetMapViewer.Forms
             this.exitOverlayModeToolStripMenuItem.Text = "Exit Overlay Mode";
             this.exitOverlayModeToolStripMenuItem.Click += new System.EventHandler(this.exitOverlayModeToolStripMenuItem_Click);
             // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.magnificationLabel);
-            this.groupBox3.Controls.Add(this.MagnificationSlider);
-            this.groupBox3.Location = new System.Drawing.Point(3, 342);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(168, 67);
-            this.groupBox3.TabIndex = 10003;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Magnification";
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -623,14 +623,14 @@ namespace Demoder.PlanetMapViewer.Forms
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MagnificationSlider)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.OverlayTitleContextMenuStrip.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
