@@ -340,12 +340,16 @@ namespace Demoder.PlanetMapViewer.Xna
             }
             else if (ModifierKeys == System.Windows.Forms.Keys.Control)
             {
-                float newVal = this.Context.UiElements.ParentForm.MagnificationSlider.Value;
-                newVal += (e.Delta / 120 * this.Context.UiElements.ParentForm.MagnificationSlider.SmallChange);
-                newVal /= 5;
-                newVal = ((int)newVal) * 5;
+                var element = this.Context.UiElements.ParentForm.MagnificationSlider;
+                float newVal = element.Value;
+                if (e.Delta > 0) { newVal++; }
+                else if (e.Delta < 0) { newVal--; }
+                else { return; }
 
-                this.Context.UiElements.ParentForm.MagnificationSlider.Value = (int)MathHelper.Clamp(newVal, this.Context.UiElements.ParentForm.MagnificationSlider.Minimum, this.Context.UiElements.ParentForm.MagnificationSlider.Maximum);
+                element.Value = (int)MathHelper.Clamp(
+                        newVal,
+                        element.Minimum,
+                        element.Maximum);
             }
             else
             {
