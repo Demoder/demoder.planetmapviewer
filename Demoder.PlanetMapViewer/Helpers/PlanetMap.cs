@@ -98,7 +98,6 @@ namespace Demoder.PlanetMapViewer.Helpers
             float relativeX = zoneInfo.XScale * (worldPos.X - this.MinX) / (this.MaxX - this.MinX);
 
             float relativeY = 1 - (zoneInfo.YScale * (worldPos.Y - this.MinY) / (this.MaxY - this.MinY));
-            #region sound
             
             // Pixel position - relative world position projected onto map
             // 1: 
@@ -110,13 +109,10 @@ namespace Demoder.PlanetMapViewer.Helpers
             return new Vector2(
                 (float)Math.Round(pixelX * this.Context.State.Magnification),
                 (float)Math.Round(pixelY * this.Context.State.Magnification));
-            #endregion
         }
 
         public Vector2 GetReversePosition(int layer, uint zone, float x, float y)
         {
-            #region sound
-
             var zoneInfo = this.CoordsFile.Playfields.FirstOrDefault(i => i.ID == zone);
             if (zoneInfo == null)
             {
@@ -126,8 +122,10 @@ namespace Demoder.PlanetMapViewer.Helpers
             var layerInfo = this.Layers[layer];
 
 
-            var pixelPos = new Vector2(x / this.Context.State.Magnification, y / this.Context.State.Magnification);
-            #endregion
+            var pixelPos = new Vector2(
+                (float)Math.Round(x / this.Context.State.Magnification), 
+                (float)Math.Round(y / this.Context.State.Magnification));
+
             float relativeX = pixelPos.X - layerInfo.MapRect.X;
             relativeX /= layerInfo.MapRect.Width - layerInfo.MapRect.X;
 
@@ -315,7 +313,8 @@ namespace Demoder.PlanetMapViewer.Helpers
             var graphicsDevice = context.GraphicsDevice;
             var display = context.UiElements.TileDisplay;
 
-            var txz = this.TextureSize * context.State.Magnification;
+            var txz = (float)Math.Round(this.TextureSize * context.State.Magnification);
+            
 
             batch.Begin(
                     SpriteSortMode.Texture,

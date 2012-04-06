@@ -104,6 +104,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exitOverlayModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -115,6 +116,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.OverlayTitleContextMenuStrip.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -271,8 +273,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.magnificationLabel);
-            this.splitContainer1.Panel2.Controls.Add(this.MagnificationSlider);
+            this.splitContainer1.Panel2.Controls.Add(this.groupBox3);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox4);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
@@ -316,25 +317,23 @@ namespace Demoder.PlanetMapViewer.Forms
             // magnificationLabel
             // 
             this.magnificationLabel.AutoSize = true;
-            this.magnificationLabel.Location = new System.Drawing.Point(65, 387);
+            this.magnificationLabel.Location = new System.Drawing.Point(72, 48);
             this.magnificationLabel.Name = "magnificationLabel";
-            this.magnificationLabel.Size = new System.Drawing.Size(25, 13);
+            this.magnificationLabel.Size = new System.Drawing.Size(33, 13);
             this.magnificationLabel.TabIndex = 10002;
-            this.magnificationLabel.Text = "100";
+            this.magnificationLabel.Text = "100%";
             // 
             // MagnificationSlider
             // 
-            this.MagnificationSlider.LargeChange = 25;
-            this.MagnificationSlider.Location = new System.Drawing.Point(5, 355);
-            this.MagnificationSlider.Maximum = 200;
-            this.MagnificationSlider.Minimum = 25;
+            this.MagnificationSlider.LargeChange = 1;
+            this.MagnificationSlider.Location = new System.Drawing.Point(7, 16);
+            this.MagnificationSlider.Maximum = 2;
+            this.MagnificationSlider.Minimum = -2;
             this.MagnificationSlider.Name = "MagnificationSlider";
-            this.MagnificationSlider.Size = new System.Drawing.Size(166, 45);
-            this.MagnificationSlider.SmallChange = 5;
+            this.MagnificationSlider.Size = new System.Drawing.Size(155, 45);
             this.MagnificationSlider.TabIndex = 10001;
             this.MagnificationSlider.TickFrequency = 25;
             this.MagnificationSlider.TickStyle = System.Windows.Forms.TickStyle.Both;
-            this.MagnificationSlider.Value = 100;
             this.MagnificationSlider.ValueChanged += new System.EventHandler(this.MagnificationSlider_ValueChanged);
             // 
             // groupBox4
@@ -589,6 +588,17 @@ namespace Demoder.PlanetMapViewer.Forms
             this.exitOverlayModeToolStripMenuItem.Text = "Exit Overlay Mode";
             this.exitOverlayModeToolStripMenuItem.Click += new System.EventHandler(this.exitOverlayModeToolStripMenuItem_Click);
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.magnificationLabel);
+            this.groupBox3.Controls.Add(this.MagnificationSlider);
+            this.groupBox3.Location = new System.Drawing.Point(3, 342);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(168, 67);
+            this.groupBox3.TabIndex = 10003;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Magnification";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -611,7 +621,6 @@ namespace Demoder.PlanetMapViewer.Forms
             this.statusStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.MagnificationSlider)).EndInit();
@@ -620,6 +629,8 @@ namespace Demoder.PlanetMapViewer.Forms
             this.groupBox2.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.OverlayTitleContextMenuStrip.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -677,6 +688,7 @@ namespace Demoder.PlanetMapViewer.Forms
         private System.Windows.Forms.Label magnificationLabel;
         private System.Windows.Forms.ToolStripMenuItem missionToolStripMenuItem;
         internal System.Windows.Forms.TrackBar MagnificationSlider;
+        private System.Windows.Forms.GroupBox groupBox3;
     }
 }
 

@@ -1099,14 +1099,21 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.Context.ErrorLog.Enqueue(ex.ToString());
                 this.ShowExceptionError(ex);
             }
-        
         }
 
         private void MagnificationSlider_ValueChanged(object sender, EventArgs e)
         {
             var pos = this.Context.Camera.RelativePosition();
-            this.Context.State.Magnification = this.MagnificationSlider.Value / 100f;
-            this.magnificationLabel.Text = this.MagnificationSlider.Value.ToString() + "%";
+            switch (this.MagnificationSlider.Value)
+            {
+                case -2: this.Context.State.Magnification = 0.50f; break;
+                case -1: this.Context.State.Magnification = 0.75f; break;
+                case 0: this.Context.State.Magnification = 1.00f; break;
+                case 1: this.Context.State.Magnification = 2.00f; break;
+                case 2: this.Context.State.Magnification = 4.00f; break;
+            }
+
+            this.magnificationLabel.Text = (this.Context.State.Magnification * 100).ToString() + "%";
             this.Context.Camera.AdjustScrollbarsToLayer();
             this.Context.Camera.CenterOnRelativePosition(pos);
             this.tileDisplay1.Focus();
