@@ -144,10 +144,16 @@ namespace Demoder.PlanetMapViewer.Helpers
                 {
                     return false;
                 }
+                var oldMap = this.CurrentMap;
 
                 this.SaveCurrentMapZoomLevel();
 
                 this.CurrentMap = newMap;
+                // Unload map textures.
+                if (oldMap != null)
+                {
+                    oldMap.UnloadAllTextures();
+                }
                 SetCurrentMapZoomLevel(newMap);
                 
                 if (this.Context.Camera != null)
@@ -239,10 +245,12 @@ namespace Demoder.PlanetMapViewer.Helpers
         {
             if (this.CurrentLayerNum < this.CurrentMap.Layers.Length - 1)
             {
+
                 var relPos = this.Context.Camera.RelativePosition();
                 this.CurrentLayerNum++;
                 this.Context.Camera.AdjustScrollbarsToLayer();
                 this.Context.Camera.CenterOnRelativePosition(relPos);
+                this.CurrentMap.Layers[this.CurrentLayerNum - 1].UnloadAllTextures();
                 return true;
             }
             return false;
@@ -255,6 +263,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 this.CurrentLayerNum--;
                 this.Context.Camera.AdjustScrollbarsToLayer();
                 this.Context.Camera.CenterOnRelativePosition(relPos);
+                this.CurrentMap.Layers[this.CurrentLayerNum + 1].UnloadAllTextures();
                 return true;
             }
             return false;
