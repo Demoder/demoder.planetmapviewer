@@ -24,30 +24,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
-using Demoder.PlanetMapViewer.Forms;
-using System.IO;
+using System.Text;
+using Microsoft.Xna.Framework;
 
-namespace Demoder.PlanetMapViewer
+namespace Demoder.PlanetMapViewer.DataClasses
 {
-    static class Program
+    public class QuestInfo
     {
+        public uint ID;
+        public ZoneInfo Zone = new ZoneInfo();
+        public Vector3 ZonePosition = new Vector3();
+        public Vector3 WorldPosition = new Vector3();
+
         /// <summary>
-        /// The main entry point for the application.
+        /// Is this quest tracked by camera?
         /// </summary>
-        [STAThread]
-        static void Main()
-        {
-#if DEBUG
-            var stream = File.Open("stdout.txt", FileMode.Create, FileAccess.ReadWrite, FileShare.Read);
-            var writer = new StreamWriter(stream);
-            writer.AutoFlush = true;
-            Console.SetOut(writer);            
-#endif
-            Console.WriteLine("Starting application");
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainWindow());
-        }     
+        public bool IsTrackedByCamera = false;
     }
 }

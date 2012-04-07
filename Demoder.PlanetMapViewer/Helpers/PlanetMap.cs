@@ -323,7 +323,15 @@ namespace Demoder.PlanetMapViewer.Helpers
                     camera.TransformMatrix);
             // Point is best for zooming out
             // Linear is for zooming in
-            graphicsDevice.SamplerStates[0] = new SamplerState { Filter = TextureFilter.MinPointMagLinearMipLinear };
+            if (context.State.Magnification > 1)
+            {
+                graphicsDevice.SamplerStates[0] = new SamplerState { Filter = TextureFilter.Linear };
+            }
+            else
+            {
+                graphicsDevice.SamplerStates[0] = new SamplerState { Filter = TextureFilter.Anisotropic, MaxAnisotropy = 16 };
+            }
+
             try
             {
                 Vector2 minPos = camera.Position;
@@ -343,39 +351,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 {
                     for (int y = (int)Math.Max(minPos.Y, 0); y < (int)maxPos.Y; y++)
                     {
-                        if (this.textureMap[y, x] == null)
-                        {
-                            try
-                            {
-                                int texturePos = this.filePos[y, x];
-                                this.binFile.Seek(texturePos, SeekOrigin.Begin);
-                                // Read maximum 512kB to find image slice.
-                                int size = (int)Math.Min(512 * 1024, this.binFile.Length - texturePos);
-
-                                byte[] b = new byte[size];
-                                this.binFile.Read(b, 0, size);
-
-                                var ms = new MemoryStream(b);
-                                var tex = Texture2D.FromStream(graphicsDevice, ms);
-                                
-                                this.textureMap[y, x] = tex;
-                            }
-                            catch (Exception ex)
-                            {
-                                if (this.invalidTile == null)
-                                {
-                                    this.invalidTile = new Texture2D(graphicsDevice, this.TextureSize, this.TextureSize, false, SurfaceFormat.Color);
-                                    var pixels = new Color[this.TextureSize * this.TextureSize];
-                                    for (int i=0; i<pixels.Length; i++)
-                                    {
-                                        pixels[i] = Color.White;
-                                    }
-
-                                    this.invalidTile.SetData(pixels);
-                                }
-                                this.textureMap[y, x] = this.invalidTile;
-                            }
-                        }
+                        this.LoadTile(graphicsDevice, x, y);
       
                         batch.Draw(this.textureMap[y, x],
                             new Rectangle(
@@ -395,6 +371,49 @@ namespace Demoder.PlanetMapViewer.Helpers
             finally
             {
                 batch.End();
+            }
+        }
+
+        /// <summary>
+        /// Loads a single tile
+        /// </summary>
+        /// <param name="graphicsDevice"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        private void LoadTile(GraphicsDevice graphicsDevice, int x, int y)
+        {
+            if (this.textureMap == null) { this.textureMap = new Texture2D[this.Tiles.Y, this.Tiles.X]; }
+            if (this.textureMap[y, x] != null) { return; }
+
+            try
+            {
+                int texturePos = this.filePos[y, x];
+                this.binFile.Seek(texturePos, SeekOrigin.Begin);
+                
+                // Read maximum 512kB to find image slice.
+                int size = (int)Math.Min(512 * 1024, this.binFile.Length - texturePos);
+
+                var b = new byte[size];
+                this.binFile.Read(b, 0, size);
+                var ms = new MemoryStream(b, false);
+                var tex = Texture2D.FromStream(graphicsDevice, ms);
+
+                this.textureMap[y, x] = tex;
+            }
+            catch (Exception ex)
+            {
+                if (this.invalidTile == null)
+                {
+                    this.invalidTile = new Texture2D(graphicsDevice, this.TextureSize, this.TextureSize, false, SurfaceFormat.Color);
+                    var pixels = new Color[this.TextureSize * this.TextureSize];
+                    for (int i = 0; i < pixels.Length; i++)
+                    {
+                        pixels[i] = Color.White;
+                    }
+
+                    this.invalidTile.SetData(pixels);
+                }
+                this.textureMap[y, x] = this.invalidTile;
             }
         }
     }

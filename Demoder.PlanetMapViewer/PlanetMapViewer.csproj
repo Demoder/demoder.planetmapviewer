@@ -92,6 +92,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataClasses\PlayerInfo.cs" />
+    <Compile Include="DataClasses\QuestInfo.cs" />
+    <Compile Include="Properties\CharacterTrackerControlResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CharacterTrackerControlResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="DataClasses\IMapItem.cs" />
     <Compile Include="DataClasses\MapText.cs" />
     <Compile Include="enums.cs" />
@@ -102,6 +109,12 @@
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </Compile>
     <Compile Include="DataClasses\MapTexture.cs" />
+    <Compile Include="Forms\CharacterTrackerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\CharacterTrackerControl.Designer.cs">
+      <DependentUpon>CharacterTrackerControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ErrorLog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,7 +123,7 @@
     </Compile>
     <Compile Include="Helpers\Camera.cs" />
     <Compile Include="DataClasses\Context.cs" />
-    <Compile Include="DataClasses\AoInfo.cs" />
+    <Compile Include="DataClasses\ZoneInfo.cs" />
     <Compile Include="Helpers\NormalTotorial.cs" />
     <Compile Include="Helpers\FrameDrawer.cs" />
     <Compile Include="Helpers\OverlayTutorial.cs" />
@@ -162,8 +175,15 @@
     </Compile>
     <Compile Include="Xna\GraphicsDeviceService.cs" />
     <Compile Include="Xna\ServiceContainer.cs" />
+    <EmbeddedResource Include="Properties\CharacterTrackerControlResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CharacterTrackerControlResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\AboutBox1.resx">
       <DependentUpon>AboutBox1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CharacterTrackerControl.resx">
+      <DependentUpon>CharacterTrackerControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ErrorLog.resx">
       <DependentUpon>ErrorLog.cs</DependentUpon>
@@ -261,6 +281,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\MapCoordinates.xml" />
+    <None Include="Resources\PlayerInShadowlands.png" />
+    <None Include="Resources\PlayerOnRubika.png" />
     <Content Include="Xna\Readme.txt" />
   </ItemGroup>
   <ItemGroup />

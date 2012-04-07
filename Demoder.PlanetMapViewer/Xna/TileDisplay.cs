@@ -76,6 +76,8 @@ namespace Demoder.PlanetMapViewer.Xna
             this.SetStyle(ControlStyles.UserPaint, true);
             this.SetStyle(ControlStyles.ResizeRedraw, true);
 
+            this.Context.UiElements.TileDisplay = this;
+
             try
             {
                 this.Context.ContentManager = new ContentManager(Services, "Content");
@@ -338,7 +340,7 @@ namespace Demoder.PlanetMapViewer.Xna
                 var newPos = (this.Context.Camera.Center.X - (e.Delta * this.mouseScrollSensitivity / 120 * this.Context.UiElements.HScrollBar.SmallChange));
                 this.Context.Camera.CenterOnPixel(newPos, this.Context.Camera.Center.Y);
             }
-            else if (ModifierKeys == System.Windows.Forms.Keys.Control)
+            else if (ModifierKeys.HasFlag(System.Windows.Forms.Keys.Control))
             {
                 var element = this.Context.UiElements.ParentForm.MagnificationSlider;
                 float newVal = element.Value;
@@ -346,10 +348,26 @@ namespace Demoder.PlanetMapViewer.Xna
                 else if (e.Delta < 0) { newVal--; }
                 else { return; }
 
+                // Magnify to mouse position.
+                
+                
+                if (ModifierKeys.HasFlag(System.Windows.Forms.Keys.Alt) && this.Context.State.CameraControl == CameraControl.Manual)
+                {
+                    this.Context.Camera.CenterOnPixel(
+                        (int)this.Context.Camera.Position.X + e.X,
+                        (int)this.Context.Camera.Position.Y + e.Y);
+                }
+                var curPos = this.Context.Camera.RelativePosition();
+                
                 element.Value = (int)MathHelper.Clamp(
                         newVal,
                         element.Minimum,
                         element.Maximum);
+
+                if (curPos != Vector2.Zero)
+                {
+                    this.Context.Camera.CenterOnRelativePosition(curPos);
+                }
             }
             else
             {

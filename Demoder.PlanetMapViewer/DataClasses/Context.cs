@@ -77,6 +77,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
         public HScrollBar HScrollBar;
         public ComboBox MapList;
         public TileDisplay TileDisplay;
+        public CharacterTrackerControl CharacterTrackerControl;
     }
 
     public class ContextState
@@ -99,7 +100,11 @@ namespace Demoder.PlanetMapViewer.DataClasses
         /// Percent magnification. 2 = twice size, 0.5=half size.
         /// </summary>
         public float Magnification = 1;
+
+        public Dictionary<uint, PlayerInfo> PlayerInfo = new Dictionary<uint, PlayerInfo>();
+
     }
+
 
     public enum CameraControl
     {

@@ -173,6 +173,8 @@ namespace Demoder.AoHook
             this.curCharacterPos = e;
             this.outgoingEvents.Enqueue(new hEvents.CharacterPositionEventArgs(
                  e.ProcessId,
+                 e.DynelType,
+                 e.DynelID,
                  e.ZoneID,
                  e.ZoneName,
                  e.InShadowlands,
