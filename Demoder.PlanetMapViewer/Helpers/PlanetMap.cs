@@ -31,6 +31,7 @@ using Demoder.PlanetMapViewer.DataClasses;
 using Demoder.PlanetMapViewer.Xna;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics;
 
 namespace Demoder.PlanetMapViewer.Helpers
 {
@@ -148,6 +149,14 @@ namespace Demoder.PlanetMapViewer.Helpers
                 (float)Math.Round(worldY - zoneInfo.Y));
 
             return reversePos;
+        }
+
+        public void UnloadAllTextures()
+        {
+            foreach (var layer in this.Layers)
+            {
+                layer.UnloadAllTextures();
+            }
         }
 
         #region Static methods
@@ -275,13 +284,18 @@ namespace Demoder.PlanetMapViewer.Helpers
         private int[,] filePos = null;
 
         private Texture2D[,] textureMap = null;
+        private uint[,] textureUsedMap = null;
+        
         private Texture2D invalidTile;
 
         private int addedTiles = 0;
 
+        public Stopwatch LastDraw {get; private set;}
+
         public PlanetMapLayer(string binFile)
         {
             this.binFile = new FileStream(binFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+            this.LastDraw = new Stopwatch();
         }
 
         public void AddFilePos(int filePos) 
@@ -290,12 +304,26 @@ namespace Demoder.PlanetMapViewer.Helpers
             {
                 this.filePos = new int[this.Tiles.Y, this.Tiles.X];
                 this.textureMap = new Texture2D[this.Tiles.Y, this.Tiles.X];
+                this.textureUsedMap = new uint[this.Tiles.Y, this.Tiles.X];
             }
             var pos = this.ConvertFilePosNumToSlot(this.addedTiles);
             this.filePos[pos.Y, pos.X] = filePos;
             this.addedTiles++;
         }
 
+        internal void UnloadAllTextures()
+        {
+            for (int x = 0; x < this.Tiles.X; x++)
+            {
+                for (int y = 0; y < this.Tiles.Y; y++)
+                {
+                    if (this.textureMap[y, x] == null) { continue; }
+                    this.textureMap[y, x].Dispose();
+                    this.textureMap[y, x] = null;
+
+                }
+            }
+        }
 
         private Point ConvertFilePosNumToSlot(int num)
         {
@@ -308,6 +336,7 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         public void Draw(Context context)
         {
+            this.LastDraw.Restart();
             var batch = context.SpriteBatch;
             var camera = context.Camera;
             var graphicsDevice = context.GraphicsDevice;
@@ -337,20 +366,39 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Vector2 minPos = camera.Position;
                 minPos.X /= txz;
                 minPos.Y /= txz;
+                minPos.X = MathHelper.Clamp(minPos.X - 2, 0, this.Tiles.X);
+                minPos.Y = MathHelper.Clamp(minPos.Y - 2, 0, this.Tiles.Y);
 
                 Vector2 maxPos = new Vector2(minPos.X, minPos.Y);
-
-
                 maxPos.X += (display.Width / txz) + 2;
                 maxPos.Y += (display.Height / txz) + 2;
+                maxPos.X = MathHelper.Clamp(maxPos.X + 2, 0, this.Tiles.X);
+                maxPos.Y = MathHelper.Clamp(maxPos.Y + 2, 0, this.Tiles.Y);
 
-                maxPos.X = Math.Min(maxPos.X, this.Tiles.X);
-                maxPos.Y = Math.Min(maxPos.Y, this.Tiles.Y);
 
-                for (int x = (int)Math.Max(minPos.X, 0); x < (int)maxPos.X; x++)
+
+                for (int x = 0; x < this.Tiles.X; x++)
                 {
-                    for (int y = (int)Math.Max(minPos.Y, 0); y < (int)maxPos.Y; y++)
+                    for (int y = 0; y < this.Tiles.Y; y++)
                     {
+
+                        // Tag all unused tiles
+                        if (x < minPos.X || x > maxPos.X || y < minPos.Y || y > maxPos.Y)
+                        {
+                            this.textureUsedMap[y, x]++;
+
+                            // Unload tiles which haven't been used for 120 seconds.
+                            if (this.textureMap[y,x]!=null && this.textureUsedMap[y, x] > (Properties.GeneralSettings.Default.FramesPerSecond * 120))
+                            {
+                                this.textureMap[y, x].Dispose();
+                                this.textureMap[y, x] = null;
+                            }
+                            continue;
+                        }
+                       
+
+                        // We're supposed to use this tile
+                        this.textureUsedMap[y, x] = 0;
                         this.LoadTile(graphicsDevice, x, y);
       
                         batch.Draw(this.textureMap[y, x],
