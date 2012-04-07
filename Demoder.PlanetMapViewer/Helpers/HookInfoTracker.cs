@@ -37,7 +37,7 @@ namespace Demoder.PlanetMapViewer.Helpers
     {
         private Provider aoHookProvider;
         internal Context Context { get; private set; }
-        public Dictionary<int, AoInfo> Processes = new Dictionary<int, AoInfo>();
+        private Dictionary<int, uint> ProcessCharacterMap = new Dictionary<int, uint>();
 
 
         public HookInfoTracker(Context context)
@@ -53,6 +53,7 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         void HandleQuestLocationEvent(Provider sender, AoHook.Events.QuestLocationEventArgs e)
         {
+            /*
             Vector2 cameraPosition = Vector2.Zero;
             lock (this.Processes)
             {
@@ -76,60 +77,88 @@ namespace Demoder.PlanetMapViewer.Helpers
             {
                 this.Context.Camera.CenterOnPixel(cameraPosition.X, cameraPosition.Y);
             }
+             */
         }
 
         private void HandleDynelNameEvent(Provider sender, Demoder.AoHook.Events.DynelNameEventArgs e)
         {
             if (!e.IsSelf) { return; }
-            lock (this.Processes)
+            bool changed = false;
+
+            lock (this.ProcessCharacterMap)
             {
-                var info = this.Processes[e.ProcessID];
+                if (!this.ProcessCharacterMap.ContainsKey(e.ProcessID))
+                {
+                    this.ProcessCharacterMap[e.ProcessID] = e.DynelID;
+                }
+            }
+
+            lock (this.Context.State.PlayerInfo)
+            {
+                if (!this.Context.State.PlayerInfo.ContainsKey(e.DynelID))
+                {
+                    this.Context.State.PlayerInfo[e.DynelID]= new PlayerInfo();
+                }
+                
+                var info = this.Context.State.PlayerInfo[e.DynelID];
+
                 if (e.DynelID != uint.MinValue && e.DynelID != uint.MaxValue)
                 {
-                    info.Character.ID = e.DynelID;
+                    if (info.ID != e.DynelID) { changed = true; }
+                    info.ID = e.DynelID;
                 }
                 if (e.DynelName != "NoName")
                 {
-                    info.Character.Name = e.DynelName;
+                    if (e.DynelName != info.Name) { changed = true; }
+                    info.Name = e.DynelName;
                 }
-                info.LastModified.Restart();
+            }
+            if (changed)
+            {
+                this.Context.UiElements.CharacterTrackerControl.UpdateCharacterList();
             }
         }
 
 
         private void HandleHookStateChangeEvent(Provider sender, Demoder.AoHook.Events.HookStateChangeEventArgs e)
         {
-            lock (this.Processes)
+            lock (this.ProcessCharacterMap)
             {
-                if (e.IsHooked)
-                {
-                    this.Processes[e.ProcessID] = new AoInfo(e.ProcessID);
-                }
-                else
-                {
-                    if (this.Processes.ContainsKey(e.ProcessID))
-                    {
-                        var info = this.Processes[e.ProcessID];
-                        this.Processes.Remove(e.ProcessID);
-                    }
-                }
+                // We don't have anything to do if we're hooking.
+                if (e.IsHooked) { return; }
+                // We can't do anything if we don't know about the process
+                if (!this.ProcessCharacterMap.ContainsKey(e.ProcessID)) { return; }
+
+                // Update status of whether or not a player character is hooked.
+                this.Context.State.PlayerInfo[this.ProcessCharacterMap[e.ProcessID]].IsHooked = false;
+                this.ProcessCharacterMap.Remove(e.ProcessID);
+
+                this.Context.UiElements.CharacterTrackerControl.UpdateCharacterList();
             }
         }
 
         private void HandleCharacterPositionEvent(Provider sender, Demoder.AoHook.Events.CharacterPositionEventArgs e)
         {
+            // Ignore anything which isn't player characters.
+            if (e.DynelType != 50000) { return; }
+
             // Don't update if we have invalid data (such as while zoning)
             if (e.ZoneID == 0) { return; }
 
-            lock (this.Processes)
-            {
-                var info = this.Processes[e.ProcessID];
-                info.Character.Position = new Vector3(e.X, e.Y, e.Z);
-                info.Character.Zone.ID = e.ZoneID;
-                info.Character.Zone.Name = e.ZoneName;
-                info.Character.InShadowlands = e.InShadowlands;
-                info.LastModified.Restart();
+            var update = false;
+           lock (this.Context.State.PlayerInfo)
+           {
+                var info = this.Context.State.PlayerInfo[e.DynelID];
+                info.Position = new Vector3(e.X, e.Y, e.Z);
+                info.Zone.ID = e.ZoneID;
+                info.Zone.Name = e.ZoneName;
+                if (info.InShadowlands != e.InShadowlands) { update = true; }
+                info.InShadowlands = e.InShadowlands;
             }
+           if (update)
+           {
+               this.Context.UiElements.CharacterTrackerControl.UpdateCharacterList();
+           }
         }
     }
 }

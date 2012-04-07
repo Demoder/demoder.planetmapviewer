@@ -55,7 +55,6 @@ namespace Demoder.PlanetMapViewer.Forms
         private Stopwatch lastException;
 
         #region Timers
-        private thrd.Timer updateCharacterListTimer;
         private thrd.Timer topMostTimer;
         #endregion
 
@@ -72,6 +71,11 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.splitContainer1.FixedPanel = FixedPanel.Panel2;
                 this.splitContainer1.SplitterDistance = 605;
                 this.Context = this.tileDisplay1.Context;
+
+                // Add manual components
+                var charTrackControl = new CharacterTrackerControl(this.Context);
+                charTrackControl.Dock = DockStyle.Fill;
+                this.followCharacterPanel.Controls.Add(charTrackControl);
             }
             catch (Exception ex)
             {
@@ -84,14 +88,12 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             try
             {
-                this.Context.UiElements.TileDisplay = this.tileDisplay1;
                 this.Context.UiElements.HScrollBar = this.tileDisplay1_hScrollBar;
                 this.Context.UiElements.VScrollBar = this.tileDisplay1_vScrollBar;
                 this.Context.UiElements.MapList = this.mapComboBox;
                 this.Context.UiElements.ParentForm = this;
 
                 this.Context.HookInfo = new HookInfoTracker(this.Context);
-                this.updateCharacterListTimer = new thrd.Timer(this.UpdateCharacterList, null, 1000, 2000);
 
                 // Check if we should attempt to upgrade settings
                 if (Properties.GeneralSettings.Default.SettingVersion != this.ProductVersion.ToString())
@@ -309,63 +311,6 @@ namespace Demoder.PlanetMapViewer.Forms
             base.OnKeyDown(e);
         }
 
-        private void UpdateCharacterList(object state)
-        {
-            if (this.followCharacter.InvokeRequired)
-            {
-                this.followCharacter.Invoke((Action)this.UpdateCharacterListDoWork);
-            }
-            else
-            {
-                this.UpdateCharacterListDoWork();
-            }
-        }
-
-        private void UpdateCharacterListDoWork()
-        {
-            if (this.Context == null) { return; }
-            if (this.Context.HookInfo == null) { return; }
-            if (this.Context.HookInfo.Processes == null) { return; }
-
-            lock (this.Context.HookInfo.Processes)
-            {
-                this.followCharacter.BeginUpdate();
-                // Remove entries from the list if they're no longer tracked
-                var toRemove = new List<AoInfo>();
-                // Find which ones to remove
-                foreach (var oldInfo in this.followCharacter.Items)
-                {
-                    if (oldInfo == null) { continue; }
-                    var aoInfo = oldInfo as AoInfo;
-                    if (!this.Context.HookInfo.Processes.ContainsKey(aoInfo.ProcessID))
-                    {
-                        toRemove.Add(aoInfo);
-                    }
-                }
-                // Now remove them
-                foreach (var aoInfo in toRemove)
-                {
-                    this.followCharacter.Items.Remove(aoInfo);
-                }
-
-                // Add new entries, if any.
-                foreach (var newInfo in this.Context.HookInfo.Processes.Values)
-                {
-                    if (newInfo == null) { continue; }
-                    if (!this.followCharacter.Items.Contains(newInfo))
-                    {
-                        this.followCharacter.Items.Add(newInfo);
-                        if (this.followCharacter.Items.Count == 1 && this.followCharacter.CheckedItems.Count == 0)
-                        {
-                            this.followCharacter.SetItemChecked(0, true);
-                        }
-                    }
-                }
-
-                this.followCharacter.EndUpdate();
-            }
-        }
-
         private void tileDisplay1_OnDraw(object sender, EventArgs e)
         {
             if (this.Context.Camera == null) { return; }
@@ -399,45 +344,44 @@ namespace Demoder.PlanetMapViewer.Forms
                 var vectors = new List<Vector2>();
                 int shadowlandsCharacters = 0;
                 int rubikaCharacters = 0;
-                this.followCharacter.Invoke((Action)delegate()
+
+
+                var playerInfo = this.Context.State.PlayerInfo.Values.ToArray().Where(i=>i.IsTrackedByCamera);
+                foreach (var item in playerInfo)
                 {
-                    lock (this.Context.HookInfo.Processes)
+                    var info = item as PlayerInfo;
+
+                    // Track rk/sl characters
+                    if (info.InShadowlands)
                     {
-                        foreach (var item in this.followCharacter.CheckedItems)
-                        {
-                            var info = item as AoInfo;
-
-                            // Track rk/sl characters
-                            if (info.Character.InShadowlands)
-                            {
-                                shadowlandsCharacters++;
-                            }
-                            else
-                            {
-                                rubikaCharacters++;
-                            }
-
-                            if (info.Character.InShadowlands && this.Context.MapManager.CurrentMap.Type != MapType.Shadowlands) { continue; }
-
-                            var charPos = this.Context.MapManager.GetPosition(info.Character.Zone.ID, info.Character.Position.X, info.Character.Position.Z);
-                            if (charPos == Vector2.Zero) { continue; }
-                            vectors.Add(charPos);
-                        }
-                        if (this.Context.State.MapTypeAutoSwitching)
-                        {
-                            if (rubikaCharacters > shadowlandsCharacters && this.Context.MapManager.CurrentMap.Type != MapType.Rubika)
-                            {
-                                this.Context.MapManager.FindAvailableMaps(MapType.Rubika);
-                                this.Context.MapManager.SelectMap(MapType.Rubika);
-                            }
-                            else if (shadowlandsCharacters > rubikaCharacters && this.Context.MapManager.CurrentMap.Type != MapType.Shadowlands)
-                            {
-                                this.Context.MapManager.FindAvailableMaps(MapType.Shadowlands);
-                                this.Context.MapManager.SelectMap(MapType.Shadowlands);
-                            }
-                        }
+                        shadowlandsCharacters++;
                     }
-                });
+                    else
+                    {
+                        rubikaCharacters++;
+                    }
+
+                    if (info.InShadowlands && this.Context.MapManager.CurrentMap.Type != MapType.Shadowlands) { continue; }
+
+                    var charPos = this.Context.MapManager.GetPosition(info.Zone.ID, info.Position.X, info.Position.Z);
+                    if (charPos == Vector2.Zero) { continue; }
+                    vectors.Add(charPos);
+                }
+
+                if (this.Context.State.MapTypeAutoSwitching)
+                {
+                    if (rubikaCharacters > shadowlandsCharacters && this.Context.MapManager.CurrentMap.Type != MapType.Rubika)
+                    {
+                        this.Context.MapManager.FindAvailableMaps(MapType.Rubika);
+                        this.Context.MapManager.SelectMap(MapType.Rubika);
+                    }
+                    else if (shadowlandsCharacters > rubikaCharacters && this.Context.MapManager.CurrentMap.Type != MapType.Shadowlands)
+                    {
+                        this.Context.MapManager.FindAvailableMaps(MapType.Shadowlands);
+                        this.Context.MapManager.SelectMap(MapType.Shadowlands);
+                    }
+                }
+
                 if (vectors.Count == 0) { return; }
 
                 this.Context.Camera.CenterOnVectors(vectors.ToArray());
@@ -450,8 +394,6 @@ namespace Demoder.PlanetMapViewer.Forms
         }
 
         #endregion
-
-
 
         private void Render()
         {
@@ -498,40 +440,53 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             var mapItems = new List<IMapItem>();
             var mapTexts = new List<IMapItem>();
-            if (this.Context.HookInfo == null || this.Context.HookInfo.Processes == null)
+            if (this.Context.State.PlayerInfo.Count == 0)
             {
                 return new MapTexture[0];
             }
 
-            lock (this.Context.HookInfo.Processes)
-            {
-                foreach (var info in this.Context.HookInfo.Processes.Values)
-                {
-                    if (info == null || info.Character == null || info.Character.Zone == null || info.Character.Position == null || info.Character.Name == null) { continue; }
-                    var charLoc = new MapTexture();
-                    charLoc.Texture = this.Context.Content.Textures.CharacterLocator;
-                    charLoc.Position = this.Context.MapManager.GetPosition(info.Character.Zone.ID, info.Character.Position.X, info.Character.Position.Z);
-                    charLoc.PositionAlignment = MapItemAlignment.Center;
-                    
-                    mapTexts.Add(new MapText
-                    {
-                        Position = new Vector2(charLoc.Position.X, charLoc.Position.Y + (int)charLoc.Texture.Height / 2 + 5),
-                        Text = info.Character.Name,
-                        TextColor = Microsoft.Xna.Framework.Color.White,
-                        ShadowColor = Microsoft.Xna.Framework.Color.Black,
-                        Shadow = true,
-                        Font = this.Context.Content.Fonts.CharacterName
-                    });
+            var characters = this.Context.State.PlayerInfo.Values.ToArray();
 
-                    mapItems.Add(charLoc);
+            foreach (var character in characters)
+            {
+                if (character == null || character.Zone == null || character.Position == null || character.Name == null) { continue; }
+                var charLoc = new MapTexture();
+                charLoc.Texture = this.Context.Content.Textures.CharacterLocator;
+                charLoc.Position = this.Context.MapManager.GetPosition(character.Zone.ID, character.Position.X, character.Position.Z);
+                charLoc.PositionAlignment = MapItemAlignment.Center;
+                if (!character.IsHooked)
+                {
+                    charLoc.Color = Microsoft.Xna.Framework.Color.Gray;
                 }
+
+                var txt = new MapText
+                 {
+                     Position = new Vector2(charLoc.Position.X, charLoc.Position.Y + (int)charLoc.Texture.Height / 2 + 5),
+                     Text = character.Name,
+                     TextColor = Microsoft.Xna.Framework.Color.White,
+                     ShadowColor = Microsoft.Xna.Framework.Color.Black,
+                     Shadow = true,
+                     Font = this.Context.Content.Fonts.CharacterName
+                 };
+                if (!character.IsHooked)
+                {
+                    txt.TextColor = Microsoft.Xna.Framework.Color.LightGray;
+                    txt.ShadowColor = Microsoft.Xna.Framework.Color.Gray;
+                }
+
+                mapTexts.Add(txt);
+
+                mapItems.Add(charLoc);
             }
+
             mapItems.AddRange(mapTexts);
             return mapItems.ToArray();
         }
 
         private IMapItem[] GetMissionLocators()
         {
+            return new MapTexture[0];
+            /*
             var mapItems = new List<IMapItem>();
             var mapTexts = new List<IMapItem>();
             if (this.Context.HookInfo == null || this.Context.HookInfo.Processes == null)
@@ -568,6 +523,7 @@ namespace Demoder.PlanetMapViewer.Forms
             }
             mapItems.AddRange(mapTexts);
             return mapItems.ToArray();
+             * */
         }
 
         FormWindowState oldState = FormWindowState.Normal;
@@ -829,7 +785,7 @@ namespace Demoder.PlanetMapViewer.Forms
             }
             else
             {
-                this.MinimumSize = new Size(300, 300);
+                this.MinimumSize = new Size(400, 500);
                 if (this.Width < this.MinimumSize.Width) { this.Width = this.MinimumSize.Width; }
                 if (this.Height < this.MinimumSize.Height) { this.Height = this.MinimumSize.Height; }
 
@@ -961,15 +917,30 @@ namespace Demoder.PlanetMapViewer.Forms
                     }
 
                     this.selectCharactersToolStripMenuItem.DropDownItems.Clear();
-                    var characters = new object[this.followCharacter.Items.Count];
-                    this.followCharacter.Items.CopyTo(characters, 0);
-                    foreach (AoInfo aoInfo in characters)
+                    var characters = this.Context.State.PlayerInfo.Values.ToArray();
+                    foreach (var character in characters)
                     {
                         try
                         {
-                            var item = new ToolStripMenuItem(aoInfo.Character.Name);
-                            item.Tag = aoInfo;
-                            item.Checked = this.followCharacter.CheckedItems.Contains(aoInfo);
+                            if (String.IsNullOrWhiteSpace(character.Name)) { continue; }
+                            
+                            var item = new ToolStripMenuItem(character.Name);
+                            if (character.InShadowlands)
+                            {
+                                item.Image = Properties.CharacterTrackerControlResources.PlayerInShadowlands;
+                            }
+                            else
+                            {
+                                item.Image = Properties.CharacterTrackerControlResources.PlayerOnRubika;
+                            }
+
+                            if (!character.IsHooked)
+                            {
+                                item.ForeColor = SystemColors.GrayText;
+                            }
+
+                            item.Tag = character.ID;
+                            item.Checked = character.IsTrackedByCamera;
                             item.Click += this.OverlayTitleContextMenu_CharacterSelectionItemClickEventHandler;
                             this.selectCharactersToolStripMenuItem.DropDownItems.Add(item);
                         }
@@ -1000,11 +971,13 @@ namespace Demoder.PlanetMapViewer.Forms
                 try
                 {
                     var item = sender as ToolStripMenuItem;
+                    var charId = (uint)item.Tag;
                     if (!item.Checked)
                     {
                         this.Context.State.CameraControl = CameraControl.Character;
                     }
-                    this.followCharacter.SetItemChecked(this.followCharacter.Items.IndexOf(item.Tag), !item.Checked);
+
+                    this.Context.State.PlayerInfo[charId].IsTrackedByCamera = !item.Checked;
 
                     this.OverlayTitleContextMenuStrip.Show();
                     this.selectCharactersToolStripMenuItem.ShowDropDown();
@@ -1073,6 +1046,8 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void MoveCameraToMission()
         {
+            return;
+            /*
             try
             {
                 var vectors = new List<Vector2>();
@@ -1093,12 +1068,14 @@ namespace Demoder.PlanetMapViewer.Forms
                 if (vectors.Count == 0) { return; }
 
                 this.Context.Camera.CenterOnVectors(vectors.ToArray());
+             
             }
             catch (Exception ex)
             {
                 this.Context.ErrorLog.Enqueue(ex.ToString());
                 this.ShowExceptionError(ex);
             }
+             */
         }
 
         private void MagnificationSlider_ValueChanged(object sender, EventArgs e)
