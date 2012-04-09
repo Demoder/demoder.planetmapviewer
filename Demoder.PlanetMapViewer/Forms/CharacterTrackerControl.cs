@@ -146,22 +146,22 @@ namespace Demoder.PlanetMapViewer.Forms
         }
 
         #region ISynchronizeInvoke
-        public IAsyncResult BeginInvoke(Delegate method, object[] args)
+        public new IAsyncResult BeginInvoke(Delegate method, object[] args)
         {
             return this.listView1.BeginInvoke(method, args);
         }
 
-        public object EndInvoke(IAsyncResult result)
+        public new object EndInvoke(IAsyncResult result)
         {
             return this.listView1.EndInvoke(result);
         }
 
-        public object Invoke(Delegate method, object[] args)
+        public new object Invoke(Delegate method, object[] args)
         {
             return this.listView1.Invoke(method, args);
         }
 
-        public bool InvokeRequired
+        public new bool InvokeRequired
         {
             get { return this.listView1.InvokeRequired; }
         }

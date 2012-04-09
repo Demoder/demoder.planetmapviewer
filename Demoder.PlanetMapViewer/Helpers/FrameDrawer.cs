@@ -96,14 +96,12 @@ namespace Demoder.PlanetMapViewer.Helpers
                     {
                         if (item.Type != MapItemType.SpriteFont) { continue; }
                         var sd = item as MapText;
-                        if (sd.Font == null) { continue; }
-                        if (!sd.Shadow) { continue; }
                         var textSize = sd.Size;
                         var pos = GetRealPosition(item);
                         pos.X++;
                         pos.Y++;
                         this.Context.SpriteBatch.DrawString(
-                            sd.Font,
+                            this.Context.Content.Fonts.GetFont(sd.Font),
                             sd.Text,
                             pos,
                             sd.ShadowColor
@@ -129,10 +127,9 @@ namespace Demoder.PlanetMapViewer.Helpers
                     {
                         if (item.Type != MapItemType.SpriteFont) { continue; }
                         var sd = item as MapText;
-                        if (sd.Font == null) { continue; }
                         var textSize = sd.Size;
                         this.Context.SpriteBatch.DrawString(
-                            sd.Font,
+                            this.Context.Content.Fonts.GetFont(sd.Font),
                             sd.Text,
                             GetRealPosition(item),
                             sd.TextColor

@@ -69,4 +69,40 @@ namespace Demoder.PlanetMapViewer
         World,
         ViewPort
     }
+
+    /// <summary>
+    /// Default font mappings
+    /// </summary>
+    public enum FontType
+    {
+        GuiSmall,
+        GuiNormal,
+        GuiLarge,
+        GuiXLarge,
+
+        MapCharLocator,
+#if DEBUG
+        CourierNew8,
+        CourierNew10,
+        CourierNew12,
+        CourierNew18,
+        Rockwell13,
+        Silkscreen7,
+#endif
+    }
+
+    /// <summary>
+    /// Recognized SpriteFonts
+    /// </summary>
+    public enum LoadedFont
+    {
+        CourierNew8,
+        CourierNew10,
+        CourierNew12,
+        CourierNew18,
+
+        Rockwell13,
+
+        Silkscreen7,
+    }
 }

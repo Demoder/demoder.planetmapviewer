@@ -36,6 +36,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
     public class MapText : IMapItem
     {
         #region IMapItem
+        private Context context;
         public MapItemType Type { get { return MapItemType.SpriteFont; } }
         public MapItemAlignment PositionAlignment { get; set; }
         public Vector2 Position {get; set;}
@@ -43,14 +44,14 @@ namespace Demoder.PlanetMapViewer.DataClasses
         {
             get
             {
-                if (this.Font == null) { return default(Vector2); }
-                return this.Font.MeasureString(this.Text);
+                return this.context.Content.Fonts.GetFont(this.Font).MeasureString(this.Text);
             }
         }
         #endregion
 
-        public MapText()
+        public MapText(Context context)
         {
+            this.context = context;
             this.Position = default(Vector2);
             this.PositionAlignment = default(MapItemAlignment);
         }
@@ -58,7 +59,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
         public string Text;
         public Color ShadowColor = Color.Black;
         public Color TextColor = Color.White;
-        public SpriteFont Font = null;
+        public FontType Font = default(FontType);
         public bool Shadow = true;
 
         public bool IsRelativePosition
@@ -66,6 +67,21 @@ namespace Demoder.PlanetMapViewer.DataClasses
             get { throw new NotImplementedException(); }
         }
 
-        
+
+
+
+        public object Clone()
+        {
+            return new MapText(this.context)
+            {
+                Font = this.Font,
+                Position = this.Position,
+                Shadow = this.Shadow,
+                ShadowColor = this.ShadowColor,
+                Text = (string)this.Text.Clone(),
+                PositionAlignment = this.PositionAlignment,
+                TextColor = this.TextColor
+            };
+        }
     }
 }

@@ -61,6 +61,7 @@ namespace Demoder.PlanetMapViewer.Xna
             parameters.PresentationInterval = PresentInterval.Two;
             parameters.IsFullScreen = false;
 
+
             graphicsDevice = new GraphicsDevice(GraphicsAdapter.DefaultAdapter,
                                                 GraphicsProfile.Reach,
                                                 parameters);

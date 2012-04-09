@@ -9,3 +9,4 @@ syntax: glob
 **/*.suo
 **/*.user
 Rel/**
+Msc/tools/SpriteFont201/**

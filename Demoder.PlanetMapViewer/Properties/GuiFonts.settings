@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Demoder.PlanetMapViewer.Properties" GeneratedClassName="GuiFonts">
+  <Profiles />
+  <Settings>
+    <Setting Name="Small" Type="Demoder.PlanetMapViewer.LoadedFont" Scope="User">
+      <Value Profile="(Default)">CourierNew8</Value>
+    </Setting>
+    <Setting Name="Normal" Type="Demoder.PlanetMapViewer.LoadedFont" Scope="User">
+      <Value Profile="(Default)">CourierNew10</Value>
+    </Setting>
+    <Setting Name="Large" Type="Demoder.PlanetMapViewer.LoadedFont" Scope="User">
+      <Value Profile="(Default)">CourierNew12</Value>
+    </Setting>
+    <Setting Name="XLarge" Type="Demoder.PlanetMapViewer.LoadedFont" Scope="User">
+      <Value Profile="(Default)">CourierNew18</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

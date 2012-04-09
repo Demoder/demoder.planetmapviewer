@@ -81,7 +81,6 @@ namespace Demoder.PlanetMapViewer.Helpers
             int currentHeight = this.Context.UiElements.TileDisplay.Height / 3;
             int center = this.Context.UiElements.TileDisplay.Width / 2;
 
-            {
                 var tex = new MapTexture
                 {
                     Texture = this.Context.Content.Textures.ArrowUp,
@@ -90,44 +89,17 @@ namespace Demoder.PlanetMapViewer.Helpers
                     Position = new Vector2(center, 0)
                 };
                 items.Add(tex);
-            }
-
             items.Add(this.Context.FrameDrawer.GetTutorialStamp(center, currentHeight, 386, 140));
 
-            #region Header
-            items.Add(new MapText
-            {
-                Position = new Vector2(
-                    center,
-                    currentHeight),
-                PositionAlignment = MapItemAlignment.Top,
-                TextColor = Color.Red,
-                Shadow = false,
-                Text = "Tutorial: Overlay Menu",
-                Font = this.Context.Content.Fonts.GuiXLarge
-            });
-            currentHeight += (int)items.Last().Size.Y;
+            // Add texts.
+            var txts = new MapTextBuilder(this.Context, FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top);
+            txts.Text("Tutorial: Overlay Menu", textColor: Color.Red, font: FontType.GuiXLarge).Break();
+            txts.Text("The Overlay Menu provides quick access to many useful controls. You may access it by right-clicking the title bar.", 350).Break();
+            txts.Break();
+            txts.Text("Please open the Overlay Menu now.").Break();
 
-            #endregion
+            items.AddRange(txts.ToMapItem(this.Context.UiElements.TileDisplay.Width / 2, this.Context.UiElements.TileDisplay.Height / 3));
 
-            #region Content
-            items.Add(new MapText
-            {
-                Position = new Vector2(
-                    center,
-                    currentHeight),
-                PositionAlignment = MapItemAlignment.Top,
-                TextColor = Color.White,
-                Shadow = false,
-                Font = this.Context.Content.Fonts.GuiNormal,
-                Text = "The Overlay Menu provides quick access to\r\n" +
-                        "many useful controls. You may access it by\r\n" +
-                        "right-clicking the title bar.\r\n" +
-                        "\r\n" +
-                        "Please open the Overlay Menu now."
-            });
-            currentHeight += (int)items.Last().Size.Y;
-            #endregion
             this.Context.FrameDrawer.Draw(items, DrawMode.ViewPort);
         }
 
@@ -139,38 +111,13 @@ namespace Demoder.PlanetMapViewer.Helpers
 
             items.Add(this.Context.FrameDrawer.GetTutorialStamp(center, currentHeight, 386, 128));
 
-            #region Header
-            items.Add(new MapText
-            {
-                Position = new Vector2(
-                    center,
-                    currentHeight),
-                PositionAlignment = MapItemAlignment.Top,
-                TextColor = Color.Red,
-                Shadow = false,
-                Text = "Tutorial: Window Size",
-                Font = this.Context.Content.Fonts.GuiXLarge
-            });
-            currentHeight += (int)items.Last().Size.Y;
-            #endregion
-
-            #region Content
-            items.Add(new MapText
-            {
-                Position = new Vector2(
-                    center,
-                    currentHeight),
-                PositionAlignment = MapItemAlignment.Top,
-                TextColor = Color.White,
-                Shadow = false,
-                Font = this.Context.Content.Fonts.GuiNormal,
-                Text = "You may resize the window by dragging\r\n" +
-                        "the window border using the mouse.\r\n" +
-                        "\r\n" +
-                        "Please resize the window now."
-            });
-            currentHeight += (int)items.Last().Size.Y;
-            #endregion
+            // Add texts.
+            var txts = new MapTextBuilder(this.Context, FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top);
+            txts.Text("Tutorial: Window Size", textColor: Color.Red, font: FontType.GuiXLarge).Break();
+            txts.Text("You may resize the window by dragging the window border using the mouse.", 350).Break();
+            txts.Break();
+            txts.Text("Please resize the window now.").Break();
+            items.AddRange(txts.ToMapItem(this.Context.UiElements.TileDisplay.Width / 2, this.Context.UiElements.TileDisplay.Height / 3));
 
             this.Context.FrameDrawer.Draw(items, DrawMode.ViewPort);
         }
@@ -181,41 +128,16 @@ namespace Demoder.PlanetMapViewer.Helpers
             int currentHeight = this.Context.UiElements.TileDisplay.Height / 3;
             int center = this.Context.UiElements.TileDisplay.Width / 2;
 
-            items.Add(this.Context.FrameDrawer.GetTutorialStamp(center, currentHeight, 500, 180));
+            items.Add(this.Context.FrameDrawer.GetTutorialStamp(center, currentHeight, 500, 150));
 
-            #region Header
-            items.Add(new MapText
-            {
-                Position = new Vector2(
-                    center,
-                    currentHeight),
-                PositionAlignment = MapItemAlignment.Top,
-                TextColor = Color.Red,
-                Shadow = false,
-                Text = "Tutorial: Exiting Overlay Mode",
-                Font = this.Context.Content.Fonts.GuiXLarge
-            });
-            currentHeight += (int)items.Last().Size.Y;
-            #endregion
+            // Add texts.
+            var txts = new MapTextBuilder(this.Context, FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top);
+            txts.Text("Tutorial: Exiting Overlay Mode", textColor: Color.Red, font: FontType.GuiXLarge).Break();
+            txts.Text("You may exit overlay mode by pressing the close window button at top right, by opening the Overlay Menu and selecting 'Exit Overlay Mode', or pressing [F12]", 480).Break();
+            txts.Break();
+            txts.Text("Please exit overlay mode now.", textColor: Color.Green).Break();
+            items.AddRange(txts.ToMapItem(this.Context.UiElements.TileDisplay.Width / 2, this.Context.UiElements.TileDisplay.Height / 3));
 
-            #region Content
-            items.Add(new MapText
-            {
-                Position = new Vector2(
-                    center,
-                    currentHeight),
-                PositionAlignment = MapItemAlignment.Top,
-                TextColor = Color.White,
-                Shadow = false,
-                Font = this.Context.Content.Fonts.GuiNormal,
-                Text = "You may exit overlay mode by pressing the close window\r\n"+
-                        "button at top right, by opening the Overlay Menu and\r\n"+
-                        "selecting 'Exit Overlay Mode', or pressing [F12]\r\n" +
-                        "\r\n"+
-                        "Please exit overlay mode now."
-            });
-            currentHeight += (int)items.Last().Size.Y;
-            #endregion
             this.Context.FrameDrawer.Draw(items, DrawMode.ViewPort);
         }
     }
