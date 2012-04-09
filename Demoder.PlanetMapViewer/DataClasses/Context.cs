@@ -31,6 +31,7 @@ using Demoder.PlanetMapViewer.Helpers;
 using Demoder.PlanetMapViewer.Xna;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Demoder.PlanetMapViewer.DataClasses
 {
@@ -103,6 +104,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
 
         public Dictionary<uint, PlayerInfo> PlayerInfo = new Dictionary<uint, PlayerInfo>();
 
+        public List<TimedMapText> GuiNotifications = new List<TimedMapText>();
     }
 
 

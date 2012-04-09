@@ -47,6 +47,12 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             this.context = context;
             InitializeComponent();
+
+#if DEBUG
+            this.FPS.Maximum = 999;
+#endif
+            // Default to cancel (resetting settings)
+            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             // Load settings
             this.AoPath.Text = this.mapSettings.AoPath;
             this.FPS.Value = Math.Min(this.generalSettings.FramesPerSecond, this.FPS.Maximum);
@@ -55,9 +61,27 @@ namespace Demoder.PlanetMapViewer.Forms
             this.overlayModeWorkaroundTopmost.Checked = this.windowSettings.OverlaymodeTopmostWorkaround;
             this.disableTutorials.Checked = this.generalSettings.DisableTutorials;
 
-#if DEBUG
-            this.FPS.Maximum = 999;
-#endif
+            // Setup fonts
+            this.LoadFonts();
+        }
+
+        private void LoadFonts()
+        {
+            this.selectedFont.BeginUpdate();
+            foreach (var type in Enum.GetValues(typeof(LoadedFont)))
+            {
+                this.selectedFont.Items.Add(type);
+            }
+            this.selectedFont.EndUpdate();
+            
+            this.textTypes.BeginUpdate();
+            foreach (var type in Enum.GetValues(typeof(FontType)))
+            {
+                var name = type.ToString();
+                if (!name.StartsWith("Gui") && !name.StartsWith("Map")) { continue; }
+                this.textTypes.Items.Add(type);
+            }
+            this.textTypes.EndUpdate();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -95,27 +119,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.MsgBoxInvalidAoFolder();
                 return;
             }
-
             this.DialogResult = System.Windows.Forms.DialogResult.OK;
-            // Save settings
-            this.mapSettings.AoPath = this.AoPath.Text;
-
-            this.generalSettings.DisableTutorials = this.disableTutorials.Checked;
-            this.generalSettings.FramesPerSecond = (int)this.FPS.Value;
-            TileDisplay.FrameFrequency = this.generalSettings.FramesPerSecond;
-
-            this.windowSettings.OverlaymodeShowScrollbars = this.overlayModeShowScrollbars.Checked;
-            this.windowSettings.OverlaymodeShowControlbox = this.overlayModeShowExitButton.Checked;
-            this.windowSettings.OverlaymodeTopmostWorkaround = this.overlayModeWorkaroundTopmost.Checked;
-
-            if (this.context.UiElements.ParentForm.OverlayModeToolStripMenuItem.Checked)
-            {
-                this.context.UiElements.ParentForm.ToggleOverlayMode();
-            }
-
-            this.mapSettings.Save();
-            this.windowSettings.Save();
-            this.generalSettings.Save();
             this.Close();
         }
 
@@ -128,6 +132,56 @@ namespace Demoder.PlanetMapViewer.Forms
         private void MsgBoxInvalidAoFolder()
         {
             MessageBox.Show("This does not seem like a valid Anarchy Online installation folder!", "Invalid AO folder?", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void textTypes_SelectedValueChanged(object sender, EventArgs e)
+        {
+            this.selectedFont.SelectedItem = this.context.Content.Fonts.GetLoadedFont((FontType)this.textTypes.SelectedItem);
+        }
+
+        private void selectedFont_SelectedValueChanged(object sender, EventArgs e)
+        {
+            var font = (LoadedFont)this.selectedFont.SelectedItem;
+            var type = (FontType)this.textTypes.SelectedItem;
+
+            if (font == this.context.Content.Fonts.GetLoadedFont(type)) { return; }
+            this.context.Content.Fonts.SetLoadedFont(type, font);
+            
+
+        }
+
+        private void OptionWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (this.DialogResult == System.Windows.Forms.DialogResult.Cancel)
+            {
+                Properties.GuiFonts.Default.Reload();
+                Properties.MapFonts.Default.Reload();
+                return;
+            }
+            if (this.DialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                // Save settings
+                this.mapSettings.AoPath = this.AoPath.Text;
+
+                this.generalSettings.DisableTutorials = this.disableTutorials.Checked;
+                this.generalSettings.FramesPerSecond = (int)this.FPS.Value;
+                TileDisplay.FrameFrequency = this.generalSettings.FramesPerSecond;
+
+                this.windowSettings.OverlaymodeShowScrollbars = this.overlayModeShowScrollbars.Checked;
+                this.windowSettings.OverlaymodeShowControlbox = this.overlayModeShowExitButton.Checked;
+                this.windowSettings.OverlaymodeTopmostWorkaround = this.overlayModeWorkaroundTopmost.Checked;
+
+                if (this.context.UiElements.ParentForm.OverlayModeToolStripMenuItem.Checked)
+                {
+                    this.context.UiElements.ParentForm.ToggleOverlayMode();
+                }
+
+                Properties.GuiFonts.Default.Save();
+                Properties.MapFonts.Default.Save();
+                this.mapSettings.Save();
+                this.windowSettings.Save();
+                this.generalSettings.Save();
+            }
         }
     }
 }

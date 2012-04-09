@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
+using System.IO;
 
 namespace Demoder.PlanetMapViewer.DataClasses
 {
@@ -52,19 +53,75 @@ namespace Demoder.PlanetMapViewer.DataClasses
 
     public class XnaContentSpriteFonts
     {
-        public SpriteFont CharacterName;
-        public SpriteFont GuiSmall;
-        public SpriteFont GuiNormal;
-        public SpriteFont GuiLarge;
-        public SpriteFont GuiXLarge;
+        #region Members
+        private Dictionary<LoadedFont, SpriteFont> fonts = new Dictionary<LoadedFont, SpriteFont>();
+        //private Dictionary<FontType, LoadedFont> fontTypes = new Dictionary<FontType, LoadedFont>();
 
-        public SpriteFont MapSmall;
-        public SpriteFont MapSmallB;
+        #endregion
 
-        public SpriteFont MapNormal;
-        public SpriteFont MapNormalB;
+        public void Load(Context context)
+        {
+            foreach (var file in (new DirectoryInfo(@"Content\Fonts")).GetFiles("*.xnb", SearchOption.TopDirectoryOnly))
+            {
+                LoadedFont fontType;
+                var contentName = file.Name.Substring(0, file.Name.Length - 4);
+                if (!Enum.TryParse<LoadedFont>(contentName, true, out fontType))
+                {
+                    continue;
+                }
+                this.fonts[fontType] = context.ContentManager.Load<SpriteFont>(@"Fonts\" + contentName);
+            }
+        }
 
-        public SpriteFont MapLarge;
-        public SpriteFont MapLargeB;
-    }
+        public SpriteFont GetFont(LoadedFont type)
+        {
+            return this.fonts[type];
+        }
+
+        public LoadedFont GetLoadedFont(FontType type)
+        {
+            try
+            {
+                var name = type.ToString();
+                if (name.StartsWith("Gui"))
+                {
+                    name = name.Remove(0, 3);
+                    return (LoadedFont)Properties.GuiFonts.Default[name];
+                }
+                else if (name.StartsWith("Map"))
+                {
+                    name = name.Remove(0, 3);
+                    return (LoadedFont)Properties.MapFonts.Default[name];
+                }
+                else
+                {
+                    return (LoadedFont)Enum.Parse(typeof(LoadedFont), name);
+                }
+            }
+            catch
+            {
+                return LoadedFont.Rockwell13;
+            }
+        }
+
+        public void SetLoadedFont(FontType type, LoadedFont font)
+        {
+            var name = type.ToString();
+            if (name.StartsWith("Gui"))
+            {
+                name = name.Remove(0, 3);
+                Properties.GuiFonts.Default[name]=font;
+             }
+            else if (name.StartsWith("Map"))
+            {
+                name = name.Remove(0, 3);
+                Properties.MapFonts.Default[name] = font;
+            }
+        }
+
+        public SpriteFont GetFont(FontType type)
+        {
+            return this.GetFont(this.GetLoadedFont(type));
+        }         
+    }         
 }

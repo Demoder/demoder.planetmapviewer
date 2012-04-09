@@ -25,27 +25,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
+using System.Diagnostics;
 
 namespace Demoder.PlanetMapViewer.DataClasses
 {
-    /// <summary>
-    /// Defines a map item
-    /// </summary>
-    public interface IMapItem : ICloneable
+    public class TimedMapText
     {
-        MapItemType Type { get; }
-        /// <summary>
-        /// Where on the texture is Position located?
-        /// </summary>
-        MapItemAlignment PositionAlignment { get; }
-        /// <summary>
-        /// Item position on the map
-        /// </summary>
-        Vector2 Position { get; }
-        /// <summary>
-        /// Item size
-        /// </summary>
-        Vector2 Size { get; }
+        private Stopwatch howLongLived;
+        private uint timeToLive;
+
+        public TimedMapText(string text, uint timeToLive)
+        {
+            this.timeToLive = timeToLive;
+            this.Text = text;
+            if (timeToLive != 0)
+            {
+                this.howLongLived = Stopwatch.StartNew();
+            }
+        }
+
+        public string Text { get; private set; }
+
+        public bool Expired
+        {
+            get
+            {
+                if (this.timeToLive == 0) { return false; }
+                return this.howLongLived.ElapsedMilliseconds > timeToLive;
+            }
+        }
+       
     }
 }

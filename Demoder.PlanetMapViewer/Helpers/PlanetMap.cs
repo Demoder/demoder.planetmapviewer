@@ -140,10 +140,6 @@ namespace Demoder.PlanetMapViewer.Helpers
             float worldY = relativeY * (this.MaxY - this.MinY) / zoneInfo.YScale;
             worldY += this.MinY;
 
-            /*return new Vector2(
-                worldX - zoneInfo.X,
-                worldY - zoneInfo.Y);
-             */
             var reversePos = new Vector2(
                 (float)Math.Round(worldX - zoneInfo.X),
                 (float)Math.Round(worldY - zoneInfo.Y));
@@ -343,23 +339,15 @@ namespace Demoder.PlanetMapViewer.Helpers
             var display = context.UiElements.TileDisplay;
 
             var txz = (float)Math.Round(this.TextureSize * context.State.Magnification);
-            
 
             batch.Begin(
                     SpriteSortMode.Texture,
                     BlendState.AlphaBlend,
-                    null, null, null, null,
+                    new SamplerState { Filter = TextureFilter.MinLinearMagPointMipLinear },
+                    null, null, null,
                     camera.TransformMatrix);
-            // Point is best for zooming out
-            // Linear is for zooming in
-            if (context.State.Magnification > 1)
-            {
-                graphicsDevice.SamplerStates[0] = new SamplerState { Filter = TextureFilter.Linear };
-            }
-            else
-            {
-                graphicsDevice.SamplerStates[0] = new SamplerState { Filter = TextureFilter.Anisotropic, MaxAnisotropy = 16 };
-            }
+
+            
 
             try
             {
@@ -445,7 +433,6 @@ namespace Demoder.PlanetMapViewer.Helpers
                 this.binFile.Read(b, 0, size);
                 var ms = new MemoryStream(b, false);
                 var tex = Texture2D.FromStream(graphicsDevice, ms);
-
                 this.textureMap[y, x] = tex;
             }
             catch (Exception ex)

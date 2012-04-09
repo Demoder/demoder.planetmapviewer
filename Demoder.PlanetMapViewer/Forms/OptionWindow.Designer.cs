@@ -68,11 +68,26 @@ namespace Demoder.PlanetMapViewer.Forms
             this.overlayModeShowScrollbars = new System.Windows.Forms.CheckBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.disableTutorials = new System.Windows.Forms.CheckBox();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.generalPage = new System.Windows.Forms.TabPage();
+            this.fontPage = new System.Windows.Forms.TabPage();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.selectedFont = new System.Windows.Forms.ComboBox();
+            this.textTypes = new System.Windows.Forms.ListBox();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FPS)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.generalPage.SuspendLayout();
+            this.fontPage.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -80,7 +95,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.AoPath);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(2, 5);
+            this.groupBox1.Location = new System.Drawing.Point(6, 6);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(379, 46);
             this.groupBox1.TabIndex = 0;
@@ -115,9 +130,10 @@ namespace Demoder.PlanetMapViewer.Forms
             // 
             // ButtonOkay
             // 
-            this.ButtonOkay.Location = new System.Drawing.Point(114, 142);
+            this.ButtonOkay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ButtonOkay.Location = new System.Drawing.Point(123, 0);
             this.ButtonOkay.Name = "ButtonOkay";
-            this.ButtonOkay.Size = new System.Drawing.Size(75, 23);
+            this.ButtonOkay.Size = new System.Drawing.Size(63, 22);
             this.ButtonOkay.TabIndex = 1;
             this.ButtonOkay.Text = "Okay";
             this.ButtonOkay.UseVisualStyleBackColor = true;
@@ -125,10 +141,11 @@ namespace Demoder.PlanetMapViewer.Forms
             // 
             // ButtonCancel
             // 
+            this.ButtonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.ButtonCancel.Location = new System.Drawing.Point(195, 142);
+            this.ButtonCancel.Location = new System.Drawing.Point(214, 0);
             this.ButtonCancel.Name = "ButtonCancel";
-            this.ButtonCancel.Size = new System.Drawing.Size(75, 23);
+            this.ButtonCancel.Size = new System.Drawing.Size(63, 22);
             this.ButtonCancel.TabIndex = 2;
             this.ButtonCancel.Text = "Cancel";
             this.ButtonCancel.UseVisualStyleBackColor = true;
@@ -138,7 +155,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // 
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.FPS);
-            this.groupBox2.Location = new System.Drawing.Point(266, 57);
+            this.groupBox2.Location = new System.Drawing.Point(6, 58);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(119, 79);
             this.groupBox2.TabIndex = 3;
@@ -181,7 +198,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.groupBox3.Controls.Add(this.overlayModeWorkaroundTopmost);
             this.groupBox3.Controls.Add(this.overlayModeShowExitButton);
             this.groupBox3.Controls.Add(this.overlayModeShowScrollbars);
-            this.groupBox3.Location = new System.Drawing.Point(127, 57);
+            this.groupBox3.Location = new System.Drawing.Point(127, 58);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(133, 79);
             this.groupBox3.TabIndex = 4;
@@ -221,7 +238,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.disableTutorials);
-            this.groupBox4.Location = new System.Drawing.Point(2, 57);
+            this.groupBox4.Location = new System.Drawing.Point(266, 58);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(119, 79);
             this.groupBox4.TabIndex = 5;
@@ -238,24 +255,109 @@ namespace Demoder.PlanetMapViewer.Forms
             this.disableTutorials.Text = "Disable Tutorials";
             this.disableTutorials.UseVisualStyleBackColor = true;
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.generalPage);
+            this.tabControl1.Controls.Add(this.fontPage);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(401, 168);
+            this.tabControl1.TabIndex = 6;
+            // 
+            // generalPage
+            // 
+            this.generalPage.AutoScroll = true;
+            this.generalPage.Controls.Add(this.groupBox2);
+            this.generalPage.Controls.Add(this.groupBox3);
+            this.generalPage.Controls.Add(this.groupBox4);
+            this.generalPage.Controls.Add(this.groupBox1);
+            this.generalPage.Location = new System.Drawing.Point(4, 22);
+            this.generalPage.Name = "generalPage";
+            this.generalPage.Padding = new System.Windows.Forms.Padding(3);
+            this.generalPage.Size = new System.Drawing.Size(393, 142);
+            this.generalPage.TabIndex = 0;
+            this.generalPage.Text = "General";
+            this.generalPage.UseVisualStyleBackColor = true;
+            // 
+            // fontPage
+            // 
+            this.fontPage.AutoScroll = true;
+            this.fontPage.Controls.Add(this.groupBox5);
+            this.fontPage.Location = new System.Drawing.Point(4, 22);
+            this.fontPage.Name = "fontPage";
+            this.fontPage.Padding = new System.Windows.Forms.Padding(3);
+            this.fontPage.Size = new System.Drawing.Size(393, 142);
+            this.fontPage.TabIndex = 1;
+            this.fontPage.Text = "Fonts";
+            this.fontPage.UseVisualStyleBackColor = true;
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.selectedFont);
+            this.groupBox5.Controls.Add(this.textTypes);
+            this.groupBox5.Location = new System.Drawing.Point(6, 6);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(176, 130);
+            this.groupBox5.TabIndex = 1;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Text Type";
+            // 
+            // selectedFont
+            // 
+            this.selectedFont.FormattingEnabled = true;
+            this.selectedFont.Location = new System.Drawing.Point(6, 103);
+            this.selectedFont.Name = "selectedFont";
+            this.selectedFont.Size = new System.Drawing.Size(155, 21);
+            this.selectedFont.TabIndex = 2;
+            this.selectedFont.SelectedValueChanged += new System.EventHandler(this.selectedFont_SelectedValueChanged);
+            // 
+            // textTypes
+            // 
+            this.textTypes.Location = new System.Drawing.Point(6, 19);
+            this.textTypes.Name = "textTypes";
+            this.textTypes.Size = new System.Drawing.Size(155, 82);
+            this.textTypes.Sorted = true;
+            this.textTypes.TabIndex = 0;
+            this.textTypes.SelectedValueChanged += new System.EventHandler(this.textTypes_SelectedValueChanged);
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainer1.IsSplitterFixed = true;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.tabControl1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.ButtonOkay);
+            this.splitContainer1.Panel2.Controls.Add(this.ButtonCancel);
+            this.splitContainer1.Size = new System.Drawing.Size(401, 197);
+            this.splitContainer1.SplitterDistance = 168;
+            this.splitContainer1.TabIndex = 7;
+            // 
             // OptionWindow
             // 
             this.AcceptButton = this.ButtonOkay;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.ButtonCancel;
-            this.ClientSize = new System.Drawing.Size(384, 171);
-            this.Controls.Add(this.groupBox4);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.ButtonCancel);
-            this.Controls.Add(this.ButtonOkay);
-            this.Controls.Add(this.groupBox1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.ClientSize = new System.Drawing.Size(401, 197);
+            this.Controls.Add(this.splitContainer1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(417, 231);
             this.Name = "OptionWindow";
             this.Text = "Options";
             this.TopMost = true;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OptionWindow_FormClosing);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -265,6 +367,14 @@ namespace Demoder.PlanetMapViewer.Forms
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
+            this.generalPage.ResumeLayout(false);
+            this.fontPage.ResumeLayout(false);
+            this.groupBox5.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -287,5 +397,12 @@ namespace Demoder.PlanetMapViewer.Forms
         private System.Windows.Forms.CheckBox overlayModeWorkaroundTopmost;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.CheckBox disableTutorials;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage generalPage;
+        private System.Windows.Forms.TabPage fontPage;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.ListBox textTypes;
+        private System.Windows.Forms.ComboBox selectedFont;
     }
 }

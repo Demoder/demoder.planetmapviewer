@@ -35,46 +35,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fonts\CharacterName.spritefont">
-      <Name>CharacterName</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-      <SubType>Designer</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\GFX_GUI_PLANETMAP_PLAYER_MARKER.png">
       <Name>GFX_GUI_PLANETMAP_PLAYER_MARKER</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Fonts\GuiNormal.spritefont">
-      <Name>GuiNormal</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Fonts\GuiSmall.spritefont">
-      <Name>GuiSmall</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Fonts\GuiLarge.spritefont">
-      <Name>GuiLarge</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Fonts\GuiXLarge.spritefont">
-      <Name>GuiXLarge</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
+      <ProcessorParameters_ColorKeyColor>0, 255, 0, 255</ProcessorParameters_ColorKeyColor>
+      <ProcessorParameters_PremultiplyAlpha>False</ProcessorParameters_PremultiplyAlpha>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +49,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <ProcessorParameters_GenerateMipmaps>True</ProcessorParameters_GenerateMipmaps>
+      <ProcessorParameters_PremultiplyAlpha>False</ProcessorParameters_PremultiplyAlpha>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +58,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <ProcessorParameters_GenerateMipmaps>True</ProcessorParameters_GenerateMipmaps>
+      <ProcessorParameters_PremultiplyAlpha>False</ProcessorParameters_PremultiplyAlpha>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -99,48 +67,44 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <ProcessorParameters_ColorKeyColor>0, 255, 0, 255</ProcessorParameters_ColorKeyColor>
+      <ProcessorParameters_PremultiplyAlpha>False</ProcessorParameters_PremultiplyAlpha>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fonts\MapSmall.spritefont">
-      <Name>MapSmall</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-      <SubType>Designer</SubType>
+    <Compile Include="Fonts\Rockwell13.png">
+      <Name>Rockwell13</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>FontTextureProcessor</Processor>
+      <ProcessorParameters_PremultiplyAlpha>False</ProcessorParameters_PremultiplyAlpha>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fonts\MapNormal.spritefont">
-      <Name>MapNormal</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Fonts\MapLarge.spritefont">
-      <Name>MapLarge</Name>
+    <Compile Include="Fonts\CourierNew18.spritefont">
+      <Name>CourierNew18</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fonts\MapSmallB.spritefont">
-      <SubType>Designer</SubType>
-      <Name>MapSmallB</Name>
+    <Compile Include="Fonts\CourierNew12.spritefont">
+      <Name>CourierNew12</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+    <Compile Include="Fonts\CourierNew10.spritefont">
+      <Name>CourierNew10</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+    <Compile Include="Fonts\CourierNew8.spritefont">
+      <Name>CourierNew8</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fonts\MapNormalB.spritefont">
-      <Name>MapNormalB</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Fonts\MapLargeB.spritefont">
-      <Name>MapLargeB</Name>
+    <Compile Include="Fonts\Silkscreen7.spritefont">
+      <Name>Silkscreen7</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>

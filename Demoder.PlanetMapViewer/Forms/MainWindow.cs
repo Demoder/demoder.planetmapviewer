@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
-using System.Drawing;
+using sysDrawing = System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -399,7 +399,7 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             lock (this.Context.Camera)
             {
-                this.Context.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
+                this.Context.GraphicsDevice.Clear(Color.Black);
 
                 this.Context.MapManager.CurrentLayer.Draw(this.Context);
                 if (!this.Context.Content.Loaded) { return; }
@@ -452,26 +452,27 @@ namespace Demoder.PlanetMapViewer.Forms
                 if (character == null || character.Zone == null || character.Position == null || character.Name == null) { continue; }
                 var charLoc = new MapTexture();
                 charLoc.Texture = this.Context.Content.Textures.CharacterLocator;
+                charLoc.Color = Color.Yellow;
                 charLoc.Position = this.Context.MapManager.GetPosition(character.Zone.ID, character.Position.X, character.Position.Z);
                 charLoc.PositionAlignment = MapItemAlignment.Center;
                 if (!character.IsHooked)
                 {
-                    charLoc.Color = Microsoft.Xna.Framework.Color.Gray;
+                    charLoc.Color = Color.Gray;
                 }
 
-                var txt = new MapText
+                var txt = new MapText(this.Context)
                  {
                      Position = new Vector2(charLoc.Position.X, charLoc.Position.Y + (int)charLoc.Texture.Height / 2 + 5),
                      Text = character.Name,
-                     TextColor = Microsoft.Xna.Framework.Color.White,
-                     ShadowColor = Microsoft.Xna.Framework.Color.Black,
+                     TextColor = Color.Yellow,
+                     ShadowColor = Color.Black,
                      Shadow = true,
-                     Font = this.Context.Content.Fonts.CharacterName
+                     Font = FontType.MapCharLocator
                  };
                 if (!character.IsHooked)
                 {
-                    txt.TextColor = Microsoft.Xna.Framework.Color.LightGray;
-                    txt.ShadowColor = Microsoft.Xna.Framework.Color.Gray;
+                    txt.TextColor = Color.LightGray;
+                    txt.ShadowColor = Color.Gray;
                 }
 
                 mapTexts.Add(txt);
@@ -532,10 +533,10 @@ namespace Demoder.PlanetMapViewer.Forms
         #region Misc features
         private void SaveScreenShot()
         {
-            var bmpScreenshot = new Bitmap(this.Width, this.Height, PixelFormat.Format32bppArgb);
-            var gfxScreenshot = Graphics.FromImage(bmpScreenshot);
+            var bmpScreenshot = new sysDrawing.Bitmap(this.Width, this.Height, PixelFormat.Format32bppArgb);
+            var gfxScreenshot = sysDrawing.Graphics.FromImage(bmpScreenshot);
 
-            gfxScreenshot.CopyFromScreen(this.Left, this.Top, 0, 0, this.Size, CopyPixelOperation.SourceCopy);
+            gfxScreenshot.CopyFromScreen(this.Left, this.Top, 0, 0, this.Size, sysDrawing.CopyPixelOperation.SourceCopy);
 
 
             gfxScreenshot.Save();
@@ -731,6 +732,8 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.statusStrip1.Visible = false;
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
                 this.Padding = new Padding(2, 3, 5, 10);
+
+                this.Context.State.GuiNotifications.Add(new TimedMapText("Entered fullscreen mode", 5000));
             }
 
             else
@@ -741,6 +744,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.statusStrip1.Visible = true;
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
                 this.Padding = new Padding(0);
+                this.Context.State.GuiNotifications.Add(new TimedMapText("Left fullscreen mode", 5000));
             }
         }
 
@@ -768,7 +772,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.statusStrip1.Visible = false;
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
 
-                this.MinimumSize = new Size(100, 100);
+                this.MinimumSize = new sysDrawing.Size(100, 100);
 
                 this.tileDisplay1_hScrollBar.Visible = Properties.WindowSettings.Default.OverlaymodeShowScrollbars;
                 this.tileDisplay1_vScrollBar.Visible = Properties.WindowSettings.Default.OverlaymodeShowScrollbars;
@@ -782,10 +786,12 @@ namespace Demoder.PlanetMapViewer.Forms
                     Properties.NormalTutorial.Default.OverlayMode = true;
                     Properties.NormalTutorial.Default.Save();
                 }
+
+                this.Context.State.GuiNotifications.Add(new TimedMapText("Entered overlay mode", 5000));
             }
             else
             {
-                this.MinimumSize = new Size(400, 500);
+                this.MinimumSize = new sysDrawing.Size(400, 500);
                 if (this.Width < this.MinimumSize.Width) { this.Width = this.MinimumSize.Width; }
                 if (this.Height < this.MinimumSize.Height) { this.Height = this.MinimumSize.Height; }
 
@@ -812,6 +818,8 @@ namespace Demoder.PlanetMapViewer.Forms
                     Properties.OverlayTutorial.Default.ExitOverlayMode = true;
                     Properties.OverlayTutorial.Default.Save();
                 }
+
+                this.Context.State.GuiNotifications.Add(new TimedMapText("Left overlay mode", 5000));
             }
         }
 
@@ -936,7 +944,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
                             if (!character.IsHooked)
                             {
-                                item.ForeColor = SystemColors.GrayText;
+                                item.ForeColor = sysDrawing.SystemColors.GrayText;
                             }
 
                             item.Tag = character.ID;
@@ -1083,6 +1091,7 @@ namespace Demoder.PlanetMapViewer.Forms
             var pos = this.Context.Camera.RelativePosition();
             switch (this.MagnificationSlider.Value)
             {
+                case -3: this.Context.State.Magnification = 0.25f; break;
                 case -2: this.Context.State.Magnification = 0.50f; break;
                 case -1: this.Context.State.Magnification = 0.75f; break;
                 case 0: this.Context.State.Magnification = 1.00f; break;
@@ -1091,6 +1100,8 @@ namespace Demoder.PlanetMapViewer.Forms
             }
 
             this.magnificationLabel.Text = (this.Context.State.Magnification * 100).ToString() + "%";
+            this.Context.State.GuiNotifications.Add(new TimedMapText("Magnification: " + this.magnificationLabel.Text, 5000));
+            
             this.Context.Camera.AdjustScrollbarsToLayer();
             this.Context.Camera.CenterOnRelativePosition(pos);
             this.tileDisplay1.Focus();

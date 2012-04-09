@@ -63,5 +63,21 @@ namespace Demoder.PlanetMapViewer.DataClasses
 
         public Texture2D Texture { get; set; }
         public Color Color = Color.White;
+
+        public object Clone()
+        {
+            var item = new MapTexture
+            {
+                Color = this.Color,
+                Position = new Vector2(this.Position.X, this.Position.Y),
+                PositionAlignment = this.PositionAlignment,
+                Texture = this.Texture
+            };
+            if (this.size != default(Vector2))
+            {
+                item.size = this.size;
+            }
+            return item;
+        }
     }
 }

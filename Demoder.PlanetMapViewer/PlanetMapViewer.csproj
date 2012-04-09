@@ -94,6 +94,18 @@
   <ItemGroup>
     <Compile Include="DataClasses\PlayerInfo.cs" />
     <Compile Include="DataClasses\QuestInfo.cs" />
+    <Compile Include="DataClasses\TimedMapText.cs" />
+    <Compile Include="Properties\MapFonts.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>MapFonts.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\GuiFonts.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>GuiFonts.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\MapTextBuilder.cs" />
     <Compile Include="Properties\CharacterTrackerControlResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -207,6 +219,14 @@
     <None Include="app.config" />
     <None Include="app.manifest">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\MapFonts.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>MapFonts.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Properties\GuiFonts.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>GuiFonts.Designer.cs</LastGenOutput>
     </None>
     <None Include="Properties\NormalTutorial.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

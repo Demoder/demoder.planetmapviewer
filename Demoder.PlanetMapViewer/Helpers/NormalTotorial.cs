@@ -83,42 +83,18 @@ namespace Demoder.PlanetMapViewer.Helpers
 
             items.Add(this.Context.FrameDrawer.GetTutorialStamp(center, currentHeight, 500, 200));
 
-            #region Header
-            items.Add(new MapText
-            {
-                Position = new Vector2(
-                    center,
-                    currentHeight),
-                PositionAlignment = MapItemAlignment.Top,
-                TextColor = Color.Red,
-                Shadow = false,
-                Text = "Tutorial: Zooming In",
-                Font = this.Context.Content.Fonts.GuiXLarge
-            });
-            currentHeight += (int)items.Last().Size.Y;
+            // Add texts.
+            var txts = new MapTextBuilder(this.Context, FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top);
+            txts.Text("Tutorial: Zooming In", textColor: Color.Red, font: FontType.GuiXLarge).Break();
+            txts.Text("You may zoom in on the map by the following means:").Break();
+            txts.Text("- Double left-click anywhere on the map").Break();
+            txts.Text("- Pressing the 'Zoom In' button to the right").Break();
+            txts.Text("- Pressing the + key on your keyboard").Break();
+            txts.Text("- Using your keyboards zoom button, if it has one").Break();
+            txts.Break();
+            txts.Text("Please zoom in now.").Break();
+            items.AddRange(txts.ToMapItem(this.Context.UiElements.TileDisplay.Width / 2, this.Context.UiElements.TileDisplay.Height / 3));
 
-            #endregion
-
-            #region Content
-            items.Add(new MapText
-            {
-                Position = new Vector2(
-                    center,
-                    currentHeight),
-                PositionAlignment = MapItemAlignment.Top,
-                TextColor = Color.White,
-                Shadow = false,
-                Font = this.Context.Content.Fonts.GuiNormal,
-                Text = "You may zoom in on the map by the following means:\r\n" +
-                "- Double left-click anywhere on the map\r\n" +
-                "- Pressing the 'Zoom In' button to the right\r\n" +
-                "- Pressing the + key on your keyboard\r\n" +
-                "- Using your keyboards zoom button, if it has one\r\n" +
-                "\r\n" +
-                "Please zoom in now."
-            });
-            currentHeight += (int)items.Last().Size.Y;
-            #endregion
             this.Context.FrameDrawer.Draw(items, DrawMode.ViewPort);
         }
 
@@ -129,43 +105,19 @@ namespace Demoder.PlanetMapViewer.Helpers
             int center = this.Context.UiElements.TileDisplay.Width / 2;
 
             items.Add(this.Context.FrameDrawer.GetTutorialStamp(center, currentHeight, 500, 200));
-            
-            #region Header
-            items.Add(new MapText
-            {
-                Position = new Vector2(
-                    center,
-                    currentHeight),
-                PositionAlignment = MapItemAlignment.Top,
-                TextColor = Color.Red,
-                Shadow = false,
-                Text = "Tutorial: Zooming Out",
-                Font = this.Context.Content.Fonts.GuiXLarge
-            });
-            currentHeight += (int)items.Last().Size.Y;
-            #endregion
 
-            #region Content
-            items.Add(new MapText
-            {
-                Position = new Vector2(
-                    center,
-                    currentHeight),
-                PositionAlignment = MapItemAlignment.Top,
-                TextColor = Color.White,
-                Shadow = false,
-                Font = this.Context.Content.Fonts.GuiNormal,
-                Text = "You may zoom out on the map by the following means:\r\n" +
-                "- Double right-click anywhere on the map\r\n" +
-                "- Pressing the 'Zoom Out' button to the right\r\n" +
-                "- Pressing the - key on your keyboard\r\n" +
-                "- Pressing [Ctrl] plus your keyboards zoom button,\r\n" +
-                "  if it has one\r\n" +
-                "\r\n" +
-                "Please zoom out now."
-            });
-            currentHeight += (int)items.Last().Size.Y;
-            #endregion
+            // Add texts.
+            var txts = new MapTextBuilder(this.Context, FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top);
+            txts.Text("Tutorial: Zooming Out", textColor: Color.Red, font: FontType.GuiXLarge).Break();
+            txts.Text("You may zoom out on the map by the following means:").Break();
+            txts.Text("- Double right-click anywhere on the map").Break();
+            txts.Text("- Pressing the 'Zoom Out' button to the right").Break();
+            txts.Text("- Pressing the - key on your keyboard").Break();
+            txts.Text("- Using your keyboards zoom button, if it has one").Break();
+            txts.Break();
+            txts.Text("Please zoom out now.").Break();
+            items.AddRange(txts.ToMapItem(this.Context.UiElements.TileDisplay.Width / 2, this.Context.UiElements.TileDisplay.Height / 3));
+
             this.Context.FrameDrawer.Draw(items, DrawMode.ViewPort);
         }
 
@@ -177,44 +129,15 @@ namespace Demoder.PlanetMapViewer.Helpers
 
             items.Add(this.Context.FrameDrawer.GetTutorialStamp(center, currentHeight, 425, 210));
 
-            #region Header
-            items.Add(new MapText
-            {
-                Position = new Vector2(
-                    center,
-                    currentHeight),
-                PositionAlignment = MapItemAlignment.Top,
-                TextColor = Color.Red,
-                Shadow = false,
-                Text = "Tutorial: Overlay Mode",
-                Font = this.Context.Content.Fonts.GuiXLarge
-            });
-            currentHeight += (int)items.Last().Size.Y;
-            #endregion
+            // Add texts.
+            var txts = new MapTextBuilder(this.Context, FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top);
+            txts.Text("Tutorial: Overlay Mode", textColor: Color.Red, font: FontType.GuiXLarge).Break();
+            txts.Text("Overlay Mode maximizes the visible map area and keeps PMV on top of other windows, such as Anarchy Online.", 390).Break();
+            txts.Text("You may enter Overlay Mode by going to the top menu and clicking view->Overlay Mode, or by pressing [F12].", 390).Break();
+            txts.Break();
+            txts.Text("Please enter Overlay Mode now.").Break();
 
-            #region Content
-            items.Add(new MapText
-            {
-                Position = new Vector2(
-                    center,
-                    currentHeight),
-                PositionAlignment = MapItemAlignment.Top,
-                TextColor = Color.White,
-                Shadow = false,
-                Font = this.Context.Content.Fonts.GuiNormal,
-                Text =  "Overlay Mode maximizes the visible map area\r\n" +
-                        "and keeps PMV on top of other windows, such\r\n" +
-                        "as Anarchy Online.\r\n" +
-                        "\r\n" +
-                        "You may enter Overlay Mode by going to\r\n"+
-                        "the top menu and clicking view->Overlay Mode,\r\n" +
-                        "or by pressing [F12].\r\n" +
-                        "\r\n" + 
-                        "Please enter overlay mode now."
-            });
-            currentHeight += (int)items.Last().Size.Y;
-            #endregion
-
+            items.AddRange(txts.ToMapItem(this.Context.UiElements.TileDisplay.Width / 2, this.Context.UiElements.TileDisplay.Height / 3));
             this.Context.FrameDrawer.Draw(items, DrawMode.ViewPort);
         }        
     }
