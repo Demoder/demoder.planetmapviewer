@@ -25,27 +25,33 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
+using Demoder.PlanetMapViewer.Helpers;
 
 namespace Demoder.PlanetMapViewer.DataClasses
 {
-    /// <summary>
-    /// Defines a map item
-    /// </summary>
-    public interface IMapItem : ICloneable
+    public class ContextState
     {
-        MapItemType Type { get; }
         /// <summary>
-        /// Where on the texture is Position located?
+        /// Which map type is currently selected, if any?
         /// </summary>
-        MapItemAlignment PositionAlignment { get; }
+        public MapType MapType = MapType.Rubika;
         /// <summary>
-        /// Item position on the map
+        /// Is autoswitching between map types enabled?
         /// </summary>
-        PositionDefinition Position { get; }
+        public bool MapTypeAutoSwitching = true;
+        public CameraControl CameraControl = CameraControl.Character;
         /// <summary>
-        /// Item size
+        /// Current window mode
         /// </summary>
-        Vector2 Size { get; }
+        public WindowMode WindowMode = WindowMode.Normal;
+
+        /// <summary>
+        /// Percent magnification. 2 = twice size, 0.5=half size.
+        /// </summary>
+        public float Magnification = 1;
+
+        public Dictionary<uint, PlayerInfo> PlayerInfo = new Dictionary<uint, PlayerInfo>();
+
+        public List<TimedMapText> GuiNotifications = new List<TimedMapText>();
     }
 }

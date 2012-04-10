@@ -27,6 +27,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Xml.Serialization;
 
 namespace Demoder.PlanetMapViewer.DataClasses
 {
@@ -36,46 +37,56 @@ namespace Demoder.PlanetMapViewer.DataClasses
     public class MapText : IMapItem
     {
         #region IMapItem
-        private Context context;
+        [XmlIgnore]
+        internal Context Context { get; set; }
+        [XmlIgnore]
         public MapItemType Type { get { return MapItemType.SpriteFont; } }
+        [XmlAttribute("position")]
+        public PositionDefinition Position {get; set;}
+        [XmlAttribute("positionAlignment")]
         public MapItemAlignment PositionAlignment { get; set; }
-        public Vector2 Position {get; set;}
+        [XmlIgnore]
         public Vector2 Size
         {
             get
             {
-                return this.context.Content.Fonts.GetFont(this.Font).MeasureString(this.Text);
+                return this.Context.Content.Fonts.GetFont(this.Font).MeasureString(this.Text);
             }
         }
+
+        [XmlText]
+        public string Text;
+
+        [XmlAttribute("shadowColor")]
+        public Color ShadowColor = Color.Black;
+        [XmlAttribute("textColor")]
+        public Color TextColor = Color.White;
+        [XmlAttribute("font")]
+        public FontType Font = default(FontType);
+        [XmlAttribute("haveShadow")]
+        public bool Shadow = true;
+
         #endregion
 
-        public MapText(Context context)
+        #region Constructors
+        public MapText()
         {
-            this.context = context;
-            this.Position = default(Vector2);
+            this.Position = new PositionDefinition();
             this.PositionAlignment = default(MapItemAlignment);
         }
 
-        public string Text;
-        public Color ShadowColor = Color.Black;
-        public Color TextColor = Color.White;
-        public FontType Font = default(FontType);
-        public bool Shadow = true;
-
-        public bool IsRelativePosition
+        public MapText(Context context) : this()
         {
-            get { throw new NotImplementedException(); }
+            this.Context = context;
         }
-
-
-
+        #endregion
 
         public object Clone()
         {
-            return new MapText(this.context)
+            return new MapText(this.Context)
             {
                 Font = this.Font,
-                Position = this.Position,
+                Position = (PositionDefinition)this.Position.Clone(),
                 Shadow = this.Shadow,
                 ShadowColor = this.ShadowColor,
                 Text = (string)this.Text.Clone(),

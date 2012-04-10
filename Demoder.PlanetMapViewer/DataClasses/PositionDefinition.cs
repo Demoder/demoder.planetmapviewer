@@ -25,49 +25,56 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
-using Demoder.PlanetMapViewer.Forms;
 using Demoder.PlanetMapViewer.Helpers;
-using Demoder.PlanetMapViewer.Xna;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
 namespace Demoder.PlanetMapViewer.DataClasses
 {
-    public class Context
+    public class PositionDefinition : ICloneable
     {
-        public Context()
+        /// <summary>
+        /// If set to DrawMode.ViewPort, zone will be ignored and item will be placed relative to top left corner of viewport.
+        /// </summary>
+        public DrawMode Type = DrawMode.World;
+        public uint Zone = 0;
+        public int X = 0;
+        public int Y = 0;
+
+        public PositionDefinition() { }
+        public PositionDefinition(float x, float y) : this((int)x, (int)y) { }
+        public PositionDefinition(int x, int y)
         {
-            this.UiElements = new ContextUiElements();
-            this.State = new ContextState();
-            this.Content = new XnaContent(this);
-            this.FrameDrawer = new FrameDrawer(this);
-            this.Tutorial = new Tutorial(this);
+            this.Type = DrawMode.ViewPort;
+            this.X = x;
+            this.Y = y;
+        }
+        public PositionDefinition(uint zone, float x, float y) : this(zone, (int)x, (int)y) { }
+        public PositionDefinition(uint zone, int x, int y)
+            : this(x, y)
+        {
+            this.Type = DrawMode.World;
+            this.Zone = zone;
         }
 
-        public Queue<string> ErrorLog = new Queue<string>();
-
-        public FrameDrawer FrameDrawer { get; private set; }
-        public MapManager MapManager;
-        public Camera Camera;
-        public SpriteBatch SpriteBatch;
-        public HookInfoTracker HookInfo;
-        public ContentManager ContentManager;
-        public XnaContent Content { get; private set; }
-
-        public Tutorial Tutorial { get; private set; }
-
-        public GraphicsDevice GraphicsDevice
+        public object Clone()
         {
-            get
+            return new PositionDefinition
             {
-                if (this.UiElements.TileDisplay == null) { return null; }
-                return this.UiElements.TileDisplay.GraphicsDevice;
-            }
+                Type = this.Type,
+                Zone = this.Zone,
+                X = this.X,
+                Y = this.Y
+            };
         }
 
-        public ContextUiElements UiElements { get; private set; }
-        public ContextState State { get; private set; }
+        public Vector2 GetPosition(Context context)
+        {
+            if (this.Zone == 0)
+            {
+                return new Vector2(this.X, this.Y);
+            }
+
+            return context.MapManager.GetPosition(this.Zone, this.X, this.Y);
+        }
     }
 }

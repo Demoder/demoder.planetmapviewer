@@ -92,9 +92,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataClasses\PositionDefinition.cs" />
+    <Compile Include="DataClasses\ProgrammableMap.cs" />
+    <Compile Include="DataClasses\Texture2DCacheItem.cs" />
+    <Compile Include="DataClasses\ContextState.cs" />
+    <Compile Include="DataClasses\ContextUiElements.cs" />
     <Compile Include="DataClasses\PlayerInfo.cs" />
     <Compile Include="DataClasses\QuestInfo.cs" />
+    <Compile Include="DataClasses\TextureDefinition.cs" />
     <Compile Include="DataClasses\TimedMapText.cs" />
+    <Compile Include="DataClasses\XnaContentSpriteFonts.cs" />
+    <Compile Include="DataClasses\XnaContentTextures.cs" />
     <Compile Include="Properties\MapFonts.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>

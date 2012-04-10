@@ -25,22 +25,52 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework.Graphics;
-using System.IO;
 using System.Diagnostics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Demoder.PlanetMapViewer.DataClasses
 {
-    public class XnaContent
+    public class Texture2DCacheItem : IDisposable
     {
-        public XnaContent(Context context)
+        #region Members
+        private Texture2D texture;
+        private Stopwatch lastAccess;
+        #endregion
+
+        #region Accessors
+        public long LastAccess { get { return this.lastAccess.ElapsedMilliseconds; } }
+        public Texture2D Texture { get { return this; } }
+        public bool IsDisposed { get; private set; }
+        #endregion
+
+        public Texture2DCacheItem(Texture2D texture)
         {
-            this.Textures = new XnaContentTextures(context);
-            this.Fonts = new XnaContentSpriteFonts();
+            this.texture = texture;
+            this.lastAccess = Stopwatch.StartNew();
         }
 
-        public bool Loaded = false;
-        public XnaContentTextures Textures { get; private set; }
-        public XnaContentSpriteFonts Fonts { get; private set; }
-    }  
+        #region Operators
+        public static implicit operator Texture2D(Texture2DCacheItem ctx)
+        {
+            ctx.lastAccess.Restart();
+            return ctx.texture;
+        }
+
+        public static implicit operator Texture2DCacheItem(Texture2D tex)
+        {
+            return new Texture2DCacheItem(tex);
+        }
+        #endregion
+
+        public void Dispose()
+        {
+            if (this.IsDisposed)
+            {
+                throw new ObjectDisposedException("Object already disposed!", new Exception());
+            }
+            this.lastAccess.Reset();
+            this.texture.Dispose();
+            this.IsDisposed = true;
+        }
+    }
 }

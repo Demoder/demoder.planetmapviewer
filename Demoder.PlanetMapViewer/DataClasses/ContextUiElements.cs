@@ -25,27 +25,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
+using Demoder.PlanetMapViewer.Forms;
+using System.Windows.Forms;
+using Demoder.PlanetMapViewer.Xna;
 
 namespace Demoder.PlanetMapViewer.DataClasses
 {
-    /// <summary>
-    /// Defines a map item
-    /// </summary>
-    public interface IMapItem : ICloneable
+    public class ContextUiElements
     {
-        MapItemType Type { get; }
-        /// <summary>
-        /// Where on the texture is Position located?
-        /// </summary>
-        MapItemAlignment PositionAlignment { get; }
-        /// <summary>
-        /// Item position on the map
-        /// </summary>
-        PositionDefinition Position { get; }
-        /// <summary>
-        /// Item size
-        /// </summary>
-        Vector2 Size { get; }
+        public MainWindow ParentForm;
+        public VScrollBar VScrollBar;
+        public HScrollBar HScrollBar;
+        public ComboBox MapList;
+        public TileDisplay TileDisplay;
+        public CharacterTrackerControl CharacterTrackerControl;
     }
 }

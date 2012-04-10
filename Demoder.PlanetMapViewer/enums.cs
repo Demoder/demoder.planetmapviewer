@@ -105,4 +105,20 @@ namespace Demoder.PlanetMapViewer
 
         Silkscreen7,
     }
+
+    public enum CameraControl
+    {
+        Manual,
+        Character,
+    }
+
+    /// <summary>
+    /// Which mode is the application in?
+    /// </summary>
+    public enum WindowMode
+    {
+        Normal,
+        Fullscreen,
+        Overlay
+    }
 }

@@ -450,19 +450,29 @@ namespace Demoder.PlanetMapViewer.Forms
             foreach (var character in characters)
             {
                 if (character == null || character.Zone == null || character.Position == null || character.Name == null) { continue; }
-                var charLoc = new MapTexture();
-                charLoc.Texture = this.Context.Content.Textures.CharacterLocator;
-                charLoc.Color = Color.Yellow;
-                charLoc.Position = this.Context.MapManager.GetPosition(character.Zone.ID, character.Position.X, character.Position.Z);
-                charLoc.PositionAlignment = MapItemAlignment.Center;
+                var charLoc = new MapTexture(this.Context)
+                {
+                    Texture = this.Context.Content.Textures.CharacterLocator,
+                    Color = Color.Yellow,
+                    Position = new PositionDefinition(character.Zone.ID, character.Position.X, character.Position.Z),
+                    PositionAlignment = MapItemAlignment.Center,
+                };
+
                 if (!character.IsHooked)
                 {
                     charLoc.Color = Color.Gray;
                 }
 
+                var charRealPos = charLoc.Position.GetPosition(this.Context);
+
                 var txt = new MapText(this.Context)
                  {
-                     Position = new Vector2(charLoc.Position.X, charLoc.Position.Y + (int)charLoc.Texture.Height / 2 + 5),
+                     Position = new PositionDefinition
+                     {
+                         Type = DrawMode.World,
+                         X = (int)charRealPos.X,
+                         Y = (int)charRealPos.Y + (int)charLoc.Size.Y / 2 + 5
+                     },
                      Text = character.Name,
                      TextColor = Color.Yellow,
                      ShadowColor = Color.Black,

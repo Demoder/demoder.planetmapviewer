@@ -93,9 +93,9 @@ namespace Demoder.PlanetMapViewer.Helpers
             txts.Text("- Using your keyboards zoom button, if it has one").Break();
             txts.Break();
             txts.Text("Please zoom in now.").Break();
-            items.AddRange(txts.ToMapItem(this.Context.UiElements.TileDisplay.Width / 2, this.Context.UiElements.TileDisplay.Height / 3));
+            items.AddRange(txts.ToMapItem(DrawMode.ViewPort, this.Context.UiElements.TileDisplay.Width / 2, this.Context.UiElements.TileDisplay.Height / 3));
 
-            this.Context.FrameDrawer.Draw(items, DrawMode.ViewPort);
+            this.Context.FrameDrawer.Draw(items);
         }
 
         private void ZoomOut()
@@ -116,9 +116,9 @@ namespace Demoder.PlanetMapViewer.Helpers
             txts.Text("- Using your keyboards zoom button, if it has one").Break();
             txts.Break();
             txts.Text("Please zoom out now.").Break();
-            items.AddRange(txts.ToMapItem(this.Context.UiElements.TileDisplay.Width / 2, this.Context.UiElements.TileDisplay.Height / 3));
+            items.AddRange(txts.ToMapItem(DrawMode.ViewPort, this.Context.UiElements.TileDisplay.Width / 2, this.Context.UiElements.TileDisplay.Height / 3));
 
-            this.Context.FrameDrawer.Draw(items, DrawMode.ViewPort);
+            this.Context.FrameDrawer.Draw(items);
         }
 
         private void OverlayMode()
@@ -137,8 +137,8 @@ namespace Demoder.PlanetMapViewer.Helpers
             txts.Break();
             txts.Text("Please enter Overlay Mode now.").Break();
 
-            items.AddRange(txts.ToMapItem(this.Context.UiElements.TileDisplay.Width / 2, this.Context.UiElements.TileDisplay.Height / 3));
-            this.Context.FrameDrawer.Draw(items, DrawMode.ViewPort);
+            items.AddRange(txts.ToMapItem(DrawMode.ViewPort, this.Context.UiElements.TileDisplay.Width / 2, this.Context.UiElements.TileDisplay.Height / 3));
+            this.Context.FrameDrawer.Draw(items);
         }        
     }
 }

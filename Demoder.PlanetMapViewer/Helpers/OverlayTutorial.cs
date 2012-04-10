@@ -81,13 +81,13 @@ namespace Demoder.PlanetMapViewer.Helpers
             int currentHeight = this.Context.UiElements.TileDisplay.Height / 3;
             int center = this.Context.UiElements.TileDisplay.Width / 2;
 
-                var tex = new MapTexture
-                {
-                    Texture = this.Context.Content.Textures.ArrowUp,
-                    PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Center,
-                    Size = new Vector2(128, 128),
-                    Position = new Vector2(center, 0)
-                };
+            var tex = new MapTexture(this.Context)
+            {
+                Texture = this.Context.Content.Textures.ArrowUp,
+                PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Center,
+                Size = new Vector2(128, 128),
+                Position = new PositionDefinition { Type = DrawMode.ViewPort, X = center, Y = 0 },
+            };
                 items.Add(tex);
             items.Add(this.Context.FrameDrawer.GetTutorialStamp(center, currentHeight, 386, 140));
 
@@ -98,9 +98,9 @@ namespace Demoder.PlanetMapViewer.Helpers
             txts.Break();
             txts.Text("Please open the Overlay Menu now.").Break();
 
-            items.AddRange(txts.ToMapItem(this.Context.UiElements.TileDisplay.Width / 2, this.Context.UiElements.TileDisplay.Height / 3));
+            items.AddRange(txts.ToMapItem(DrawMode.ViewPort, this.Context.UiElements.TileDisplay.Width / 2, this.Context.UiElements.TileDisplay.Height / 3));
 
-            this.Context.FrameDrawer.Draw(items, DrawMode.ViewPort);
+            this.Context.FrameDrawer.Draw(items);
         }
 
         private void ResizeWindow()
@@ -117,9 +117,9 @@ namespace Demoder.PlanetMapViewer.Helpers
             txts.Text("You may resize the window by dragging the window border using the mouse.", 350).Break();
             txts.Break();
             txts.Text("Please resize the window now.").Break();
-            items.AddRange(txts.ToMapItem(this.Context.UiElements.TileDisplay.Width / 2, this.Context.UiElements.TileDisplay.Height / 3));
+            items.AddRange(txts.ToMapItem(DrawMode.ViewPort, this.Context.UiElements.TileDisplay.Width / 2, this.Context.UiElements.TileDisplay.Height / 3));
 
-            this.Context.FrameDrawer.Draw(items, DrawMode.ViewPort);
+            this.Context.FrameDrawer.Draw(items);
         }
 
         private void ExitOverlayMode()
@@ -136,9 +136,9 @@ namespace Demoder.PlanetMapViewer.Helpers
             txts.Text("You may exit overlay mode by pressing the close window button at top right, by opening the Overlay Menu and selecting 'Exit Overlay Mode', or pressing [F12]", 480).Break();
             txts.Break();
             txts.Text("Please exit overlay mode now.", textColor: Color.Green).Break();
-            items.AddRange(txts.ToMapItem(this.Context.UiElements.TileDisplay.Width / 2, this.Context.UiElements.TileDisplay.Height / 3));
+            items.AddRange(txts.ToMapItem(DrawMode.ViewPort, this.Context.UiElements.TileDisplay.Width / 2, this.Context.UiElements.TileDisplay.Height / 3));
 
-            this.Context.FrameDrawer.Draw(items, DrawMode.ViewPort);
+            this.Context.FrameDrawer.Draw(items);
         }
     }
 }
