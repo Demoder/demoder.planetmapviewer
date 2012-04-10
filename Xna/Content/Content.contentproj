@@ -35,8 +35,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\GFX_GUI_PLANETMAP_PLAYER_MARKER.png">
-      <Name>GFX_GUI_PLANETMAP_PLAYER_MARKER</Name>
+    <Compile Include="Textures\CharacterMarker.png">
+      <Name>CharacterMarker</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <ProcessorParameters_ColorKeyColor>0, 255, 0, 255</ProcessorParameters_ColorKeyColor>
@@ -62,8 +62,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\GFX_GUI_PLANETMAP_MISSION_MARKER2.png">
-      <Name>GFX_GUI_PLANETMAP_MISSION_MARKER2</Name>
+    <Compile Include="Textures\MissionMarker.png">
+      <Name>MissionMarker</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <ProcessorParameters_ColorKeyColor>0, 255, 0, 255</ProcessorParameters_ColorKeyColor>
@@ -107,6 +107,15 @@
       <Name>Silkscreen7</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\ErrorTexture.png">
+      <Name>ErrorTexture</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_ColorKeyEnabled>False</ProcessorParameters_ColorKeyEnabled>
+      <ProcessorParameters_PremultiplyAlpha>False</ProcessorParameters_PremultiplyAlpha>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

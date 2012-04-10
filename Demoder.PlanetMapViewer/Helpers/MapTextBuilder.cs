@@ -118,7 +118,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Shadow = this.haveShadow,
                 TextColor = this.textColor,
                 ShadowColor = this.shadowColor,
-                Position = new Vector2(this.nextPosition.X, this.nextPosition.Y),
+                Position = new PositionDefinition(this.nextPosition.X, this.nextPosition.Y),
                 PositionAlignment = this.alignment,
                 Text = text
             };
@@ -144,7 +144,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 Shadow = this.haveShadow,
                 TextColor = this.textColor,
                 ShadowColor = this.shadowColor,
-                Position = new Vector2(this.nextPosition.X, this.nextPosition.Y),
+                Position = new PositionDefinition(this.nextPosition.X, this.nextPosition.Y),
                 PositionAlignment = this.alignment,
                 Text = text
             };
@@ -204,7 +204,7 @@ namespace Demoder.PlanetMapViewer.Helpers
         }
 
 
-        public IMapItem[] ToMapItem(int x, int y)
+        public IMapItem[] ToMapItem(DrawMode mode, int x, int y)
         {
             var items = new IMapItem[this.mapItems.Count];
 
@@ -212,8 +212,8 @@ namespace Demoder.PlanetMapViewer.Helpers
             {
               
                 var item = this.mapItems[i].Clone() as MapText;
-
-                item.Position = new Vector2(item.Position.X + x, item.Position.Y + y);
+                item.Position = new PositionDefinition(item.Position.X + x, item.Position.Y + y);
+                item.Position.Type = mode;
                 items[i]=item;
             }
             return items.ToArray();
@@ -221,8 +221,8 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         public void Draw(DrawMode mode, int x, int y)
         {
-            var items = this.ToMapItem(x,y);
-            this.context.FrameDrawer.Draw(items, mode);
+            var items = this.ToMapItem(mode, x, y);
+            this.context.FrameDrawer.Draw(items);
         }
     }
 }

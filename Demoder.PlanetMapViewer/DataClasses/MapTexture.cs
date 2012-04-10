@@ -27,6 +27,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Xml.Serialization;
 
 namespace Demoder.PlanetMapViewer.DataClasses
 {
@@ -36,17 +37,30 @@ namespace Demoder.PlanetMapViewer.DataClasses
     public class MapTexture : IMapItem
     {
         private Vector2 size;
+        [XmlIgnore]
+        internal Context Context { get; set; }
         #region IMapItem
+        [XmlIgnore]
         public MapItemType Type { get { return MapItemType.Texture; } }
-        public Vector2 Position { get; set; }
+        [XmlAttribute("position")]
+        public PositionDefinition Position { get; set; }
+        [XmlAttribute("positionAlignment")]
         public MapItemAlignment PositionAlignment { get; set; }
+        [XmlElement("texture")]
+        public TextureDefinition Texture { get; set; }
+        [XmlAttribute("color")]
+        public Color Color = Color.White;
+
+
+        [XmlAttribute("size")]
         public Vector2 Size
         {
             get
             {
                 if (this.size != default(Vector2)) { return this.size; }
                 if (this.Texture == null) { return default(Vector2); }
-                return new Vector2(this.Texture.Width, this.Texture.Height);
+                var tex = this.Context.Content.Textures.GetTexture(this.Texture);
+                return new Vector2(tex.Width, tex.Height);
             }
             set
             {
@@ -54,22 +68,25 @@ namespace Demoder.PlanetMapViewer.DataClasses
             }
         }
         #endregion
-       
         public MapTexture()
         {
-            this.Position = default(Vector2);
+            this.Position = new PositionDefinition();
             this.PositionAlignment = default(MapItemAlignment);
         }
 
-        public Texture2D Texture { get; set; }
-        public Color Color = Color.White;
+        public MapTexture(Context context) : this()
+        {           
+            this.Context = context;
+        }
+
+        
 
         public object Clone()
         {
-            var item = new MapTexture
+            var item = new MapTexture(this.Context)
             {
                 Color = this.Color,
-                Position = new Vector2(this.Position.X, this.Position.Y),
+                Position = (PositionDefinition)this.Position.Clone(),
                 PositionAlignment = this.PositionAlignment,
                 Texture = this.Texture
             };

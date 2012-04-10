@@ -24,19 +24,20 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Demoder.Common;
+using Demoder.PlanetMapViewer.DataClasses;
+using Demoder.PlanetMapViewer.Forms;
+using Demoder.PlanetMapViewer.Helpers;
+using Demoder.PlanetMapViewer.Xna;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Demoder.PlanetMapViewer.Xna;
-using Demoder.PlanetMapViewer.DataClasses;
-using Demoder.PlanetMapViewer.Helpers;
-using System.IO;
 
 namespace Demoder.PlanetMapViewer.Xna
 {
@@ -61,9 +62,14 @@ namespace Demoder.PlanetMapViewer.Xna
 
         public event EventHandler OnDraw;
         public event EventHandler OnInitialize;
-        internal Context Context = new Context();
+        internal Context Context;
 
         private object drawLocker = new Object();
+
+        public TileDisplay()
+        {
+            this.Context = new Context();
+        }
 
         #region Constructor / Initialization
         protected override void Initialize()
@@ -83,16 +89,7 @@ namespace Demoder.PlanetMapViewer.Xna
             try
             {
                 this.Context.ContentManager = new ContentManager(Services, "Content");
-                // Load textures
-                this.Context.Content.Textures.CharacterLocator = this.Context.ContentManager.Load<Texture2D>(@"Textures\GFX_GUI_PLANETMAP_PLAYER_MARKER");
-                this.Context.Content.Textures.MissionLocator = this.Context.ContentManager.Load<Texture2D>(@"Textures\GFX_GUI_PLANETMAP_MISSION_MARKER2");
-                this.Context.Content.Textures.ArrowUp = this.Context.ContentManager.Load<Texture2D>(@"Textures\ArrowUp");
-                this.Context.Content.Textures.TutorialFrame = this.Context.ContentManager.Load<Texture2D>(@"Textures\TutorialFrame");
-
-                // Load fonts
-
                 this.Context.Content.Fonts.Load(this.Context);
-
                 this.Context.Content.Loaded = true;
                 ThreadPool.QueueUserWorkItem(new WaitCallback(this.InvalidateFrame));
             }
@@ -110,7 +107,7 @@ namespace Demoder.PlanetMapViewer.Xna
 
         private void InvalidateFrame(object state)
         {
-            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;            
             do
             {
                 var sw = Stopwatch.StartNew();
@@ -155,7 +152,7 @@ namespace Demoder.PlanetMapViewer.Xna
                                txtBuilder.Text("This is " + font.ToString() + " with shadow", font: font, haveShadow: true).Break(2);
                            }
                            */
-                            this.Context.FrameDrawer.Draw(txtBuilder.ToMapItem(10, 10), DrawMode.ViewPort);
+                            this.Context.FrameDrawer.Draw(txtBuilder.ToMapItem(DrawMode.ViewPort, 10, 10));
 
 
                             // Notification pane
@@ -174,9 +171,8 @@ namespace Demoder.PlanetMapViewer.Xna
                                     txtBuilder.Text(text.Text).Break();
                                 }
 
-                                this.Context.FrameDrawer.Draw(txtBuilder.ToMapItem(this.Size.Width / 2, 10), DrawMode.ViewPort);
+                                this.Context.FrameDrawer.Draw(txtBuilder.ToMapItem(DrawMode.ViewPort, this.Size.Width / 2, 10));
                             }
-
                         }
 #endif
                     }
@@ -250,8 +246,6 @@ namespace Demoder.PlanetMapViewer.Xna
                 else { return; }
 
                 // Magnify to mouse position.
-                
-                
                 if (ModifierKeys.HasFlag(System.Windows.Forms.Keys.Alt) && this.Context.State.CameraControl == CameraControl.Manual)
                 {
                     this.Context.Camera.CenterOnPixel(

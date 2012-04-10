@@ -25,27 +25,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
+using System.Xml.Serialization;
+using Demoder.PlanetMapViewer.Helpers;
 
 namespace Demoder.PlanetMapViewer.DataClasses
 {
-    /// <summary>
-    /// Defines a map item
-    /// </summary>
-    public interface IMapItem : ICloneable
+    [XmlRoot("ProgrammableMap")]
+    public class ProgrammableMap
     {
-        MapItemType Type { get; }
-        /// <summary>
-        /// Where on the texture is Position located?
-        /// </summary>
-        MapItemAlignment PositionAlignment { get; }
-        /// <summary>
-        /// Item position on the map
-        /// </summary>
-        PositionDefinition Position { get; }
-        /// <summary>
-        /// Item size
-        /// </summary>
-        Vector2 Size { get; }
+        [XmlAttribute("mapType")]
+        public MapType MapType;
+        [XmlAttribute("name")]
+        public string Name;
+        
+        [XmlElement("Texts")]
+        public List<MapText> Texts = new List<MapText>();
+        [XmlElement("Textures")]
+        public List<MapTexture> Textures = new List<MapTexture>();        
     }
 }

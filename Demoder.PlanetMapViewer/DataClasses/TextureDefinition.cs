@@ -21,31 +21,28 @@
 * THE SOFTWARE.
 */
 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
+using Demoder.PlanetMapViewer.DataClasses;
+using System.Xml.Serialization;
 
 namespace Demoder.PlanetMapViewer.DataClasses
 {
-    /// <summary>
-    /// Defines a map item
-    /// </summary>
-    public interface IMapItem : ICloneable
+    public class TextureDefinition
     {
-        MapItemType Type { get; }
-        /// <summary>
-        /// Where on the texture is Position located?
-        /// </summary>
-        MapItemAlignment PositionAlignment { get; }
-        /// <summary>
-        /// Item position on the map
-        /// </summary>
-        PositionDefinition Position { get; }
-        /// <summary>
-        /// Item size
-        /// </summary>
-        Vector2 Size { get; }
+        [XmlAttribute("type")]
+        public TextureType Type { get; set; }
+        [XmlAttribute("key")]
+        public string Key { get; set; }
+
+        public TextureDefinition(){}
+        public TextureDefinition(TextureType type, string Key)
+        {
+            this.Type = type;
+            this.Key = Key;
+        }
     }
 }

@@ -28,6 +28,7 @@ using System.Text;
 using Demoder.PlanetMapViewer.DataClasses;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Demoder.Common.Serialization;
 
 namespace Demoder.PlanetMapViewer.Helpers
 {
@@ -43,7 +44,22 @@ namespace Demoder.PlanetMapViewer.Helpers
         }
 
 
-        public void Draw(IEnumerable<IMapItem> mapItems, DrawMode drawMode = DrawMode.World)
+        public void Draw(IEnumerable<IMapItem> mapItems)
+        {
+            var worldItems = mapItems.Where(i => i.Position.Type == DrawMode.World).ToArray();
+            var hudItems = mapItems.Where(i => i.Position.Type == DrawMode.ViewPort).ToArray();
+
+            if (worldItems.Length > 0)
+            {
+                this.Draw(worldItems, DrawMode.World);
+            }
+            if (hudItems.Length > 0)
+            {
+                this.Draw(hudItems, DrawMode.ViewPort);
+            }
+        }
+
+        private void Draw(IEnumerable<IMapItem> mapItems, DrawMode drawMode)
         {
             var bufferedItems = new List<IMapItem>();
             MapItemType lastType = default(MapItemType);
@@ -85,7 +101,6 @@ namespace Demoder.PlanetMapViewer.Helpers
         /// <param name="worldText">If set to true, positions are relative to map area. If set to false, positions are relative to viewport area.</param>
         public void DrawText(IEnumerable<IMapItem> items, DrawMode drawMode = DrawMode.World)
         {
-            if (this.Context.SpriteBatch == null) { return; }
             try
             {
                 #region Shadow
@@ -97,7 +112,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                         if (item.Type != MapItemType.SpriteFont) { continue; }
                         var sd = item as MapText;
                         var textSize = sd.Size;
-                        var pos = GetRealPosition(item);
+                        var pos = GetRealPosition(this.Context, item);
                         pos.X++;
                         pos.Y++;
                         this.Context.SpriteBatch.DrawString(
@@ -128,10 +143,12 @@ namespace Demoder.PlanetMapViewer.Helpers
                         if (item.Type != MapItemType.SpriteFont) { continue; }
                         var sd = item as MapText;
                         var textSize = sd.Size;
+                        var pos = GetRealPosition(this.Context, item);                       
+
                         this.Context.SpriteBatch.DrawString(
                             this.Context.Content.Fonts.GetFont(sd.Font),
                             sd.Text,
-                            GetRealPosition(item),
+                            pos,
                             sd.TextColor
                             );
                     }
@@ -158,9 +175,9 @@ namespace Demoder.PlanetMapViewer.Helpers
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static Vector2 GetRealPosition(IMapItem item)
+        public static Vector2 GetRealPosition(Context context, IMapItem item)
         {
-            Vector2 realPos = item.Position;
+            Vector2 realPos = item.Position.GetPosition(context);
             
             // Adjust horizontal.
             if (item.PositionAlignment.HasFlag(MapItemAlignment.Left))
@@ -209,10 +226,10 @@ namespace Demoder.PlanetMapViewer.Helpers
                 foreach (var item in items)
                 {
                     if (item.Type != MapItemType.Texture) { continue; }
-                    var realPos = GetRealPosition(item);
+                    Vector2 realPos = GetRealPosition(this.Context, item);
                     var tex = item as MapTexture;
                     this.Context.SpriteBatch.Draw(
-                        tex.Texture,
+                        this.Context.Content.Textures.GetTexture(tex.Texture),
                         new Microsoft.Xna.Framework.Rectangle((int)realPos.X, (int)realPos.Y, (int)tex.Size.X, (int)tex.Size.Y),
                         tex.Color);
                 }
@@ -260,10 +277,10 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         public MapTexture GetTutorialStamp(int posX, int posY, int width, int height)
         {
-            var tex = new MapTexture
+            var tex = new MapTexture(this.Context)
             {
                 Texture = this.Context.Content.Textures.TutorialFrame,
-                Position = new Vector2(posX, posY - 15),
+                Position = new PositionDefinition { Type = DrawMode.ViewPort, X = posX, Y = posY - 15 },
                 Size = new Vector2(width, height),
                 PositionAlignment = MapItemAlignment.Top
             };
