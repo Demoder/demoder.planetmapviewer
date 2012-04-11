@@ -26,20 +26,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
-using Demoder.PlanetMapViewer.Helpers;
+using Microsoft.Xna.Framework;
 
 namespace Demoder.PlanetMapViewer.DataClasses
 {
-    [XmlRoot("ProgrammableMap")]
     [Serializable]
-    public class ProgrammableMap
+    public struct SimpleColor
     {
-        [XmlAttribute("mapType")]
-        public MapType MapType;
-        [XmlAttribute("name")]
-        public string Name;
-        
-        public List<MapText> Texts = new List<MapText>();
-        public List<MapTexture> Textures = new List<MapTexture>();        
+        private int red { get; set; }
+        private int green { get; set; }
+        private int blue { get; set; }
+        private int alpha { get; set; }
+        [XmlAttribute("value")]
+        public string Value
+        {
+            get
+            {
+                return String.Format("{0}:{1}:{2}:{3}", this.red, this.green, this.blue, this.alpha);
+            }
+            set
+            {
+                var values = value.Split(':');
+                this.red = int.Parse(values[0]);
+                this.green = int.Parse(values[1]);
+                this.blue = int.Parse(values[2]);
+                this.alpha = int.Parse(values[3]);
+            }
+        }
+
+        public static implicit operator Color(SimpleColor color)
+        {
+            return new Color(color.red, color.green, color.blue, color.red);
+        }
+        public static implicit operator SimpleColor(Color color)
+        {
+            return new SimpleColor { red = color.R, green = color.G, blue = color.B, alpha = color.A };
+        }
     }
 }

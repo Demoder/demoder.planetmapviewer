@@ -231,7 +231,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                     this.Context.SpriteBatch.Draw(
                         this.Context.Content.Textures.GetTexture(tex.Texture),
                         new Microsoft.Xna.Framework.Rectangle((int)realPos.X, (int)realPos.Y, (int)tex.Size.X, (int)tex.Size.Y),
-                        tex.Color);
+                        tex.KeyColor);
                 }
             }
             catch (Exception ex)

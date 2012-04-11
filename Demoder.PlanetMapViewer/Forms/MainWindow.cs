@@ -453,14 +453,14 @@ namespace Demoder.PlanetMapViewer.Forms
                 var charLoc = new MapTexture(this.Context)
                 {
                     Texture = this.Context.Content.Textures.CharacterLocator,
-                    Color = Color.Yellow,
+                    KeyColor = Color.Yellow,
                     Position = new PositionDefinition(character.Zone.ID, character.Position.X, character.Position.Z),
                     PositionAlignment = MapItemAlignment.Center,
                 };
 
                 if (!character.IsHooked)
                 {
-                    charLoc.Color = Color.Gray;
+                    charLoc.KeyColor = Color.Gray;
                 }
 
                 var charRealPos = charLoc.Position.GetPosition(this.Context);
