@@ -94,6 +94,7 @@
   <ItemGroup>
     <Compile Include="DataClasses\PositionDefinition.cs" />
     <Compile Include="DataClasses\ProgrammableMap.cs" />
+    <Compile Include="DataClasses\SimpleColor.cs" />
     <Compile Include="DataClasses\Texture2DCacheItem.cs" />
     <Compile Include="DataClasses\ContextState.cs" />
     <Compile Include="DataClasses\ContextUiElements.cs" />

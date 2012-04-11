@@ -34,6 +34,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
     /// <summary>
     /// Stores information about a charcter locator, and associated text
     /// </summary>
+    [Serializable]
     public class MapTexture : IMapItem
     {
         private Vector2 size;
@@ -42,17 +43,12 @@ namespace Demoder.PlanetMapViewer.DataClasses
         #region IMapItem
         [XmlIgnore]
         public MapItemType Type { get { return MapItemType.Texture; } }
-        [XmlAttribute("position")]
         public PositionDefinition Position { get; set; }
         [XmlAttribute("positionAlignment")]
         public MapItemAlignment PositionAlignment { get; set; }
-        [XmlElement("texture")]
         public TextureDefinition Texture { get; set; }
-        [XmlAttribute("color")]
-        public Color Color = Color.White;
+        public SimpleColor KeyColor = Color.White;
 
-
-        [XmlAttribute("size")]
         public Vector2 Size
         {
             get
@@ -85,7 +81,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
         {
             var item = new MapTexture(this.Context)
             {
-                Color = this.Color,
+                KeyColor = this.KeyColor,
                 Position = (PositionDefinition)this.Position.Clone(),
                 PositionAlignment = this.PositionAlignment,
                 Texture = this.Texture

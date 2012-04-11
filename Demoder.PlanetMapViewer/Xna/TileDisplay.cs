@@ -152,8 +152,8 @@ namespace Demoder.PlanetMapViewer.Xna
                                txtBuilder.Text("This is " + font.ToString() + " with shadow", font: font, haveShadow: true).Break(2);
                            }
                            */
-                            this.Context.FrameDrawer.Draw(txtBuilder.ToMapItem(DrawMode.ViewPort, 10, 10));
 
+                            txtBuilder.Draw(DrawMode.ViewPort, 10, 10);
 
                             // Notification pane
                             if (this.Context.State.GuiNotifications.Count > 0)
@@ -171,9 +171,11 @@ namespace Demoder.PlanetMapViewer.Xna
                                     txtBuilder.Text(text.Text).Break();
                                 }
 
-                                this.Context.FrameDrawer.Draw(txtBuilder.ToMapItem(DrawMode.ViewPort, this.Size.Width / 2, 10));
+                                txtBuilder.Draw(DrawMode.ViewPort, this.Size.Width / 2, 10);
                             }
                         }
+
+
 #endif
                     }
                 }
