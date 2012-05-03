@@ -174,8 +174,6 @@ namespace Demoder.PlanetMapViewer.Xna
                                 txtBuilder.Draw(DrawMode.ViewPort, this.Size.Width / 2, 10);
                             }
                         }
-
-
 #endif
                     }
                 }
