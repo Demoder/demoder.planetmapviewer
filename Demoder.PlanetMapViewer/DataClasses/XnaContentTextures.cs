@@ -33,6 +33,7 @@ using Demoder.Common.Cache;
 using Demoder.Common.Extensions;
 using Demoder.PlanetMapViewer.Forms;
 using Microsoft.Xna.Framework.Graphics;
+using System.Reflection;
 
 namespace Demoder.PlanetMapViewer.DataClasses
 {
@@ -71,9 +72,12 @@ namespace Demoder.PlanetMapViewer.DataClasses
             this.Context = context;
             this.CleanTimer = new Timer(this.RemoveExpiredItems, null, 30000, 30000);
             this.iconCache = new FileCache(new DirectoryInfo(Path.Combine(Demoder.Common.Misc.MyTemporaryDirectory, "IconCache")));
+        }
 
+        private void SetupIconWebClient()
+        {
             this.iconWebClient = new WebClient();
-            this.iconWebClient.Headers.Set(HttpRequestHeader.UserAgent, System.Reflection.Assembly.GetEntryAssembly().GetName().Name);
+            this.iconWebClient.Headers.Set(HttpRequestHeader.UserAgent, Assembly.GetAssembly(typeof(XnaContentTextures)).GetName().Name);
             this.iconWebClient.DownloadDataCompleted += this.iconCache.WebClientDownloadDataCompleted;
         }
 
@@ -179,6 +183,10 @@ namespace Demoder.PlanetMapViewer.DataClasses
 
         internal byte[] DownloadAoIconTexture(string key)
         {
+            lock (this)
+            {
+                if (this.iconWebClient == null) { this.SetupIconWebClient(); }
+            }
             var data = this.iconWebClient.WaitForReady().DownloadData(new Uri(String.Format("{0}icon/{1}", textureSite, key)));
             if (data == null) { throw new Exception(); }
             this.iconCache.Cache(key, data);

@@ -67,7 +67,9 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             try
             {
+                Program.WriteLog("MainWindow->MainWindow()");
                 InitializeComponent();
+                Program.WriteLog("MainWindow->MainWindow(): InitializeComponent was successfull.");
                 this.splitContainer1.FixedPanel = FixedPanel.Panel2;
                 this.splitContainer1.SplitterDistance = 605;
                 this.Context = this.tileDisplay1.Context;
@@ -76,10 +78,17 @@ namespace Demoder.PlanetMapViewer.Forms
                 var charTrackControl = new CharacterTrackerControl(this.Context);
                 charTrackControl.Dock = DockStyle.Fill;
                 this.followCharacterPanel.Controls.Add(charTrackControl);
+                Program.WriteLog("MainWindow->MainWindow(): Constructor was successful.");
             }
             catch (Exception ex)
             {
-                this.Context.ErrorLog.Enqueue(ex.ToString());
+                Program.WriteLog("");
+                Program.WriteLog("MainWindow->MainWindow() Exception: {0}", ex.ToString());
+                Program.WriteLog("");
+                if (this.Context != null && this.Context.ErrorLog != null)
+                {
+                    this.Context.ErrorLog.Enqueue(ex.ToString());
+                }
                 this.ShowExceptionError(ex);
             }
         }
@@ -88,14 +97,18 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             try
             {
+                Program.WriteLog("MainWindow->Form1_Load() A");
                 this.Context.UiElements.HScrollBar = this.tileDisplay1_hScrollBar;
                 this.Context.UiElements.VScrollBar = this.tileDisplay1_vScrollBar;
                 this.Context.UiElements.MapList = this.mapComboBox;
                 this.Context.UiElements.ParentForm = this;
 
+                Program.WriteLog("MainWindow->Form1_Load() B");
+
                 this.Context.HookInfo = new HookInfoTracker(this.Context);
 
                 // Check if we should attempt to upgrade settings
+                Program.WriteLog("MainWindow->Form1_Load(): Checking settings");
                 if (Properties.GeneralSettings.Default.SettingVersion != this.ProductVersion.ToString())
                 {
                     Properties.GeneralSettings.Default.Upgrade();
@@ -104,29 +117,42 @@ namespace Demoder.PlanetMapViewer.Forms
                     Properties.GeneralSettings.Default.SettingVersion = this.ProductVersion.ToString();
                     Properties.GeneralSettings.Default.Save();
                 }
+                Program.WriteLog("MainWindow->Form1_Load() Settings OK");
+
+                Program.WriteLog("MainWindow->Form1_Load() Checking AO folder");
                 if (!OptionWindow.IsValidAoFolder(Properties.MapSettings.Default.AoPath))
                 {
+                    Program.WriteLog("MainWindow->Form1_Load(): AO folder is invalid. Showing options dialog to user.");
                     var dr = this.ShowOptionsDialog("Demoder's Planet Map Viewer - Options");
                     if (dr == DialogResult.Cancel)
                     {
+                        Program.WriteLog("MainWindow->Form1_Load() User canceled AO folder selection.");
                         Application.Exit();
                         return;
                     }
                 }
 
+                Program.WriteLog("MainWindow->Form1_Load() Initializing SpriteBatch");
                 this.Context.SpriteBatch = new SpriteBatch(this.Context.GraphicsDevice);
+                Program.WriteLog("MainWindow->Form1_Load() Initializing MapManager");
                 this.Context.MapManager = new MapManager(this.Context);
+                Program.WriteLog("MainWindow->Form1_Load() Initializing Camera");
                 this.Context.Camera = new Camera(this.Context);
+                Program.WriteLog("MainWindow->Form1_Load() Initializing MapManager (stage 2)");
                 this.Context.MapManager.Initialize();
-                
 
+                Program.WriteLog("MainWindow->Form1_Load() Assigning events");
                 this.bgwVersionCheck.DoWork += bgwVersionCheck_DoWork;
                 this.bgwVersionCheck.RunWorkerCompleted += bgwVersionCheck_RunWorkerCompleted;
+                Program.WriteLog("MainWindow->Form1_Load() Applying settings");
                 this.ApplySettings();
+                Program.WriteLog("MainWindow->Form1_Load() Adjusting scrollbars to layer");
                 this.Context.Camera.AdjustScrollbarsToLayer();
 
                 // Setup the tile display.
+                Program.WriteLog("MainWindow->Form1_Load() Assigning window handle to tileDisplay1.Handle");
                 Mouse.WindowHandle = this.tileDisplay1.Handle;
+                Program.WriteLog("MainWindow->Form1_Load() Registring tileDisplay OnDraw event");
                 this.tileDisplay1.OnDraw += tileDisplay1_OnDraw;
 
 #if DEBUG
@@ -138,7 +164,13 @@ namespace Demoder.PlanetMapViewer.Forms
             }
             catch (Exception ex)
             {
-                this.Context.ErrorLog.Enqueue(ex.ToString());
+                Program.WriteLog("");
+                Program.WriteLog("MainWindow->Form1_Load() Exception caught: {0}", ex.ToString());
+                Program.WriteLog("");
+                if (this.Context != null && this.Context.ErrorLog != null)
+                {
+                    this.Context.ErrorLog.Enqueue(ex.ToString());
+                }
                 this.ShowExceptionError(ex);
                 Application.Exit();
             }
@@ -1027,6 +1059,16 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void MainWindow_Resize(object sender, EventArgs e)
         {
+            if (this.Context == null)
+            {
+                Program.WriteLog("MainWindow_Resize: Context is null.");
+                return;
+            }
+            if (this.Context.State == null)
+            {
+                Program.WriteLog("MainWindow_Resize: Context.State is null.");
+                return;
+            }
             if (this.Context.State.WindowMode != WindowMode.Overlay) { return; }
             if (this.Context.Tutorial.Overlay.CurrentStage == OverlayTutorialStage.ResizeWindow)
             {
