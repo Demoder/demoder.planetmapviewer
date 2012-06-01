@@ -92,7 +92,7 @@ namespace Demoder.AoHookBridge
                                     myInstance.SendBridgeEvent(new DynelPositionEventArgs(
                                         Identity.Character,
                                         charID,
-                                        pfIdentity.ID,
+                                        pfIdentity.Instance,
                                         Marshal.PtrToStringAnsi(AONative.API.Interfaces.N3InterfaceModule.GetPFName(n3interface)),
                                         inShadowlands,
                                         position.X,
@@ -151,8 +151,8 @@ namespace Demoder.AoHookBridge
                         // Insert code to send bridge event here
                         myInstance.SendBridgeEvent(
                             new QuestLocationEventArgs(
-                                identityMission.ID,
-                                identityZone.ID,
+                                identityMission.Instance,
+                                identityZone.Instance,
                                 worldCoord,
                                 zoneCoord));
                     }

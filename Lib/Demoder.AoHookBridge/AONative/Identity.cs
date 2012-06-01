@@ -75,14 +75,14 @@ namespace Demoder.AoHookBridge.AONative
         public Identity(uint type, uint id)
         {
             this.Type = type;
-            this.ID = id;
+            this.Instance = id;
         }
-        public uint Type;
-        public uint ID;
+        public uint Type { get; set; }
+        public uint Instance { get; set; }
 
         public override string ToString()
         {
-            return String.Format("Type: {0} ID: {1}", this.Type, this.ID);
+            return String.Format("Type: {0} ID: {1}", this.Type, this.Instance);
         }
     }
 }

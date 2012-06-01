@@ -477,7 +477,8 @@ namespace Demoder.PlanetMapViewer.Forms
                 return new MapTexture[0];
             }
 
-            var characters = this.Context.State.PlayerInfo.Values.ToArray();
+            var characters = this.Context.State.PlayerInfo.Values;
+            
 
             foreach (var character in characters)
             {
@@ -487,6 +488,7 @@ namespace Demoder.PlanetMapViewer.Forms
                     Texture = this.Context.Content.Textures.CharacterLocator,
                     KeyColor = Color.Yellow,
                     Position = new PositionDefinition(character.Zone.ID, character.Position.X, character.Position.Z),
+                    //Position = new PositionDefinition(4365, 228.9f, 206.4f),
                     PositionAlignment = MapItemAlignment.Center,
                 };
 
