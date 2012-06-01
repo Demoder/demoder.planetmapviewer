@@ -37,7 +37,6 @@ namespace Demoder.PlanetMapViewer.Helpers
     public class MapTextBuilder
     {
         #region Members
-        private Context context;
         private List<IMapItem> mapItems = new List<IMapItem>();
         private FontType font;
         private Color textColor;
@@ -55,9 +54,8 @@ namespace Demoder.PlanetMapViewer.Helpers
         public uint MessagesTimeoutAfter = 0;
         #endregion
 
-        public MapTextBuilder(Context context, FontType font, Color textColor, Color shadowColor, bool haveShadow, MapItemAlignment alignment)
+        public MapTextBuilder(FontType font, Color textColor, Color shadowColor, bool haveShadow, MapItemAlignment alignment)
         {
-            this.context = context;
             this.font = font;
             this.textColor = textColor;
             this.shadowColor = shadowColor;
@@ -83,7 +81,7 @@ namespace Demoder.PlanetMapViewer.Helpers
 
             if (breaks > 0)
             {
-                this.nextPosition.Y += (breaks * this.context.Content.Fonts.GetFont(this.font).MeasureString("S").Y);
+                this.nextPosition.Y += (breaks * Context.Content.Fonts.GetFont(this.font).MeasureString("S").Y);
             }
             this.didBreakOnLastTextAlready = true;
             return this;
@@ -112,7 +110,7 @@ namespace Demoder.PlanetMapViewer.Helpers
         
         public MapTextBuilder Text(string text)
         {
-            var txt = new MapText(this.context)
+            var txt = new MapText
             {
                 Font = this.font,
                 Shadow = this.haveShadow,
@@ -138,7 +136,7 @@ namespace Demoder.PlanetMapViewer.Helpers
         public MapTextBuilder Text(string text, int breakWidth)
         {
 
-            var testItem = new MapText(this.context)
+            var testItem = new MapText
             {
                 Font = this.font,
                 Shadow = this.haveShadow,
@@ -222,7 +220,7 @@ namespace Demoder.PlanetMapViewer.Helpers
         public void Draw(DrawMode mode, int x, int y)
         {
             var items = this.ToMapItem(mode, x, y);
-            this.context.FrameDrawer.Draw(items);
+            Context.FrameDrawer.Draw(items);
         }
     }
 }

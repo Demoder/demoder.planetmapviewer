@@ -121,4 +121,10 @@ namespace Demoder.PlanetMapViewer
         Fullscreen,
         Overlay
     }
+
+    public enum MapType
+    {
+        Rubika,
+        Shadowlands
+    }
 }

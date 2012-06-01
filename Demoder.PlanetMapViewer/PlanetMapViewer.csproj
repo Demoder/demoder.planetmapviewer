@@ -93,7 +93,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataClasses\PositionDefinition.cs" />
-    <Compile Include="DataClasses\ProgrammableMap.cs" />
     <Compile Include="DataClasses\SimpleColor.cs" />
     <Compile Include="DataClasses\Texture2DCacheItem.cs" />
     <Compile Include="DataClasses\ContextState.cs" />
@@ -104,6 +103,13 @@
     <Compile Include="DataClasses\TimedMapText.cs" />
     <Compile Include="DataClasses\XnaContentSpriteFonts.cs" />
     <Compile Include="DataClasses\XnaContentTextures.cs" />
+    <Compile Include="Helpers\MapTextBuilder.cs" />
+    <Compile Include="Plugins\DefaultPlugin.cs" />
+    <Compile Include="Plugins\TutorialPlugin.cs" />
+    <Compile Include="PmvApi\CustomMapOverlay.cs" />
+    <Compile Include="PmvApi\IPlugin.cs" />
+    <Compile Include="PmvApi\PluginInfo.cs" />
+    <Compile Include="PmvApi\PluginManager.cs" />
     <Compile Include="Properties\MapFonts.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -114,7 +120,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>GuiFonts.settings</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\MapTextBuilder.cs" />
     <Compile Include="Properties\CharacterTrackerControlResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -145,10 +150,7 @@
     <Compile Include="Helpers\Camera.cs" />
     <Compile Include="DataClasses\Context.cs" />
     <Compile Include="DataClasses\ZoneInfo.cs" />
-    <Compile Include="Helpers\NormalTotorial.cs" />
     <Compile Include="Helpers\FrameDrawer.cs" />
-    <Compile Include="Helpers\OverlayTutorial.cs" />
-    <Compile Include="Helpers\Tutorial.cs" />
     <Compile Include="Properties\NormalTutorial.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>

@@ -37,15 +37,13 @@ namespace Demoder.PlanetMapViewer.Forms
     {
         #region members
 
-        internal Context Context { get; private set; }
         private object lockObject = new Object();
         #endregion
 
         #region Constructors
-        public CharacterTrackerControl(Context context)
+        public CharacterTrackerControl()
         {
-            this.Context = context;
-            this.Context.UiElements.CharacterTrackerControl = this;
+            Context.UiElements.CharacterTrackerControl = this;
             InitializeComponent();
 
             // Initialize component!
@@ -85,15 +83,15 @@ namespace Demoder.PlanetMapViewer.Forms
         }
         protected override void OnGotFocus(EventArgs e)
         {
-            this.Context.UiElements.TileDisplay.Focus();
+            Context.UiElements.TileDisplay.Focus();
         }
         #endregion
 
         private void ItemCheckedChanged(object sender, ItemCheckedEventArgs e)
         {
-            lock (this.Context.State.PlayerInfo)
+            lock (Context.State.PlayerInfo)
             {
-                this.Context.State.PlayerInfo[(uint)e.Item.Tag].IsTrackedByCamera = e.Item.Checked;
+                Context.State.PlayerInfo[(uint)e.Item.Tag].IsTrackedByCamera = e.Item.Checked;
             }
         }
         #endregion
@@ -111,7 +109,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.listView1.BeginUpdate();
                 this.listView1.Items.Clear();
 
-                var playerInfo = this.Context.State.PlayerInfo.ToArray();
+                var playerInfo = Context.State.PlayerInfo.ToArray();
                 foreach (var kvp in playerInfo)
                 {
                     var pid = kvp.Key;

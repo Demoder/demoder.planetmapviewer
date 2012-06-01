@@ -39,8 +39,6 @@ namespace Demoder.PlanetMapViewer.DataClasses
     {
         #region IMapItem
         [XmlIgnore]
-        internal Context Context { get; set; }
-        [XmlIgnore]
         public MapItemType Type { get { return MapItemType.SpriteFont; } }
         public PositionDefinition Position {get; set;}
         [XmlAttribute("positionAlignment")]
@@ -50,7 +48,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
         {
             get
             {
-                return this.Context.Content.Fonts.GetFont(this.Font).MeasureString(this.Text);
+                return Context.Content.Fonts.GetFont(this.Font).MeasureString(this.Text);
             }
         }
 
@@ -71,16 +69,11 @@ namespace Demoder.PlanetMapViewer.DataClasses
             this.Position = new PositionDefinition();
             this.PositionAlignment = default(MapItemAlignment);
         }
-
-        public MapText(Context context) : this()
-        {
-            this.Context = context;
-        }
         #endregion
 
         public object Clone()
         {
-            return new MapText(this.Context)
+            return new MapText
             {
                 Font = this.Font,
                 Position = (PositionDefinition)this.Position.Clone(),

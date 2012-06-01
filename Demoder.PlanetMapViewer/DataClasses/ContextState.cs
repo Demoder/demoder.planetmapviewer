@@ -51,7 +51,5 @@ namespace Demoder.PlanetMapViewer.DataClasses
         public float Magnification = 1;
 
         public Dictionary<uint, PlayerInfo> PlayerInfo = new Dictionary<uint, PlayerInfo>();
-
-        public List<TimedMapText> GuiNotifications = new List<TimedMapText>();
     }
 }

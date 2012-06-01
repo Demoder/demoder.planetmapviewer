@@ -37,7 +37,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
 
         #endregion
 
-        public void Load(Context context)
+        public void Load()
         {
             foreach (var file in (new DirectoryInfo(@"Content\Fonts")).GetFiles("*.xnb", SearchOption.TopDirectoryOnly))
             {
@@ -47,7 +47,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
                 {
                     continue;
                 }
-                this.fonts[fontType] = context.ContentManager.Load<SpriteFont>(@"Fonts\" + contentName);
+                this.fonts[fontType] = Context.ContentManager.Load<SpriteFont>(@"Fonts\" + contentName);
             }
         }
 

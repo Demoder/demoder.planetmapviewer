@@ -25,21 +25,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
-using Demoder.PlanetMapViewer.Helpers;
 
-namespace Demoder.PlanetMapViewer.DataClasses
+namespace Demoder.PlanetMapViewer.PmvApi
 {
-    [XmlRoot("ProgrammableMap")]
-    [Serializable]
-    public class ProgrammableMap
+    internal class PluginInfo
     {
-        [XmlAttribute("mapType")]
-        public MapType MapType;
-        [XmlAttribute("name")]
-        public string Name;
-        
-        public List<MapText> Texts = new List<MapText>();
-        public List<MapTexture> Textures = new List<MapTexture>();        
+        public bool Enabled { get; set; }
+        public Type Type { get; set; }
+        public IPlugin Instance { get; set; }
     }
 }
