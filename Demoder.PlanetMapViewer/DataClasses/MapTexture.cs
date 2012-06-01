@@ -38,8 +38,6 @@ namespace Demoder.PlanetMapViewer.DataClasses
     public class MapTexture : IMapItem
     {
         private Vector2 size;
-        [XmlIgnore]
-        internal Context Context { get; set; }
         #region IMapItem
         [XmlIgnore]
         public MapItemType Type { get { return MapItemType.Texture; } }
@@ -55,7 +53,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
             {
                 if (this.size != default(Vector2)) { return this.size; }
                 if (this.Texture == null) { return default(Vector2); }
-                var tex = this.Context.Content.Textures.GetTexture(this.Texture);
+                var tex = Context.Content.Textures.GetTexture(this.Texture);
                 return new Vector2(tex.Width, tex.Height);
             }
             set
@@ -70,16 +68,9 @@ namespace Demoder.PlanetMapViewer.DataClasses
             this.PositionAlignment = default(MapItemAlignment);
         }
 
-        public MapTexture(Context context) : this()
-        {           
-            this.Context = context;
-        }
-
-        
-
         public object Clone()
         {
-            var item = new MapTexture(this.Context)
+            var item = new MapTexture
             {
                 KeyColor = this.KeyColor,
                 Position = (PositionDefinition)this.Position.Clone(),

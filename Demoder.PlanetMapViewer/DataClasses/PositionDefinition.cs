@@ -67,14 +67,14 @@ namespace Demoder.PlanetMapViewer.DataClasses
             };
         }
 
-        public Vector2 GetPosition(Context context)
+        public Vector2 GetPosition()
         {
             if (this.Zone == 0)
             {
                 return new Vector2(this.X, this.Y);
             }
 
-            return context.MapManager.GetPosition(this.Zone, this.X, this.Y);
+            return Context.MapManager.GetPosition(this.Zone, this.X, this.Y);
         }
     }
 }

@@ -21,24 +21,16 @@
 * THE SOFTWARE.
 */
 
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Demoder.PlanetMapViewer.DataClasses;
 
-namespace Demoder.PlanetMapViewer.Helpers
+namespace Demoder.PlanetMapViewer.PmvApi
 {
-    public class Tutorial
+    public interface IPlugin
     {
-        public Tutorial(Context context)
-        {
-            this.Overlay = new OverlayTutorial(context);
-            this.Normal = new NormalTutorial(context);
-        }
-
-        public OverlayTutorial Overlay;
-        public NormalTutorial Normal;
+        CustomMapOverlay GetCustomOverlay();
     }
 }

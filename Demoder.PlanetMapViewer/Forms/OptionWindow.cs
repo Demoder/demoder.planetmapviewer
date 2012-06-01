@@ -41,11 +41,8 @@ namespace Demoder.PlanetMapViewer.Forms
         private Properties.WindowSettings windowSettings { get { return Properties.WindowSettings.Default; } }
         private Properties.GeneralSettings generalSettings { get { return Properties.GeneralSettings.Default; } }
 
-        private Context context;
-
-        public OptionWindow(Context context)
+        public OptionWindow()
         {
-            this.context = context;
             InitializeComponent();
 
 #if DEBUG
@@ -136,7 +133,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void textTypes_SelectedValueChanged(object sender, EventArgs e)
         {
-            this.selectedFont.SelectedItem = this.context.Content.Fonts.GetLoadedFont((FontType)this.textTypes.SelectedItem);
+            this.selectedFont.SelectedItem = Context.Content.Fonts.GetLoadedFont((FontType)this.textTypes.SelectedItem);
         }
 
         private void selectedFont_SelectedValueChanged(object sender, EventArgs e)
@@ -144,8 +141,8 @@ namespace Demoder.PlanetMapViewer.Forms
             var font = (LoadedFont)this.selectedFont.SelectedItem;
             var type = (FontType)this.textTypes.SelectedItem;
 
-            if (font == this.context.Content.Fonts.GetLoadedFont(type)) { return; }
-            this.context.Content.Fonts.SetLoadedFont(type, font);
+            if (font == Context.Content.Fonts.GetLoadedFont(type)) { return; }
+            Context.Content.Fonts.SetLoadedFont(type, font);
             
 
         }
@@ -171,9 +168,9 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.windowSettings.OverlaymodeShowControlbox = this.overlayModeShowExitButton.Checked;
                 this.windowSettings.OverlaymodeTopmostWorkaround = this.overlayModeWorkaroundTopmost.Checked;
 
-                if (this.context.UiElements.ParentForm.OverlayModeToolStripMenuItem.Checked)
+                if (Context.UiElements.ParentForm.OverlayModeToolStripMenuItem.Checked)
                 {
-                    this.context.UiElements.ParentForm.ToggleOverlayMode();
+                    Context.UiElements.ParentForm.ToggleOverlayMode();
                 }
 
                 Properties.GuiFonts.Default.Save();

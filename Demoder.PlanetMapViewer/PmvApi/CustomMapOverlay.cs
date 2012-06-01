@@ -25,19 +25,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Demoder.AoHook;
-using System.Collections.Concurrent;
 using Demoder.PlanetMapViewer.DataClasses;
-using Microsoft.Xna.Framework;
-using System.Threading;
 
-namespace Demoder.PlanetMapViewer.Helpers
+namespace Demoder.PlanetMapViewer.PmvApi
 {
-    public class HookInfoTracker
+    public class CustomMapOverlay
     {
-        public HookInfoTracker()
+        public CustomMapOverlay()
         {
-            
+            this.MapItems = new List<IMapItem>();
         }
+        public List<IMapItem> MapItems { get; private set; }
     }
 }

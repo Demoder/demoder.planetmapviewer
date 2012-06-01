@@ -33,9 +33,9 @@ namespace Demoder.PlanetMapViewer.DataClasses
 {
     public class XnaContent
     {
-        public XnaContent(Context context)
+        public XnaContent()
         {
-            this.Textures = new XnaContentTextures(context);
+            this.Textures = new XnaContentTextures();
             this.Fonts = new XnaContentSpriteFonts();
         }
 

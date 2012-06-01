@@ -32,42 +32,40 @@ using Demoder.PlanetMapViewer.Xna;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Demoder.AoHook;
 
 namespace Demoder.PlanetMapViewer.DataClasses
 {
-    public class Context
+    public static class Context
     {
-        public Context()
+        static Context()
         {
-            this.UiElements = new ContextUiElements();
-            this.State = new ContextState();
-            this.Content = new XnaContent(this);
-            this.FrameDrawer = new FrameDrawer(this);
-            this.Tutorial = new Tutorial(this);
+            UiElements = new ContextUiElements();
+            State = new ContextState();
+            Content = new XnaContent();
+            FrameDrawer = new FrameDrawer();
         }
 
-        public Queue<string> ErrorLog = new Queue<string>();
+        public static Queue<string> ErrorLog = new Queue<string>();
 
-        public FrameDrawer FrameDrawer { get; private set; }
-        public MapManager MapManager;
-        public Camera Camera;
-        public SpriteBatch SpriteBatch;
-        public HookInfoTracker HookInfo;
-        public ContentManager ContentManager;
-        public XnaContent Content { get; private set; }
+        public static  FrameDrawer FrameDrawer { get; private set; }
+        public static MapManager MapManager;
+        public static Camera Camera;
+        public static SpriteBatch SpriteBatch;
+        public static Provider AoHookProvider;
+        public static ContentManager ContentManager;
+        public static XnaContent Content { get; private set; }
 
-        public Tutorial Tutorial { get; private set; }
-
-        public GraphicsDevice GraphicsDevice
+        public static GraphicsDevice GraphicsDevice
         {
             get
             {
-                if (this.UiElements.TileDisplay == null) { return null; }
-                return this.UiElements.TileDisplay.GraphicsDevice;
+                if (UiElements.TileDisplay == null) { return null; }
+                return UiElements.TileDisplay.GraphicsDevice;
             }
         }
 
-        public ContextUiElements UiElements { get; private set; }
-        public ContextState State { get; private set; }
+        public static ContextUiElements UiElements { get; private set; }
+        public static ContextState State { get; private set; }
     }
 }

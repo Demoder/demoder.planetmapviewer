@@ -34,12 +34,10 @@ namespace Demoder.PlanetMapViewer.Helpers
 {
     public class FrameDrawer
     {
-        internal Context Context;
         public bool IsBatchBegun { get; private set; }
 
-        public FrameDrawer(Context context)
+        public FrameDrawer()
         {
-            this.Context = context;
             this.IsBatchBegun = false;
         }
 
@@ -112,11 +110,11 @@ namespace Demoder.PlanetMapViewer.Helpers
                         if (item.Type != MapItemType.SpriteFont) { continue; }
                         var sd = item as MapText;
                         var textSize = sd.Size;
-                        var pos = GetRealPosition(this.Context, item);
+                        var pos = GetRealPosition(item);
                         pos.X++;
                         pos.Y++;
-                        this.Context.SpriteBatch.DrawString(
-                            this.Context.Content.Fonts.GetFont(sd.Font),
+                        Context.SpriteBatch.DrawString(
+                            Context.Content.Fonts.GetFont(sd.Font),
                             sd.Text,
                             pos,
                             sd.ShadowColor
@@ -125,7 +123,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 }
                 catch (Exception ex)
                 {
-                    this.Context.ErrorLog.Enqueue(ex.ToString());
+                    Context.ErrorLog.Enqueue(ex.ToString());
                     throw ex;
                 }
                 finally
@@ -143,10 +141,10 @@ namespace Demoder.PlanetMapViewer.Helpers
                         if (item.Type != MapItemType.SpriteFont) { continue; }
                         var sd = item as MapText;
                         var textSize = sd.Size;
-                        var pos = GetRealPosition(this.Context, item);                       
+                        var pos = GetRealPosition(item);                       
 
-                        this.Context.SpriteBatch.DrawString(
-                            this.Context.Content.Fonts.GetFont(sd.Font),
+                        Context.SpriteBatch.DrawString(
+                            Context.Content.Fonts.GetFont(sd.Font),
                             sd.Text,
                             pos,
                             sd.TextColor
@@ -155,7 +153,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 }
                 catch (Exception ex)
                 {
-                    this.Context.ErrorLog.Enqueue(ex.ToString());
+                    Context.ErrorLog.Enqueue(ex.ToString());
                     throw ex;
                 }
                 finally
@@ -166,7 +164,7 @@ namespace Demoder.PlanetMapViewer.Helpers
             }
             catch (Exception ex)
             {
-                this.Context.ErrorLog.Enqueue(ex.ToString());
+                Program.WriteLog(ex.ToString());
             }
         }
 
@@ -175,9 +173,9 @@ namespace Demoder.PlanetMapViewer.Helpers
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static Vector2 GetRealPosition(Context context, IMapItem item)
+        public static Vector2 GetRealPosition(IMapItem item)
         {
-            Vector2 realPos = item.Position.GetPosition(context);
+            Vector2 realPos = item.Position.GetPosition();
             
             // Adjust horizontal.
             if (item.PositionAlignment.HasFlag(MapItemAlignment.Left))
@@ -226,17 +224,17 @@ namespace Demoder.PlanetMapViewer.Helpers
                 foreach (var item in items)
                 {
                     if (item.Type != MapItemType.Texture) { continue; }
-                    Vector2 realPos = GetRealPosition(this.Context, item);
+                    Vector2 realPos = GetRealPosition(item);
                     var tex = item as MapTexture;
-                    this.Context.SpriteBatch.Draw(
-                        this.Context.Content.Textures.GetTexture(tex.Texture),
+                    Context.SpriteBatch.Draw(
+                        Context.Content.Textures.GetTexture(tex.Texture),
                         new Microsoft.Xna.Framework.Rectangle((int)realPos.X, (int)realPos.Y, (int)tex.Size.X, (int)tex.Size.Y),
                         tex.KeyColor);
                 }
             }
             catch (Exception ex)
             {
-                this.Context.ErrorLog.Enqueue(ex.ToString());
+                Program.WriteLog(ex.ToString());
             }
             finally
             {
@@ -247,20 +245,20 @@ namespace Demoder.PlanetMapViewer.Helpers
         #region Spritebatch shortcuts
         public bool SpriteBatchBegin(DrawMode mode = DrawMode.World)
         {
-            if (this.Context.SpriteBatch == null) { return false; }
+            if (Context.SpriteBatch == null) { return false; }
             this.SpriteBatchEnd();
 
             if (mode == DrawMode.ViewPort)
             {
-                this.Context.SpriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend);
+                Context.SpriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend);
                 this.IsBatchBegun = true;
                 return true;
             }
-            this.Context.SpriteBatch.Begin(
+            Context.SpriteBatch.Begin(
                 SpriteSortMode.Texture,
                 BlendState.AlphaBlend,
                 null, null, null, null,
-                this.Context.Camera.TransformMatrix);
+                Context.Camera.TransformMatrix);
             this.IsBatchBegun = true;
             return true;
         }
@@ -269,23 +267,10 @@ namespace Demoder.PlanetMapViewer.Helpers
         {
             if (this.IsBatchBegun)
             {
-                this.Context.SpriteBatch.End();
+                Context.SpriteBatch.End();
                 this.IsBatchBegun = false;
             }
         }
         #endregion
-
-        public MapTexture GetTutorialStamp(int posX, int posY, int width, int height)
-        {
-            var tex = new MapTexture(this.Context)
-            {
-                Texture = this.Context.Content.Textures.TutorialFrame,
-                Position = new PositionDefinition { Type = DrawMode.ViewPort, X = posX, Y = posY - 15 },
-                Size = new Vector2(width, height),
-                PositionAlignment = MapItemAlignment.Top
-            };
-
-            return tex;
-        }
     }
 }

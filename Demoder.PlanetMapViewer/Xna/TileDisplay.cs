@@ -62,13 +62,11 @@ namespace Demoder.PlanetMapViewer.Xna
 
         public event EventHandler OnDraw;
         public event EventHandler OnInitialize;
-        internal Context Context;
 
         private object drawLocker = new Object();
 
         public TileDisplay()
         {
-            this.Context = new Context();
         }
 
         #region Constructor / Initialization
@@ -84,13 +82,13 @@ namespace Demoder.PlanetMapViewer.Xna
             this.SetStyle(ControlStyles.UserPaint, true);
             this.SetStyle(ControlStyles.ResizeRedraw, true);
 
-            this.Context.UiElements.TileDisplay = this;
+            Context.UiElements.TileDisplay = this;
 
             try
             {
-                this.Context.ContentManager = new ContentManager(Services, "Content");
-                this.Context.Content.Fonts.Load(this.Context);
-                this.Context.Content.Loaded = true;
+                Context.ContentManager = new ContentManager(Services, "Content");
+                Context.Content.Fonts.Load();
+                Context.Content.Loaded = true;
                 ThreadPool.QueueUserWorkItem(new WaitCallback(this.InvalidateFrame));
             }
             catch (Exception ex)
@@ -123,7 +121,7 @@ namespace Demoder.PlanetMapViewer.Xna
                 }
                 catch (Exception ex)
                 {
-                    this.Context.ErrorLog.Enqueue(ex.ToString());
+                    Context.ErrorLog.Enqueue(ex.ToString());
                 }
             } while (true);
         }
@@ -140,47 +138,12 @@ namespace Demoder.PlanetMapViewer.Xna
                         this.timeSinceLastDraw.Restart();
 
                         this.OnDraw(this, null);
-#if DEBUG
-                        {
-                            var txtBuilder = new MapTextBuilder(this.Context, FontType.GuiNormal, Color.White, Color.Black, false, MapItemAlignment.Top | MapItemAlignment.Left);
-                            txtBuilder.Text(String.Format("FPS: {0}", 1000 / (this.timeSinceLastDraw.ElapsedMilliseconds + curSwVal))).Break();
-                            txtBuilder.Break();
-                            /*
-                           foreach (FontType font in Enum.GetValues(typeof(FontType)))
-                           {
-                               txtBuilder.Text("This is " + font.ToString() + " without shadow", font: font, haveShadow: false).Break();
-                               txtBuilder.Text("This is " + font.ToString() + " with shadow", font: font, haveShadow: true).Break(2);
-                           }
-                           */
-
-                            txtBuilder.Draw(DrawMode.ViewPort, 10, 10);
-
-                            // Notification pane
-                            if (this.Context.State.GuiNotifications.Count > 0)
-                            {
-                                txtBuilder = new MapTextBuilder(this.Context, FontType.GuiLarge, Color.Red, Color.DarkRed, false, MapItemAlignment.Top | MapItemAlignment.Center);
-
-                                var texts = this.Context.State.GuiNotifications.ToArray();
-                                for (int i = 0; i < texts.Length; i++)
-                                {
-                                    if (texts[i].Expired) { this.Context.State.GuiNotifications.Remove(texts[i]); }
-                                }
-
-                                foreach (var text in this.Context.State.GuiNotifications.ToArray())
-                                {
-                                    txtBuilder.Text(text.Text).Break();
-                                }
-
-                                txtBuilder.Draw(DrawMode.ViewPort, this.Size.Width / 2, 10);
-                            }
-                        }
-#endif
                     }
                 }
             }
             catch (Exception ex)
             {
-                this.Context.ErrorLog.Enqueue(ex.ToString());
+                Context.ErrorLog.Enqueue(ex.ToString());
             }
         }
 
@@ -205,54 +168,52 @@ namespace Demoder.PlanetMapViewer.Xna
         private void OnHorizontalMouseWheel(object sender, int value)
         {
             if (value == 0) { return; }
-            if (this.Context == null) { return; }
-            if (this.Context.Camera == null) { return; }
+            if (Context.Camera == null) { return; }
 
-            if (this.Context.State.CameraControl != CameraControl.Manual)
+            if (Context.State.CameraControl != CameraControl.Manual)
             {
-                this.Context.State.CameraControl = CameraControl.Manual;
+                Context.State.CameraControl = CameraControl.Manual;
             }
 
-            float newPos = this.Context.Camera.Center.X;
+            float newPos = Context.Camera.Center.X;
             if (value > 0)
             {
-                newPos += this.Context.UiElements.HScrollBar.SmallChange * this.mouseScrollSensitivity;
+                newPos += Context.UiElements.HScrollBar.SmallChange * this.mouseScrollSensitivity;
             }
             else if (value < 0)
             {
-                newPos -= this.Context.UiElements.HScrollBar.SmallChange * this.mouseScrollSensitivity;
+                newPos -= Context.UiElements.HScrollBar.SmallChange * this.mouseScrollSensitivity;
             }
-            this.Context.Camera.CenterOnPixel(newPos, this.Context.Camera.Center.Y);
+            Context.Camera.CenterOnPixel(newPos, Context.Camera.Center.Y);
             this.ReportMousePosition();
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
-            if (this.Context == null) { return; }
             var button = e.Button;
-            this.Context.State.CameraControl = CameraControl.Manual;
+            Context.State.CameraControl = CameraControl.Manual;
 
             if (ModifierKeys == System.Windows.Forms.Keys.Shift)
             {
-                var newPos = (this.Context.Camera.Center.X - (e.Delta * this.mouseScrollSensitivity / 120 * this.Context.UiElements.HScrollBar.SmallChange));
-                this.Context.Camera.CenterOnPixel(newPos, this.Context.Camera.Center.Y);
+                var newPos = (Context.Camera.Center.X - (e.Delta * this.mouseScrollSensitivity / 120 * Context.UiElements.HScrollBar.SmallChange));
+                Context.Camera.CenterOnPixel(newPos, Context.Camera.Center.Y);
             }
             else if (ModifierKeys.HasFlag(System.Windows.Forms.Keys.Control))
             {
-                var element = this.Context.UiElements.ParentForm.MagnificationSlider;
+                var element = Context.UiElements.ParentForm.MagnificationSlider;
                 float newVal = element.Value;
                 if (e.Delta > 0) { newVal++; }
                 else if (e.Delta < 0) { newVal--; }
                 else { return; }
 
                 // Magnify to mouse position.
-                if (ModifierKeys.HasFlag(System.Windows.Forms.Keys.Alt) && this.Context.State.CameraControl == CameraControl.Manual)
+                if (ModifierKeys.HasFlag(System.Windows.Forms.Keys.Alt) && Context.State.CameraControl == CameraControl.Manual)
                 {
-                    this.Context.Camera.CenterOnPixel(
-                        (int)this.Context.Camera.Position.X + e.X,
-                        (int)this.Context.Camera.Position.Y + e.Y);
+                    Context.Camera.CenterOnPixel(
+                        (int)Context.Camera.Position.X + e.X,
+                        (int)Context.Camera.Position.Y + e.Y);
                 }
-                var curPos = this.Context.Camera.RelativePosition();
+                var curPos = Context.Camera.RelativePosition();
                 
                 element.Value = (int)MathHelper.Clamp(
                         newVal,
@@ -261,13 +222,13 @@ namespace Demoder.PlanetMapViewer.Xna
 
                 if (curPos != Vector2.Zero)
                 {
-                    this.Context.Camera.CenterOnRelativePosition(curPos);
+                    Context.Camera.CenterOnRelativePosition(curPos);
                 }
             }
             else
             {
-                var newPos = (this.Context.Camera.Center.Y - (e.Delta * this.mouseScrollSensitivity / 120 * this.Context.UiElements.VScrollBar.SmallChange));
-                this.Context.Camera.CenterOnPixel(this.Context.Camera.Center.X, newPos);
+                var newPos = (Context.Camera.Center.Y - (e.Delta * this.mouseScrollSensitivity / 120 * Context.UiElements.VScrollBar.SmallChange));
+                Context.Camera.CenterOnPixel(Context.Camera.Center.X, newPos);
             }
 
             this.ReportMousePosition();
@@ -278,19 +239,18 @@ namespace Demoder.PlanetMapViewer.Xna
         #region Mouse clicking
         protected override void OnMouseDoubleClick(MouseEventArgs e)
         {
-            if (this.Context == null) { return; }
             switch (e.Button)
             {
                 case System.Windows.Forms.MouseButtons.Left:
-                    this.Context.Camera.CenterOnPixel(
-                        (int)this.Context.Camera.Position.X + e.X,
-                        (int)this.Context.Camera.Position.Y + e.Y);
+                    Context.Camera.CenterOnPixel(
+                        (int)Context.Camera.Position.X + e.X,
+                        (int)Context.Camera.Position.Y + e.Y);
                     this.ZoomIn();                    
                     break;
                 case System.Windows.Forms.MouseButtons.Right:
-                    this.Context.Camera.CenterOnPixel(
-                        (int)this.Context.Camera.Position.X + e.X,
-                        (int)this.Context.Camera.Position.Y + e.Y);
+                    Context.Camera.CenterOnPixel(
+                        (int)Context.Camera.Position.X + e.X,
+                        (int)Context.Camera.Position.Y + e.Y);
                     this.ZoomOut();                    
                     break;
             }
@@ -299,13 +259,12 @@ namespace Demoder.PlanetMapViewer.Xna
 
         protected override void OnMouseClick(MouseEventArgs e)
         {
-            if (this.Context == null) { return; }
             switch (e.Button)
             {
                 case System.Windows.Forms.MouseButtons.Middle:
-                    this.Context.Camera.CenterOnPixel(
-                        (int)this.Context.Camera.Position.X + e.X,
-                        (int)this.Context.Camera.Position.Y + e.Y);
+                    Context.Camera.CenterOnPixel(
+                        (int)Context.Camera.Position.X + e.X,
+                        (int)Context.Camera.Position.Y + e.Y);
                     break;
             }
             base.OnMouseClick(e);
@@ -319,14 +278,13 @@ namespace Demoder.PlanetMapViewer.Xna
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (this.Context == null) { return; }
-            if (this.Context.Camera == null) { return; }
+            if (Context.Camera == null) { return; }
             if (this.mousePosition == Vector2.Zero)
             {
                 this.mousePosition.X = e.X;
                 this.mousePosition.Y = e.Y;
             }
-            var matrix = this.Context.Camera.TransformMatrix;
+            var matrix = Context.Camera.TransformMatrix;
             this.ReportMousePosition();
 
             var mouseState = Mouse.GetState();
@@ -334,13 +292,13 @@ namespace Demoder.PlanetMapViewer.Xna
             var deltaX = e.X - this.mousePosition.X;
             var deltaY = e.Y - this.mousePosition.Y;
             
-            if (this.Context.State.CameraControl != CameraControl.Manual)
+            if (Context.State.CameraControl != CameraControl.Manual)
             {
                 // If we're not already in manual control mode, require some delta. 
                 // Prevents accidential scrolling.
                 if (Math.Abs(deltaX) > 15 || Math.Abs(deltaY) > 15)
                 {
-                    this.Context.State.CameraControl = CameraControl.Manual;
+                    Context.State.CameraControl = CameraControl.Manual;
                 }
                 // Otherwise, discard the scroll.
                 else
@@ -352,8 +310,8 @@ namespace Demoder.PlanetMapViewer.Xna
             this.mousePosition.X = e.X;
             this.mousePosition.Y = e.Y;
 
-            var camPos = this.Context.Camera.Center;
-            this.Context.Camera.CenterOnPixel(
+            var camPos = Context.Camera.Center;
+            Context.Camera.CenterOnPixel(
                 (int)(camPos.X - deltaX),
                 (int)(camPos.Y - deltaY));
 
@@ -362,9 +320,9 @@ namespace Demoder.PlanetMapViewer.Xna
 
         private void ReportMousePosition()
         {
-            var matrix = this.Context.Camera.TransformMatrix;
+            var matrix = Context.Camera.TransformMatrix;
             var mouseState = Mouse.GetState();
-            this.Context.UiElements.ParentForm.ToolStripStatusLabel1.Text = String.Format(
+            Context.UiElements.ParentForm.ToolStripStatusLabel1.Text = String.Format(
                 "Mouse: {0}x{1}",
                 mouseState.X - matrix.Translation.X,
                 mouseState.Y - matrix.Translation.Y);
@@ -398,10 +356,9 @@ namespace Demoder.PlanetMapViewer.Xna
 
         protected override void OnResize(EventArgs e)
         {
-            if (this.Context == null) { return; }
-            if (this.Context.Camera == null) { return; }
+            if (Context.Camera == null) { return; }
             //this.Invalidate();            
-            this.Context.Camera.AdjustScrollbarsToLayer();
+            Context.Camera.AdjustScrollbarsToLayer();
             this.ReportMousePosition();
             base.OnResize(e);
         }
@@ -454,8 +411,7 @@ namespace Demoder.PlanetMapViewer.Xna
         private void PanMap(KeyEventArgs e)
         {
             if (e.Control || e.Alt) { return; }
-            if (this.Context == null) { return; }
-            if (this.Context.Camera == null) { return; }
+            if (Context.Camera == null) { return; }
             var x = 0;
             var y = 0;
             if (e.KeyData == System.Windows.Forms.Keys.W)
@@ -481,9 +437,9 @@ namespace Demoder.PlanetMapViewer.Xna
 
             if (e.SuppressKeyPress)
             {
-                this.Context.Camera.CenterOnPixel(
-                    this.Context.Camera.Center.X + this.Context.UiElements.HScrollBar.SmallChange * x,
-                    this.Context.Camera.Center.Y + this.Context.UiElements.VScrollBar.SmallChange * y);
+                Context.Camera.CenterOnPixel(
+                    Context.Camera.Center.X + Context.UiElements.HScrollBar.SmallChange * x,
+                    Context.Camera.Center.Y + Context.UiElements.VScrollBar.SmallChange * y);
                 this.ReportMousePosition();
                 return;
             }
@@ -494,41 +450,16 @@ namespace Demoder.PlanetMapViewer.Xna
 
         public void ZoomIn()
         {
-            if (this.Context == null) { return; }
-
-            this.TutorialZoomIn();
-            if (this.Context.MapManager == null) { return; }
-            this.Context.MapManager.ZoomIn();
+            if (Context.MapManager == null) { return; }
+            Context.MapManager.ZoomIn();
             this.ReportMousePosition();
         }
 
         public void ZoomOut()
         {
-            if (this.Context == null) { return; }
-            this.TutorialZoomOut();
-            if (this.Context.MapManager == null) { return; }
-            this.Context.MapManager.ZoomOut();
+            if (Context.MapManager == null) { return; }
+            Context.MapManager.ZoomOut();
             this.ReportMousePosition();
-        }
-
-        private void TutorialZoomIn()
-        {
-            if (this.Context.State.WindowMode == WindowMode.Overlay) { return; }
-            if (this.Context.Tutorial.Normal.CurrentStage == NormalTutorialStage.ZoomIn)
-            {
-                Properties.NormalTutorial.Default.ZoomIn = true;
-                Properties.NormalTutorial.Default.Save();
-            }
-        }
-
-        private void TutorialZoomOut()
-        {
-            if (this.Context.State.WindowMode == WindowMode.Overlay) { return; }
-            if (this.Context.Tutorial.Normal.CurrentStage == NormalTutorialStage.ZoomOut)
-            {
-                Properties.NormalTutorial.Default.ZoomOut = true;
-                Properties.NormalTutorial.Default.Save();
-            }
         }
     }
 }

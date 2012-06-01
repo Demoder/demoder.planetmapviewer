@@ -41,7 +41,6 @@ namespace Demoder.PlanetMapViewer.Helpers
         public MapType Type { get; private set; }
         public MapCoords CoordsFile;
         public PlanetMapLayer[] Layers;
-        internal Context Context { get; private set; }
 
         #region Accessors
         public int MinX { get { return 31022; } }
@@ -108,8 +107,8 @@ namespace Demoder.PlanetMapViewer.Helpers
 
             // Find pixel coord
             return new Vector2(
-                (float)Math.Round(pixelX * this.Context.State.Magnification),
-                (float)Math.Round(pixelY * this.Context.State.Magnification));
+                (float)Math.Round(pixelX * Context.State.Magnification),
+                (float)Math.Round(pixelY * Context.State.Magnification));
         }
 
         public Vector2 GetReversePosition(int layer, uint zone, float x, float y)
@@ -124,8 +123,8 @@ namespace Demoder.PlanetMapViewer.Helpers
 
 
             var pixelPos = new Vector2(
-                (float)Math.Round(x / this.Context.State.Magnification), 
-                (float)Math.Round(y / this.Context.State.Magnification));
+                (float)Math.Round(x / Context.State.Magnification), 
+                (float)Math.Round(y / Context.State.Magnification));
 
             float relativeX = pixelPos.X - layerInfo.MapRect.X;
             relativeX /= layerInfo.MapRect.Width - layerInfo.MapRect.X;
@@ -162,10 +161,9 @@ namespace Demoder.PlanetMapViewer.Helpers
         /// <param name="mapDir">Full path to map directory (cd_image/textures/Planetmap/)</param>
         /// <param name="mapFile">Full path to map file (AoRK/AoRK.txt)</param>
         /// <returns></returns>
-        public static PlanetMap FromFile(string mapDir, string mapFile, Context context)
+        public static PlanetMap FromFile(string mapDir, string mapFile)
         {
             var map = new PlanetMap();
-            map.Context = context;
             var layers = new List<PlanetMapLayer>();
 
             PlanetMapLayer currentLayer = null;
@@ -266,7 +264,12 @@ namespace Demoder.PlanetMapViewer.Helpers
         #endregion
     }
 
-    
+
+    public class MapTextureInfo
+    {
+        public Texture2D Texture { get; set; }
+        public uint Used { get; set; }
+    }
 
     public class PlanetMapLayer
     {
@@ -279,8 +282,7 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         private int[,] filePos = null;
 
-        private Texture2D[,] textureMap = null;
-        private uint[,] textureUsedMap = null;
+        private MapTextureInfo[,] textureMap = null;
         
         private Texture2D invalidTile;
 
@@ -299,12 +301,24 @@ namespace Demoder.PlanetMapViewer.Helpers
             if (this.filePos == null)
             {
                 this.filePos = new int[this.Tiles.Y, this.Tiles.X];
-                this.textureMap = new Texture2D[this.Tiles.Y, this.Tiles.X];
-                this.textureUsedMap = new uint[this.Tiles.Y, this.Tiles.X];
+                this.InitializeTextureMap();
             }
             var pos = this.ConvertFilePosNumToSlot(this.addedTiles);
             this.filePos[pos.Y, pos.X] = filePos;
             this.addedTiles++;
+        }
+
+        private void InitializeTextureMap()
+        {
+            if (this.textureMap != null) { return; }
+            this.textureMap = new MapTextureInfo[this.Tiles.Y, this.Tiles.X];
+            for (int x = 0; x < this.Tiles.X; x++)
+            {
+                for (int y = 0; y < this.Tiles.Y; y++)
+                {
+                    this.textureMap[y, x] = new MapTextureInfo();
+                }
+            }
         }
 
         internal void UnloadAllTextures()
@@ -313,9 +327,9 @@ namespace Demoder.PlanetMapViewer.Helpers
             {
                 for (int y = 0; y < this.Tiles.Y; y++)
                 {
-                    if (this.textureMap[y, x] == null) { continue; }
-                    this.textureMap[y, x].Dispose();
-                    this.textureMap[y, x] = null;
+                    if (this.textureMap[y, x].Texture == null) { continue; }
+                    this.textureMap[y, x].Texture.Dispose();
+                    this.textureMap[y, x].Texture = null;
 
                 }
             }
@@ -330,15 +344,15 @@ namespace Demoder.PlanetMapViewer.Helpers
             return ret;
         }
 
-        public void Draw(Context context)
+        public void Draw()
         {
             this.LastDraw.Restart();
-            var batch = context.SpriteBatch;
-            var camera = context.Camera;
-            var graphicsDevice = context.GraphicsDevice;
-            var display = context.UiElements.TileDisplay;
+            var batch = Context.SpriteBatch;
+            var camera = Context.Camera;
+            var graphicsDevice = Context.GraphicsDevice;
+            var display = Context.UiElements.TileDisplay;
 
-            var txz = (float)Math.Round(this.TextureSize * context.State.Magnification);
+            var txz = (float)Math.Round(this.TextureSize * Context.State.Magnification);
 
             batch.Begin(
                     SpriteSortMode.Texture,
@@ -347,7 +361,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                     null, null, null,
                     camera.TransformMatrix);
 
-            
+
 
             try
             {
@@ -369,27 +383,26 @@ namespace Demoder.PlanetMapViewer.Helpers
                 {
                     for (int y = 0; y < this.Tiles.Y; y++)
                     {
-
                         // Tag all unused tiles
                         if (x < minPos.X || x > maxPos.X || y < minPos.Y || y > maxPos.Y)
                         {
-                            this.textureUsedMap[y, x]++;
+                            if (this.textureMap[y, x].Texture == null) { continue; }
+                            this.textureMap[y, x].Used++;
 
                             // Unload tiles which haven't been used for 120 seconds.
-                            if (this.textureMap[y,x]!=null && this.textureUsedMap[y, x] > (Properties.GeneralSettings.Default.FramesPerSecond * 120))
+                            if (this.textureMap[y, x].Used > (Properties.GeneralSettings.Default.FramesPerSecond * 120))
                             {
-                                this.textureMap[y, x].Dispose();
-                                this.textureMap[y, x] = null;
+                                this.textureMap[y, x].Texture.Dispose();
+                                this.textureMap[y, x].Texture = null;
                             }
                             continue;
                         }
-                       
 
                         // We're supposed to use this tile
-                        this.textureUsedMap[y, x] = 0;
+                        this.textureMap[y, x].Used = 0;
                         this.LoadTile(graphicsDevice, x, y);
-      
-                        batch.Draw(this.textureMap[y, x],
+
+                        batch.Draw(this.textureMap[y, x].Texture,
                             new Rectangle(
                                 (int)(x * txz),
                                 (int)(y * txz),
@@ -399,10 +412,14 @@ namespace Demoder.PlanetMapViewer.Helpers
                     }
                 }
             }
+            catch (NullReferenceException ex)
+            {
+                Program.WriteLog("PlanetMapLayer->Draw() Exception: {0}", ex.ToString());
+            }
+
             catch (Exception ex)
             {
-                context.ErrorLog.Enqueue(ex.ToString());
-                Console.WriteLine("PlanetMapLayer->Draw() Exception: {0}", ex.ToString());
+                Program.WriteLog("PlanetMapLayer->Draw() Exception: {0}", ex.ToString());
             }
             finally
             {
@@ -418,8 +435,8 @@ namespace Demoder.PlanetMapViewer.Helpers
         /// <param name="y"></param>
         private void LoadTile(GraphicsDevice graphicsDevice, int x, int y)
         {
-            if (this.textureMap == null) { this.textureMap = new Texture2D[this.Tiles.Y, this.Tiles.X]; }
-            if (this.textureMap[y, x] != null) { return; }
+            this.InitializeTextureMap();
+            if (this.textureMap[y, x].Texture != null) { return; }
 
             try
             {
@@ -433,7 +450,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 this.binFile.Read(b, 0, size);
                 var ms = new MemoryStream(b, false);
                 var tex = Texture2D.FromStream(graphicsDevice, ms);
-                this.textureMap[y, x] = tex;
+                this.textureMap[y, x].Texture = tex;
             }
             catch (Exception ex)
             {
@@ -448,14 +465,8 @@ namespace Demoder.PlanetMapViewer.Helpers
 
                     this.invalidTile.SetData(pixels);
                 }
-                this.textureMap[y, x] = this.invalidTile;
+                this.textureMap[y, x] = new MapTextureInfo { Texture = this.invalidTile };
             }
         }
-    }
-
-    public enum MapType  
-    {
-        Rubika,
-        Shadowlands
     }
 }

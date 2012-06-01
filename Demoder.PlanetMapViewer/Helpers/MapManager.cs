@@ -31,12 +31,12 @@ using Demoder.PlanetMapViewer.DataClasses;
 using Demoder.PlanetMapViewer.Forms;
 using Demoder.PlanetMapViewer.Helpers;
 using Demoder.PlanetMapViewer.Properties;
+using System.Threading.Tasks;
 
 namespace Demoder.PlanetMapViewer.Helpers
 {
     public class MapManager
     {
-        public Context Context;
         private MapSettings settings { get { return Properties.MapSettings.Default; } }
         #region Members
         public PlanetMap CurrentMap;
@@ -62,22 +62,26 @@ namespace Demoder.PlanetMapViewer.Helpers
         private string mapDirectory { get { return Path.Combine(this.settings.AoPath, "cd_image", "textures", "PlanetMap"); } }
         #endregion
 
+        #region Events
+        public event Action ZoomInEvent;
+        public event Action ZoomOutEvent;
+        #endregion
+
         #region Constructors
-        public MapManager(Context context)
+        public MapManager()
         {
-            this.Context = context;
         }
 
         public void Initialize()
         {
             // Locate maps
-            this.FindAvailableMaps(this.Context.State.MapType);
+            this.FindAvailableMaps(Context.State.MapType);
 
-            if (this.SelectMap(this.Context.State.MapType)) { return; }
+            if (this.SelectMap(Context.State.MapType)) { return; }
             // Couldn't find selected map. try finding substitute.
             if (this.AvailablePlanetMaps.Count == 0)
             {
-                this.ShowMapNotFoundException(this.Context.State.MapType.ToString());
+                this.ShowMapNotFoundException(Context.State.MapType.ToString());
                 return;
             }
             this.SelectMap(this.AvailablePlanetMaps.First().Key);
@@ -156,19 +160,19 @@ namespace Demoder.PlanetMapViewer.Helpers
                 }
                 SetCurrentMapZoomLevel(newMap);
                 
-                if (this.Context.Camera != null)
+                if (Context.Camera != null)
                 {
-                    this.Context.Camera.CenterOnPixel(this.CurrentLayer.Size.X / 2, this.CurrentLayer.Size.Y / 2);
-                    this.Context.Camera.AdjustScrollbarsToLayer();
+                    Context.Camera.CenterOnPixel(this.CurrentLayer.Size.X / 2, this.CurrentLayer.Size.Y / 2);
+                    Context.Camera.AdjustScrollbarsToLayer();
                 }
 
-                for (int i = 0; i < this.Context.UiElements.MapList.Items.Count; i++)
+                for (int i = 0; i < Context.UiElements.MapList.Items.Count; i++)
                 {
-                    if ((this.Context.UiElements.MapList.Items[i] as MapSelectionItem).MapPath.Equals(map, StringComparison.InvariantCultureIgnoreCase))
+                    if ((Context.UiElements.MapList.Items[i] as MapSelectionItem).MapPath.Equals(map, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        if (i != this.Context.UiElements.MapList.SelectedIndex)
+                        if (i != Context.UiElements.MapList.SelectedIndex)
                         {
-                            this.Context.UiElements.MapList.SelectedIndex = i;
+                            Context.UiElements.MapList.SelectedIndex = i;
                         }
                         break;
                     }
@@ -212,24 +216,24 @@ namespace Demoder.PlanetMapViewer.Helpers
             lock (this.AvailablePlanetMaps)
             {
                 this.AvailablePlanetMaps.Clear();
-                this.Context.UiElements.MapList.Items.Clear();
+                Context.UiElements.MapList.Items.Clear();
                 var candidates = Directory.GetFiles(this.mapDirectory, "*.txt", SearchOption.AllDirectories);
                 foreach (var candidate in candidates)
                 {
                     try
                     {
-                        var map = PlanetMap.FromFile(this.mapDirectory, candidate, this.Context);
+                        var map = PlanetMap.FromFile(this.mapDirectory, candidate);
                         if (map == null) { continue; }
                         if (String.IsNullOrEmpty(map.Name)) { continue; }
                         if (map.Layers.Length == 0) { continue; }
                         if (map.Type != mapType) { continue; }
                         var pathName = candidate.Remove(0, this.mapDirectory.Length + 1);
                         this.AvailablePlanetMaps.Add(pathName, map);
-                        this.Context.UiElements.MapList.Items.Add(new MapSelectionItem { MapName = map.Name.Trim('"', ' '), MapPath = pathName, Type=map.Type });
+                        Context.UiElements.MapList.Items.Add(new MapSelectionItem { MapName = map.Name.Trim('"', ' '), MapPath = pathName, Type=map.Type });
                     }
                     catch(Exception ex)
                     {
-                        this.Context.ErrorLog.Enqueue(ex.ToString());
+                        Context.ErrorLog.Enqueue(ex.ToString());
                         continue;
                     }
                 }
@@ -238,19 +242,22 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         public void Load(string map)
         {
-            this.CurrentMap = PlanetMap.FromFile(this.mapDirectory, map, this.Context);
+            this.CurrentMap = PlanetMap.FromFile(this.mapDirectory, map);
         }
 
         public bool ZoomIn()
         {
             if (this.CurrentLayerNum < this.CurrentMap.Layers.Length - 1)
             {
-
-                var relPos = this.Context.Camera.RelativePosition();
+                var relPos = Context.Camera.RelativePosition();
                 this.CurrentLayerNum++;
-                this.Context.Camera.AdjustScrollbarsToLayer();
-                this.Context.Camera.CenterOnRelativePosition(relPos);
+                Context.Camera.AdjustScrollbarsToLayer();
+                Context.Camera.CenterOnRelativePosition(relPos);
                 this.CurrentMap.Layers[this.CurrentLayerNum - 1].UnloadAllTextures();
+                if (this.ZoomInEvent != null)
+                {
+                    Task.Factory.StartNew(this.ZoomInEvent);
+                }
                 return true;
             }
             return false;
@@ -259,11 +266,15 @@ namespace Demoder.PlanetMapViewer.Helpers
         {
             if (this.CurrentLayerNum > 0)
             {
-                var relPos = this.Context.Camera.RelativePosition();
+                var relPos = Context.Camera.RelativePosition();
                 this.CurrentLayerNum--;
-                this.Context.Camera.AdjustScrollbarsToLayer();
-                this.Context.Camera.CenterOnRelativePosition(relPos);
+                Context.Camera.AdjustScrollbarsToLayer();
+                Context.Camera.CenterOnRelativePosition(relPos);
                 this.CurrentMap.Layers[this.CurrentLayerNum + 1].UnloadAllTextures();
+                if (this.ZoomOutEvent != null)
+                {
+                    Task.Factory.StartNew(this.ZoomOutEvent);
+                }
                 return true;
             }
             return false;

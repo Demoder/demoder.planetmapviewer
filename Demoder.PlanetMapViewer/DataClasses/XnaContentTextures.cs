@@ -43,7 +43,6 @@ namespace Demoder.PlanetMapViewer.DataClasses
         internal const long MemoryCacheTime = 60000;
         internal const long DiskCacheDays = 7;
         private const string textureSite = "http://static.aodevs.com/";
-        internal Context Context { get; private set; }
         private WebClient iconWebClient;
         private Timer CleanTimer;
         
@@ -67,9 +66,8 @@ namespace Demoder.PlanetMapViewer.DataClasses
         #endregion
 
         #region Constructors
-        public XnaContentTextures(Context context)
+        public XnaContentTextures()
         {
-            this.Context = context;
             this.CleanTimer = new Timer(this.RemoveExpiredItems, null, 30000, 30000);
             this.iconCache = new FileCache(new DirectoryInfo(Path.Combine(Demoder.Common.Misc.MyTemporaryDirectory, "IconCache")));
         }
@@ -153,7 +151,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
                         data = this.iconCache.Read(key);
                     }
                     var ms = new MemoryStream(data);
-                    var tex = Texture2D.FromStream(this.Context.GraphicsDevice, ms);
+                    var tex = Texture2D.FromStream(Context.GraphicsDevice, ms);
                     ms.Dispose();
 
                     texCache = tex;
@@ -217,7 +215,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
                 }
                 try
                 {
-                    var tex2 = this.Context.ContentManager.Load<Texture2D>(String.Format(@"Textures\{0}", key));
+                    var tex2 = Context.ContentManager.Load<Texture2D>(String.Format(@"Textures\{0}", key));
                     tex = tex2;
                     this.contentTextures[key] = tex;
                 }
