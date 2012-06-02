@@ -51,8 +51,6 @@ namespace Demoder.PlanetMapViewer.Forms
     public partial class MainWindow : Form
     {
         #region Members
-        #region  XNA stuff
-        #endregion
         private Stopwatch lastException;
 
         private PluginManager pluginManager = new PluginManager();
@@ -63,6 +61,10 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private string screenShotFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Demoders PlanetMap Viewer");
         private BackgroundWorker bgwVersionCheck = new BackgroundWorker();
+        #endregion
+
+        #region Events
+        public event MainFormModeChangeDelegate ModeChanged;
         #endregion
 
         #region Form setup
@@ -657,6 +659,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
         internal void ToggleFullscreenSetting()
         {
+            var oldMode = Context.State.WindowMode;
             if (this.fullscreenToolStripMenuItem.Checked)
             {
                 this.OverlayModeToolStripMenuItem.Checked = false;
@@ -668,6 +671,10 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.statusStrip1.Visible = false;
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
                 this.Padding = new Padding(2, 3, 5, 10);
+                if (this.ModeChanged!=null)
+                {
+                    this.ModeChanged(oldMode, WindowMode.Fullscreen);
+                }
             }
 
             else
@@ -678,11 +685,17 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.statusStrip1.Visible = true;
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
                 this.Padding = new Padding(0);
+                if (this.ModeChanged != null)
+                {
+                    this.ModeChanged(oldMode, WindowMode.Normal);
+                }
             }
         }
 
         internal void ToggleOverlayMode()
         {
+            var oldMode = Context.State.WindowMode;
+
             if (this.OverlayModeToolStripMenuItem.Checked)
             {
                 this.TopMost = true;
@@ -713,6 +726,11 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.ControlBox = Properties.WindowSettings.Default.OverlaymodeShowControlbox;
                 this.splitContainer1.Panel2Collapsed = true;
                 Context.State.WindowMode = WindowMode.Overlay;
+
+                if (this.ModeChanged != null)
+                {
+                    this.ModeChanged(oldMode, WindowMode.Overlay);
+                }
             }
             else
             {
@@ -737,6 +755,11 @@ namespace Demoder.PlanetMapViewer.Forms
 
                 this.ControlBox = true;
                 Context.State.WindowMode = WindowMode.Normal;
+
+                if (this.ModeChanged != null)
+                {
+                    this.ModeChanged(oldMode, WindowMode.Normal);
+                }
             }
         }
 

@@ -37,7 +37,7 @@ namespace Demoder.PlanetMapViewer.Plugins
         /// <summary>
         /// Which stage is set up now.
         /// </summary>
-        private NormalTutorialStage setupStage = NormalTutorialStage.Completed;
+        private TutorialStage setupStage = TutorialStage.Completed;
 
         public CustomMapOverlay GetCustomOverlay()
         {
@@ -50,12 +50,14 @@ namespace Demoder.PlanetMapViewer.Plugins
             }
             switch (this.CurrentStage)
             {
-                case NormalTutorialStage.ZoomIn:
-                    return this.ZoomInTutorial();
-                case NormalTutorialStage.ZoomOut:
-                    return this.ZoomOutTutorial();
-                case NormalTutorialStage.OverlayMode:
-                    return this.OverlayModeTutorial();
+                case TutorialStage.ZoomIn:
+                    return this.NormalZoomInTutorial();
+                case TutorialStage.ZoomOut:
+                    return this.NormalZoomOutTutorial();
+                case TutorialStage.OverlayMode:
+                    return this.NormalOverlayModeTutorial();
+                case TutorialStage.OverlayTitlebarMenu:
+                    return this.OverlayTitlebarMenuTutorial();
             }
             return null;
         }
@@ -64,61 +66,85 @@ namespace Demoder.PlanetMapViewer.Plugins
         /// Prepares plugin for tutorial steps
         /// </summary>
         /// <param name="stage"></param>
-        private void SetupStage(NormalTutorialStage stage)
+        private void SetupStage(TutorialStage stage)
         {
             this.setupStage = stage;
             switch (stage)
             {
-                case NormalTutorialStage.ZoomIn:
+                case TutorialStage.ZoomIn:
                     Context.MapManager.ZoomInEvent += this.FinishZoomInTutorial;
                     break;
-                case NormalTutorialStage.ZoomOut:
+                case TutorialStage.ZoomOut:
                     Context.MapManager.ZoomOutEvent += this.FinishZoomOutTutorial;
                     break;
+                case TutorialStage.OverlayMode:
+                    Context.UiElements.ParentForm.ModeChanged += this.ParentModeChanged;
+                    break;
+                case TutorialStage.OverlayTitlebarMenu:
+                    Context.UiElements.ParentForm.OverlayTitleContextMenuStrip.Closed += this.OverlayMenuFinalizer;
+                    break;
             }
-
         }
 
         /// <summary>
         /// Cleans up a tutorial.
         /// </summary>
         /// <param name="stage"></param>
-        private void CleanupStage(NormalTutorialStage stage)
+        private void CleanupStage(TutorialStage stage)
         {
             switch (stage)
             {
-                case NormalTutorialStage.ZoomIn:
+                case TutorialStage.ZoomIn:
                     Context.MapManager.ZoomInEvent -= this.FinishZoomInTutorial;
                     break;
-                case NormalTutorialStage.ZoomOut:
+                case TutorialStage.ZoomOut:
                     Context.MapManager.ZoomOutEvent -= this.FinishZoomOutTutorial;
+                    break;
+                case TutorialStage.OverlayMode:
+                    Context.UiElements.ParentForm.ModeChanged -= this.ParentModeChanged;
+                    break;
+                case TutorialStage.OverlayTitlebarMenu:
+                    Context.UiElements.ParentForm.OverlayTitleContextMenuStrip.Closed -= this.OverlayMenuFinalizer;
                     break;
             }
         }
 
-        private NormalTutorialStage CurrentStage
+        private TutorialStage CurrentStage
         {
             get
             {
-                if (this.isComplete) { return NormalTutorialStage.Completed; }
+                if (this.isComplete) { return TutorialStage.Completed; }
                 
-                var set = Properties.NormalTutorial.Default;
-                if (!set.ZoomIn) { return NormalTutorialStage.ZoomIn; }
-                if (!set.ZoomOut) { return NormalTutorialStage.ZoomOut; }
-                if (!set.OverlayMode) { return NormalTutorialStage.OverlayMode; }
+                var norm = Properties.NormalTutorial.Default;
+                var over = Properties.OverlayTutorial.Default;
+                if (!norm.ZoomIn) { return TutorialStage.ZoomIn; }
+                if (!norm.ZoomOut) { return TutorialStage.ZoomOut; }
+                if (!norm.OverlayMode) { return TutorialStage.OverlayMode; }
+                if (!over.TitlebarMenu) { return TutorialStage.OverlayTitlebarMenu; }
                 
                 this.isComplete = true;
-                return NormalTutorialStage.Completed;
+                return TutorialStage.Completed;
             }
         }
 
-        #region Tutorial steps
-        private CustomMapOverlay OverlayModeTutorial()
+        #region Normal Tutorial steps
+        private CustomMapOverlay NormalOverlayModeTutorial()
         {
-            return null;
+            var items = new CustomMapOverlay();
+            items.MapItems.Add(this.GetTutorialStamp(500, 200));
+            var txts = new MapTextBuilder(FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top | MapItemAlignment.Left);
+            txts.Text("Tutorial: Overlay Mode", textColor: Color.Red, font: FontType.GuiXLarge).Break();
+            txts.Text("Overlay Mode maximizes the visible map area and keeps PMV on top of other windows, such as Anarchy Online.", 390).Break();
+            txts.Text("You may enter Overlay Mode by going to the top menu and clicking view->Overlay Mode, or by pressing [F12].", 390).Break();
+            txts.Break();
+            txts.Text("Please enter Overlay Mode now.", textColor: Color.Green).Break();
+
+            items.MapItems.AddRange(txts.ToMapItem(DrawMode.ViewPort, (int)(this.TutorialFramePosition.X - items.MapItems.First().Size.X / 2.5), this.TutorialFramePosition.Y));
+
+            return items;
         }
 
-        private CustomMapOverlay ZoomOutTutorial()
+        private CustomMapOverlay NormalZoomOutTutorial()
         {
             var items = new CustomMapOverlay();
             items.MapItems.Add(this.GetTutorialStamp(500, 200));
@@ -137,7 +163,7 @@ namespace Demoder.PlanetMapViewer.Plugins
             return items;
         }
 
-        private CustomMapOverlay ZoomInTutorial()
+        private CustomMapOverlay NormalZoomInTutorial()
         {
             var items = new CustomMapOverlay();
             items.MapItems.Add(this.GetTutorialStamp(500, 200));
@@ -157,6 +183,39 @@ namespace Demoder.PlanetMapViewer.Plugins
         }
         #endregion
 
+        #region Overlay tutorial steps
+        private CustomMapOverlay OverlayTitlebarMenuTutorial()
+        {
+            if (Context.State.WindowMode != WindowMode.Overlay)
+            {
+                return this.NormalOverlayModeTutorial();
+            }
+            var items = new CustomMapOverlay();
+            items.MapItems.Add(this.GetTutorialStamp(500, 200));
+            int center = Context.UiElements.TileDisplay.Width / 2;
+
+            var tex = new MapTexture
+            {
+                Texture = Context.Content.Textures.ArrowUp,
+                PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Center,
+                Size = new Vector2(128, 128),
+                Position = new PositionDefinition { Type = DrawMode.ViewPort, X = center, Y = 0 },
+            };
+
+            items.MapItems.Add(tex);
+
+            var txts = new MapTextBuilder(FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top | MapItemAlignment.Left);
+            txts.Text("Tutorial: Overlay Menu", textColor: Color.Red, font: FontType.GuiXLarge).Break();
+            txts.Text("The Overlay Menu provides quick access to many useful controls. You may access it by right-clicking the title bar.", 350).Break();
+            txts.Break();
+            txts.Text("Please open the Overlay Menu now.", textColor: Color.Green).Break();
+            items.MapItems.AddRange(txts.ToMapItem(DrawMode.ViewPort, (int)(this.TutorialFramePosition.X - items.MapItems.First().Size.X / 2.5), this.TutorialFramePosition.Y));
+
+            return items;
+        }
+
+        #endregion
+
         private Point TutorialFramePosition
         {
             get
@@ -169,11 +228,37 @@ namespace Demoder.PlanetMapViewer.Plugins
         private void FinishZoomInTutorial()
         {
             Properties.NormalTutorial.Default.ZoomIn = true;
+            Properties.NormalTutorial.Default.Save();
         }
 
         private void FinishZoomOutTutorial()
         {
             Properties.NormalTutorial.Default.ZoomOut = true;
+            Properties.NormalTutorial.Default.Save();
+        }
+
+        private void ParentModeChanged(WindowMode fromMode, WindowMode toMode)
+        {
+            if (this.setupStage == TutorialStage.OverlayMode && toMode == WindowMode.Overlay)
+            {
+                Properties.NormalTutorial.Default.OverlayMode = true;
+                Properties.NormalTutorial.Default.Save();
+                return;
+            }
+
+            if (this.setupStage == TutorialStage.OverlayExit && fromMode == WindowMode.Overlay && toMode != WindowMode.Overlay)
+            {
+                Properties.OverlayTutorial.Default.ExitOverlayMode = true;
+                Properties.OverlayTutorial.Default.Save();
+                return;
+            }
+           
+        }
+
+        private void OverlayMenuFinalizer(object sender, System.Windows.Forms.ToolStripDropDownClosedEventArgs e)
+        {
+            Properties.OverlayTutorial.Default.TitlebarMenu = true;
+            Properties.OverlayTutorial.Default.Save();
         }
         #endregion
 

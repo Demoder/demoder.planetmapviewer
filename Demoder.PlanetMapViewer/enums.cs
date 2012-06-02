@@ -28,20 +28,16 @@ using System.Text;
 
 namespace Demoder.PlanetMapViewer
 {
-    public enum OverlayTutorialStage
-    {
-        Completed,
-        TitlebarMenu,
-        ResizeWindow,
-        ExitOverlayMode
-    }
-
-    public enum NormalTutorialStage
+    public enum TutorialStage
     {
         Completed,
         ZoomIn,
         ZoomOut,
-        OverlayMode
+        OverlayMode,
+        OverlayTitlebarMenu,
+        OverlayResizeWindow,
+        OverlayExit
+
     }
 
     /// <summary>

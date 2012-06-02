@@ -103,6 +103,7 @@
     <Compile Include="DataClasses\TimedMapText.cs" />
     <Compile Include="DataClasses\XnaContentSpriteFonts.cs" />
     <Compile Include="DataClasses\XnaContentTextures.cs" />
+    <Compile Include="delegates.cs" />
     <Compile Include="Helpers\MapTextBuilder.cs" />
     <Compile Include="Plugins\DefaultPlugin.cs" />
     <Compile Include="Plugins\TutorialPlugin.cs" />
