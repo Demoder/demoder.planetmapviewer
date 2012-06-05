@@ -27,14 +27,24 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Threading;
+using Demoder.PlanetMapViewer.Xna;
+using System.ComponentModel;
+using Demoder.PlanetMapViewer.Helpers;
 
 namespace Demoder.PlanetMapViewer.PmvApi
 {
-    internal class PluginManager
+    public class PluginManager
     {
+        public event Action PluginStateChangeEvent;
+
         private ConcurrentDictionary<Type, PluginInfo> registeredPlugins = new ConcurrentDictionary<Type, PluginInfo>();
-        
-        public void RegisterPlugins(Assembly assembly)
+
+        internal PluginInfo[] AllPlugins { get { return this.registeredPlugins.Values.ToArray(); } }
+
+        internal void RegisterPlugins(Assembly assembly)
         {
             foreach (var plugin in assembly.GetTypes().Where(t => typeof(IPlugin).IsAssignableFrom(t) && t != typeof(IPlugin)))
             {
@@ -42,12 +52,47 @@ namespace Demoder.PlanetMapViewer.PmvApi
             }
         }
 
-        private void RegisterPlugin(Type type)
+        private void SendPluginStateChangeEvent()
         {
-            this.registeredPlugins.TryAdd(type, new PluginInfo { Type = type, Enabled = false });
+            var e = this.PluginStateChangeEvent;
+            if (e == null) { return; }
+            lock (e)
+            {
+                e();
+            }
         }
 
-        public bool LoadPlugin(Type type)
+        private void RegisterPlugin(Type type)
+        {
+            var pi = new PluginInfo
+            {
+                Type = type,
+                Visible = true
+            };
+
+            var attr = type.GetCustomAttributes(typeof(PluginAttribute), true).FirstOrDefault() as PluginAttribute;
+            var descAttr = type.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault() as DescriptionAttribute;
+            if (attr == null)
+            {
+                pi.RefreshInterval = -1;
+                pi.Name = pi.Type.Name;
+            }
+            else
+            {
+                pi.RefreshInterval = attr.RefreshInterval;
+                pi.Name = attr.Name;
+            }
+
+            if (descAttr != null)
+            {
+                pi.Description = descAttr.Description;
+            }
+
+            pi.Settings = SettingInfo.Generate(pi.Type).OrderBy(s => s.PropertyInfo.Name).ToArray();
+            this.registeredPlugins.TryAdd(type, pi);
+        }
+
+        internal bool LoadPlugin(Type type)
         {
             PluginInfo pi;
             if (!this.registeredPlugins.TryGetValue(type, out pi))
@@ -59,13 +104,52 @@ namespace Demoder.PlanetMapViewer.PmvApi
                 return false;
             }
             pi.Instance = Activator.CreateInstance(pi.Type) as IPlugin;
+            API.PluginConfig.LoadConfig(pi.Instance);
+            this.StartGenerationTask(pi);
+            this.SendPluginStateChangeEvent();
             return pi.Instance != null;
         }
 
-        public bool LoadPlugin<T>()
+        internal bool LoadPlugin<T>()
             where T : IPlugin
         {
             return this.LoadPlugin(typeof(T));
+        }
+
+        internal void UnloadPlugin<T>()
+        {
+            this.UnloadPlugin(typeof(T));
+        }
+
+        internal void LoadEnabledPlugins()
+        {
+            var pluginTypes = Properties.GeneralSettings.Default.EnabledPlugins.Split(new string[] { ";;" }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var p in this.AllPlugins)
+            {
+                if (pluginTypes.Contains(p.Type.FullName))
+                {
+                    p.AutoLoad = true;
+                    this.LoadPlugin(p.Type);
+                }
+            }
+        }
+
+        internal void UnloadPlugin(Type plugin)
+        {
+            PluginInfo pi;
+            if (!this.registeredPlugins.TryGetValue(plugin, out pi))
+            {
+                return;
+            }
+            if (pi.Instance == null)
+            {
+                return;
+            }
+
+            var instance = pi.Instance;
+            pi.Instance = null;
+            instance.Dispose();
+            this.SendPluginStateChangeEvent();
         }
 
         public T GetPlugin<T>()
@@ -79,16 +163,84 @@ namespace Demoder.PlanetMapViewer.PmvApi
             return (T)pi.Instance;
         }
 
-        public CustomMapOverlay[] GetMapOverlays()
+        internal void ChangePluginStatus<T>(bool enabled)
+        {
+            this.ChangePluginStatus(typeof(T), enabled);
+        }
+
+        internal void ChangePluginStatus(Type type, bool enabled)
+        {
+            PluginInfo pi;
+            if (!this.registeredPlugins.TryGetValue(type, out pi))
+            {
+                return;
+            }
+            pi.Visible = enabled;
+        }
+        
+        internal CustomMapOverlay[] GetMapOverlays()
         {
             var overlays = new List<CustomMapOverlay>();
-            foreach (var p in this.registeredPlugins.Values.Where(pi => pi.Instance != null))
+            var sw = new Stopwatch();
+            foreach (var p in this.registeredPlugins.Values.Where(pi => pi.Instance != null && pi.Visible).ToArray())
             {
-                overlays.Add(p.Instance.GetCustomOverlay());
+                this.StartGenerationTask(p);
+                overlays.Add(p.GeneratedOverlay);
             }
             return overlays.ToArray();
         }
 
 
+        internal void SignalGenerationMre(Type type)
+        {
+            var pi = this.AllPlugins.FirstOrDefault(p => p.Type == type);
+            if (pi == null) { return; }
+            pi.GenerationMre.Set();
+        }
+
+        private void StartGenerationTask(PluginInfo pi)
+        {
+            if (pi.GenerationTask == null || pi.GenerationTask.IsCompleted)
+            {
+                pi.GenerationTask = Task.Factory.StartNew((Action<object>)this.GenerateMapOverlay, pi, TaskCreationOptions.LongRunning);
+            }
+        }
+
+        #region Task methods
+        private void GenerateMapOverlay(object obj)
+        {
+            if (obj == null || !(obj is PluginInfo)) { return; }
+            var info = obj as PluginInfo;
+            while (info.Instance != null)
+            {
+                var sw = Stopwatch.StartNew();
+                try
+                {
+                    info.GeneratedOverlay = info.Instance.GetCustomOverlay();
+                }
+                catch (Exception ex)
+                {
+                    Program.WriteLog(ex.ToString());
+                }
+                sw.Stop();
+                info.LastExecutionTime = sw.ElapsedMilliseconds;
+
+                // Calculate pause delay.
+                long delay = info.RefreshInterval;
+                if (delay == -1)
+                {
+                    delay = (long)(1000 / TileDisplay.FrameFrequency);
+                }
+                delay -= sw.ElapsedMilliseconds;
+
+                if (delay > 0)
+                {
+                    // If we haven't overshot interval, sleep.
+                    info.GenerationMre.WaitOne((int)delay);
+                    info.GenerationMre.Reset();
+                }
+            }
+        }
+        #endregion
     }
 }

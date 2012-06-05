@@ -33,22 +33,33 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Demoder.AoHook;
+using Demoder.PlanetMapViewer.PmvApi;
+using Demoder.PlanetMapViewer.DataClasses;
+using System.IO;
 
-namespace Demoder.PlanetMapViewer.DataClasses
+namespace Demoder.PlanetMapViewer
 {
-    public static class Context
+    public static class API
     {
-        static Context()
+        static API()
         {
+            PluginManager = new PluginManager();
             UiElements = new ContextUiElements();
             State = new ContextState();
             Content = new XnaContent();
             FrameDrawer = new FrameDrawer();
+            PluginConfig = new PluginConfig(
+                new DirectoryInfo(
+                    Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                        "Demoder.PlanetMapViewer")
+                        )
+                    );
         }
 
         public static Queue<string> ErrorLog = new Queue<string>();
 
-        public static  FrameDrawer FrameDrawer { get; private set; }
+        public static FrameDrawer FrameDrawer { get; private set; }
         public static MapManager MapManager;
         public static Camera Camera;
         public static SpriteBatch SpriteBatch;
@@ -67,5 +78,9 @@ namespace Demoder.PlanetMapViewer.DataClasses
 
         public static ContextUiElements UiElements { get; private set; }
         public static ContextState State { get; private set; }
+
+        public static PluginManager PluginManager { get; private set; }
+
+        public static PluginConfig PluginConfig { get; private set; }
     }
 }

@@ -44,10 +44,12 @@ namespace Demoder.PlanetMapViewer.DataClasses
         internal const long DiskCacheDays = 7;
         private const string textureSite = "http://static.aodevs.com/";
         private WebClient iconWebClient;
+        private WebClient guiWebClient;
         private Timer CleanTimer;
         
 
         private FileCache iconCache;
+        private FileCache guiCache;
 
         /// <summary>
         /// Contains our bundled textures
@@ -70,6 +72,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
         {
             this.CleanTimer = new Timer(this.RemoveExpiredItems, null, 30000, 30000);
             this.iconCache = new FileCache(new DirectoryInfo(Path.Combine(Demoder.Common.Misc.MyTemporaryDirectory, "IconCache")));
+            this.guiCache = new FileCache(new DirectoryInfo(Path.Combine(Demoder.Common.Misc.MyTemporaryDirectory, "GuiCache")));
         }
 
         private void SetupIconWebClient()
@@ -77,6 +80,13 @@ namespace Demoder.PlanetMapViewer.DataClasses
             this.iconWebClient = new WebClient();
             this.iconWebClient.Headers.Set(HttpRequestHeader.UserAgent, Assembly.GetAssembly(typeof(XnaContentTextures)).GetName().Name);
             this.iconWebClient.DownloadDataCompleted += this.iconCache.WebClientDownloadDataCompleted;
+        }
+
+        private void SetupGuiWebClient()
+        {
+            this.guiWebClient = new WebClient();
+            this.guiWebClient.Headers.Set(HttpRequestHeader.UserAgent, Assembly.GetAssembly(typeof(XnaContentTextures)).GetName().Name);
+            this.guiWebClient.DownloadDataCompleted += this.guiCache.WebClientDownloadDataCompleted;
         }
 
         #endregion
@@ -151,7 +161,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
                         data = this.iconCache.Read(key);
                     }
                     var ms = new MemoryStream(data);
-                    var tex = Texture2D.FromStream(Context.GraphicsDevice, ms);
+                    var tex = Texture2D.FromStream(API.GraphicsDevice, ms);
                     ms.Dispose();
 
                     texCache = tex;
@@ -199,7 +209,58 @@ namespace Demoder.PlanetMapViewer.DataClasses
         /// <returns></returns>
         private Texture2D GetAoGuiTexture(string key)
         {
-            throw new NotImplementedException();
+            Texture2DCacheItem texCache;
+
+            lock (this.guiTextures)
+            {
+                // Is it already loaded?
+                if (this.guiTextures.TryGetValue(key, out texCache))
+                {
+                    return texCache;
+                }
+
+                // Load it!
+                try
+                {
+                    byte[] data;
+                    if ((DateTime.Now - this.guiCache.Time(key)).Days > DiskCacheDays)
+                    {
+                        data = this.DownloadAoGuiTexture(key);
+                    }
+                    else
+                    {
+                        data = this.guiCache.Read(key);
+                    }
+                    
+                    var ms = new MemoryStream(data);
+                    var tex = Texture2D.FromStream(API.GraphicsDevice, ms);
+                    ms.Dispose();
+
+                    texCache = tex;
+                    this.iconTextures[key] = texCache;
+                }
+                catch
+                {
+                    if (!key.Equals("ErrorTexture", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return this.GetContentTexture("ErrorTexture");
+                    }
+                }
+            }
+            return texCache;
+        }
+
+        private byte[] DownloadAoGuiTexture(string key)
+        {
+            lock (this)
+            {
+                if (this.guiWebClient == null) { this.SetupGuiWebClient(); }
+            }
+            var data = this.guiWebClient.WaitForReady().DownloadData(new Uri(String.Format("{0}texture/gui/{1}", textureSite, key)));
+            if (data == null) { throw new Exception(); }
+            this.guiCache.Cache(key, data);
+
+            return data;
         }
 
 
@@ -215,7 +276,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
                 }
                 try
                 {
-                    var tex2 = Context.ContentManager.Load<Texture2D>(String.Format(@"Textures\{0}", key));
+                    var tex2 = API.ContentManager.Load<Texture2D>(String.Format(@"Textures\{0}", key));
                     tex = tex2;
                     this.contentTextures[key] = tex;
                 }

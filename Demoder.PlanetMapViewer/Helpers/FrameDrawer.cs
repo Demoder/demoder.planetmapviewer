@@ -64,17 +64,16 @@ namespace Demoder.PlanetMapViewer.Helpers
 
             foreach (var item in mapItems)
             {
+                if (item == null) { continue; }
                 if (item.Type != lastType && bufferedItems.Count != 0)
                 {
                     this.Draw(bufferedItems, drawMode, lastType);
-                    lastType = item.Type;
                     bufferedItems.Clear();
                 }
                 bufferedItems.Add(item);
                 lastType = item.Type;
             }
             this.Draw(bufferedItems, drawMode, lastType);
-
         }
 
         public void Draw(IEnumerable<IMapItem> items, DrawMode drawMode, MapItemType itemType)
@@ -88,7 +87,24 @@ namespace Demoder.PlanetMapViewer.Helpers
                 case MapItemType.SpriteFont:
                     this.DrawText(items, drawMode);
                     break;
+                case MapItemType.TextureWithAttachedSpriteFont:
+                    this.DrawTextureWithSpriteFont(items, drawMode);
+                    break;
             }
+        }
+
+        private void DrawTextureWithSpriteFont(IEnumerable<IMapItem> items, DrawMode drawMode)
+        {
+            var realItems = new List<IMapItem>();
+
+            foreach (var item in items)
+            {
+                if (item is MapTextureText)
+                {
+                   realItems.AddRange((item as MapTextureText).ToMapItems());
+                }
+            }
+            this.Draw(realItems, drawMode);
         }
 
 
@@ -109,12 +125,13 @@ namespace Demoder.PlanetMapViewer.Helpers
                     {
                         if (item.Type != MapItemType.SpriteFont) { continue; }
                         var sd = item as MapText;
+                        if (String.IsNullOrEmpty(sd.Text)) { continue; }
                         var textSize = sd.Size;
                         var pos = GetRealPosition(item);
                         pos.X++;
                         pos.Y++;
-                        Context.SpriteBatch.DrawString(
-                            Context.Content.Fonts.GetFont(sd.Font),
+                        API.SpriteBatch.DrawString(
+                            API.Content.Fonts.GetFont(sd.Font),
                             sd.Text,
                             pos,
                             sd.ShadowColor
@@ -123,7 +140,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 }
                 catch (Exception ex)
                 {
-                    Context.ErrorLog.Enqueue(ex.ToString());
+                    Program.WriteLog(ex.ToString());
                     throw ex;
                 }
                 finally
@@ -140,11 +157,12 @@ namespace Demoder.PlanetMapViewer.Helpers
                     {
                         if (item.Type != MapItemType.SpriteFont) { continue; }
                         var sd = item as MapText;
+                        if (String.IsNullOrEmpty(sd.Text)) { continue; }
                         var textSize = sd.Size;
                         var pos = GetRealPosition(item);                       
 
-                        Context.SpriteBatch.DrawString(
-                            Context.Content.Fonts.GetFont(sd.Font),
+                        API.SpriteBatch.DrawString(
+                            API.Content.Fonts.GetFont(sd.Font),
                             sd.Text,
                             pos,
                             sd.TextColor
@@ -153,7 +171,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 }
                 catch (Exception ex)
                 {
-                    Context.ErrorLog.Enqueue(ex.ToString());
+                    Program.WriteLog(ex.ToString());
                     throw ex;
                 }
                 finally
@@ -226,8 +244,8 @@ namespace Demoder.PlanetMapViewer.Helpers
                     if (item.Type != MapItemType.Texture) { continue; }
                     Vector2 realPos = GetRealPosition(item);
                     var tex = item as MapTexture;
-                    Context.SpriteBatch.Draw(
-                        Context.Content.Textures.GetTexture(tex.Texture),
+                    API.SpriteBatch.Draw(
+                        API.Content.Textures.GetTexture(tex.Texture),
                         new Microsoft.Xna.Framework.Rectangle((int)realPos.X, (int)realPos.Y, (int)tex.Size.X, (int)tex.Size.Y),
                         tex.KeyColor);
                 }
@@ -245,20 +263,20 @@ namespace Demoder.PlanetMapViewer.Helpers
         #region Spritebatch shortcuts
         public bool SpriteBatchBegin(DrawMode mode = DrawMode.World)
         {
-            if (Context.SpriteBatch == null) { return false; }
+            if (API.SpriteBatch == null) { return false; }
             this.SpriteBatchEnd();
 
             if (mode == DrawMode.ViewPort)
             {
-                Context.SpriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend);
+                API.SpriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend);
                 this.IsBatchBegun = true;
                 return true;
             }
-            Context.SpriteBatch.Begin(
+            API.SpriteBatch.Begin(
                 SpriteSortMode.Texture,
                 BlendState.AlphaBlend,
                 null, null, null, null,
-                Context.Camera.TransformMatrix);
+                API.Camera.TransformMatrix);
             this.IsBatchBegun = true;
             return true;
         }
@@ -267,7 +285,7 @@ namespace Demoder.PlanetMapViewer.Helpers
         {
             if (this.IsBatchBegun)
             {
-                Context.SpriteBatch.End();
+                API.SpriteBatch.End();
                 this.IsBatchBegun = false;
             }
         }

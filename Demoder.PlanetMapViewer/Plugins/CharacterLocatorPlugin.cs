@@ -29,19 +29,22 @@ using Demoder.PlanetMapViewer.PmvApi;
 using Demoder.PlanetMapViewer.DataClasses;
 using Microsoft.Xna.Framework;
 using Demoder.AoHook;
+using System.Threading;
+using System.ComponentModel;
 
 namespace Demoder.PlanetMapViewer.Plugins
 {
-    public class DefaultPlugin : IPlugin
+    [Plugin("Character Locator")]
+    [Description("Displays character locators on the planet map")]
+    public class CharacterLocatorPlugin : IPlugin
     {
         private Dictionary<int, uint> ProcessCharacterMap = new Dictionary<int, uint>();
 
-        public DefaultPlugin()
+        public CharacterLocatorPlugin()
         {
-            Context.AoHookProvider.CharacterPositionEvent += HandleCharacterPositionEvent;
-            Context.AoHookProvider.HookStateChangeEvent += HandleHookStateChangeEvent;
-            Context.AoHookProvider.DynelNameEvent += HandleDynelNameEvent;
-            Context.AoHookProvider.QuestLocationEvent += HandleQuestLocationEvent;
+            API.AoHookProvider.CharacterPositionEvent += HandleCharacterPositionEvent;
+            API.AoHookProvider.HookStateChangeEvent += HandleHookStateChangeEvent;
+            API.AoHookProvider.DynelNameEvent += HandleDynelNameEvent;
         }
 
         #region Retrieve IMapItems
@@ -50,28 +53,25 @@ namespace Demoder.PlanetMapViewer.Plugins
         {
             var overlay = new CustomMapOverlay();
             overlay.MapItems.AddRange(this.GetCharacterLocators());
-            overlay.MapItems.AddRange(this.GetMissionLocators());
             return overlay;
         }
 
         private IMapItem[] GetCharacterLocators()
         {
-            var mapItems = new List<IMapItem>();
-            var mapTexts = new List<IMapItem>();
-            if (Context.State.PlayerInfo.Count == 0)
+            var mapTextureTexts = new List<IMapItem>();
+            if (API.State.PlayerInfo.Count == 0)
             {
                 return new MapTexture[0];
             }
 
-            var characters = Context.State.PlayerInfo.Values;
-
+            var characters = API.State.PlayerInfo.Values.ToArray();
 
             foreach (var character in characters)
             {
                 if (character == null || character.Zone == null || character.Position == null || character.Name == null) { continue; }
-                var charLoc = new MapTexture()
+                var texture = new MapTexture()
                 {
-                    Texture = Context.Content.Textures.CharacterLocator,
+                    Texture = API.Content.Textures.CharacterLocator,
                     KeyColor = Color.Yellow,
                     Position = new PositionDefinition(character.Zone.ID, character.Position.X, character.Position.Z),
                     PositionAlignment = MapItemAlignment.Center,
@@ -79,114 +79,41 @@ namespace Demoder.PlanetMapViewer.Plugins
 
                 if (!character.IsHooked)
                 {
-                    charLoc.KeyColor = Color.Gray;
+                    texture.KeyColor = Color.Gray;
                 }
 
-                var charRealPos = charLoc.Position.GetPosition();
+                var charRealPos = texture.Position.GetPosition();
 
                 var txt = new MapText
                 {
-                    Position = new PositionDefinition
-                    {
-                        Type = DrawMode.World,
-                        X = (int)charRealPos.X,
-                        Y = (int)charRealPos.Y + (int)charLoc.Size.Y / 2 + 5
-                    },
+                    Position = new PositionDefinition(),
+                    PositionAlignment = MapItemAlignment.Center,
                     Text = character.Name,
                     TextColor = Color.Yellow,
                     ShadowColor = Color.Black,
                     Shadow = true,
                     Font = FontType.MapCharLocator
                 };
+
                 if (!character.IsHooked)
                 {
                     txt.TextColor = Color.LightGray;
                     txt.ShadowColor = Color.Gray;
                 }
 
-                mapTexts.Add(txt);
-
-                mapItems.Add(charLoc);
-            }
-
-            mapItems.AddRange(mapTexts);
-            return mapItems.ToArray();
-        }
-
-        private IMapItem[] GetMissionLocators()
-        {
-            return new MapTexture[0];
-            /*
-            var mapItems = new List<IMapItem>();
-            var mapTexts = new List<IMapItem>();
-            if (this.Context.HookInfo == null || this.Context.HookInfo.Processes == null)
-            {
-                return new MapTexture[0];
-            }
-
-            lock (this.Context.HookInfo.Processes)
-            {
-                foreach (var info in this.Context.HookInfo.Processes.Values)
+                mapTextureTexts.Add(new MapTextureText(texture, txt, 1)
                 {
-                    // We need both mission locator info and character name info
-                    if (info == null) { continue; }
-                    if (info.Mission == null || info.Mission.Zone == null || info.Mission.ZonePosition == null || info.Mission.ZonePosition == default(Vector3)) { continue; }
-                    if (info.Character == null || info.Character.Name == null) { continue; }
-
-                    var mapItem = new MapTexture();
-                    mapItem.Texture = this.Context.Content.Textures.MissionLocator;
-                    mapItem.Position = this.Context.MapManager.GetPosition(info.Mission.Zone.ID, info.Mission.ZonePosition.X, info.Mission.ZonePosition.Z);
-                    
-                    mapItem.PositionAlignment = MapItemAlignment.Bottom | MapItemAlignment.Center;
-                    mapTexts.Add(new MapText
-                    {
-                        Position = new Vector2(mapItem.Position.X, mapItem.Position.Y + (int)mapItem.Texture.Height / 2 + 5),
-                        Text = info.Character.Name,
-                        TextColor = Microsoft.Xna.Framework.Color.White,
-                        ShadowColor = Microsoft.Xna.Framework.Color.Black,
-                        Shadow = true,
-                        Font = this.Context.Content.Fonts.CharacterName
-                    });
-
-                    mapItems.Add(mapItem);
-                }
+                    PositionAlignment = MapItemAlignment.Bottom | MapItemAlignment.Center,
+                });
             }
-            mapItems.AddRange(mapTexts);
-            return mapItems.ToArray();
-             * */
+
+            return mapTextureTexts.ToArray();
         }
+
         #endregion
 
         #region AO Hook Provider
-        void HandleQuestLocationEvent(Provider sender, AoHook.Events.QuestLocationEventArgs e)
-        {
-            /*
-            Vector2 cameraPosition = Vector2.Zero;
-            lock (this.Processes)
-            {
-                var info = this.Processes[e.ProcessID];
-                var quest = info.Mission;
-                quest.ID = e.QuestID;
-                quest.WorldPosition = new Vector3(e.WorldPosX, e.WorldPosY, e.WorldPosZ);
-                quest.Zone.ID = e.ZoneID;
-                quest.ZonePosition = new Vector3(e.ZonePosX, e.ZonePosY, e.ZonePosZ);
-                info.LastModified.Restart();
-
-                // Center camera on mission coord.
-                if (quest.ZonePosition != default(Vector3))
-                {
-                    this.Context.State.CameraControl = CameraControl.Manual;
-                    cameraPosition = this.Context.MapManager.GetPosition(quest.Zone.ID, quest.ZonePosition.X, quest.ZonePosition.Z);
-                }
-            }
-
-            if (cameraPosition != Vector2.Zero)
-            {
-                this.Context.Camera.CenterOnPixel(cameraPosition.X, cameraPosition.Y);
-            }
-             */
-        }
-
+        // Todo: Move this to the general 
         private void HandleDynelNameEvent(Provider sender, Demoder.AoHook.Events.DynelNameEventArgs e)
         {
             if (!e.IsSelf) { return; }
@@ -200,14 +127,14 @@ namespace Demoder.PlanetMapViewer.Plugins
                 }
             }
 
-            lock (Context.State.PlayerInfo)
+            lock (API.State.PlayerInfo)
             {
-                if (!Context.State.PlayerInfo.ContainsKey(e.DynelID))
+                if (!API.State.PlayerInfo.ContainsKey(e.DynelID))
                 {
-                    Context.State.PlayerInfo[e.DynelID] = new PlayerInfo();
+                    API.State.PlayerInfo[e.DynelID] = new PlayerInfo();
                 }
 
-                var info = Context.State.PlayerInfo[e.DynelID];
+                var info = API.State.PlayerInfo[e.DynelID];
 
                 if (e.DynelID != uint.MinValue && e.DynelID != uint.MaxValue)
                 {
@@ -222,7 +149,7 @@ namespace Demoder.PlanetMapViewer.Plugins
             }
             if (changed)
             {
-                Context.UiElements.CharacterTrackerControl.UpdateCharacterList();
+                API.UiElements.CharacterTrackerControl.UpdateCharacterList();
             }
         }
 
@@ -237,10 +164,10 @@ namespace Demoder.PlanetMapViewer.Plugins
                 if (!this.ProcessCharacterMap.ContainsKey(e.ProcessID)) { return; }
 
                 // Update status of whether or not a player character is hooked.
-                Context.State.PlayerInfo[this.ProcessCharacterMap[e.ProcessID]].IsHooked = false;
+                API.State.PlayerInfo[this.ProcessCharacterMap[e.ProcessID]].IsHooked = false;
                 this.ProcessCharacterMap.Remove(e.ProcessID);
 
-                Context.UiElements.CharacterTrackerControl.UpdateCharacterList();
+                API.UiElements.CharacterTrackerControl.UpdateCharacterList();
             }
         }
 
@@ -253,9 +180,9 @@ namespace Demoder.PlanetMapViewer.Plugins
             if (e.ZoneID == 0) { return; }
 
             var update = false;
-            lock (Context.State.PlayerInfo)
+            lock (API.State.PlayerInfo)
             {
-                var info = Context.State.PlayerInfo[e.DynelID];
+                var info = API.State.PlayerInfo[e.DynelID];
                 info.Position = new Vector3(e.X, e.Y, e.Z);
                 info.Zone.ID = e.ZoneID;
                 info.Zone.Name = e.ZoneName;
@@ -264,11 +191,18 @@ namespace Demoder.PlanetMapViewer.Plugins
             }
             if (update)
             {
-                Context.UiElements.CharacterTrackerControl.UpdateCharacterList();
+                API.UiElements.CharacterTrackerControl.UpdateCharacterList();
             }
         }
         #endregion
 
 
+
+        public void Dispose()
+        {
+            API.AoHookProvider.CharacterPositionEvent -= HandleCharacterPositionEvent;
+            API.AoHookProvider.HookStateChangeEvent -= HandleHookStateChangeEvent;
+            API.AoHookProvider.DynelNameEvent -= HandleDynelNameEvent;
+        }
     }
 }
