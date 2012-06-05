@@ -57,6 +57,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pluginManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fullscreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -75,6 +76,8 @@ namespace Demoder.PlanetMapViewer.Forms
             this.tileDisplay1_vScrollBar = new System.Windows.Forms.VScrollBar();
             this.tileDisplay1_hScrollBar = new System.Windows.Forms.HScrollBar();
             this.tileDisplay1 = new Demoder.PlanetMapViewer.Xna.TileDisplay();
+            this.pluginsPanel = new System.Windows.Forms.GroupBox();
+            this.pluginListView = new System.Windows.Forms.ListView();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.magnificationLabel = new System.Windows.Forms.Label();
             this.MagnificationSlider = new System.Windows.Forms.TrackBar();
@@ -102,21 +105,28 @@ namespace Demoder.PlanetMapViewer.Forms
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.selectCharactersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exitOverlayModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.eventLog1 = new System.Diagnostics.EventLog();
+            this.pluginContextStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.configureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.pluginsPanel.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MagnificationSlider)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.followCharacterGroupBox.SuspendLayout();
             this.OverlayTitleContextMenuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
+            this.pluginContextStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -135,6 +145,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.optionsToolStripMenuItem,
+            this.pluginManagerToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -143,14 +154,21 @@ namespace Demoder.PlanetMapViewer.Forms
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem1_Click);
+            // 
+            // pluginManagerToolStripMenuItem
+            // 
+            this.pluginManagerToolStripMenuItem.Name = "pluginManagerToolStripMenuItem";
+            this.pluginManagerToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.pluginManagerToolStripMenuItem.Text = "Plugin Manager";
+            this.pluginManagerToolStripMenuItem.Click += new System.EventHandler(this.pluginManagerToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -273,6 +291,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.pluginsPanel);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox3);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox4);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
@@ -313,6 +332,30 @@ namespace Demoder.PlanetMapViewer.Forms
             this.tileDisplay1.TabIndex = 1;
             this.tileDisplay1.Text = "PlanetMap";
             this.tileDisplay1.OnDraw += new System.EventHandler(this.tileDisplay1_OnDraw);
+            // 
+            // pluginsPanel
+            // 
+            this.pluginsPanel.Controls.Add(this.pluginListView);
+            this.pluginsPanel.Location = new System.Drawing.Point(5, 303);
+            this.pluginsPanel.Name = "pluginsPanel";
+            this.pluginsPanel.Size = new System.Drawing.Size(159, 123);
+            this.pluginsPanel.TabIndex = 10004;
+            this.pluginsPanel.TabStop = false;
+            this.pluginsPanel.Text = "Plugins";
+            // 
+            // pluginListView
+            // 
+            this.pluginListView.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.pluginListView.CheckBoxes = true;
+            this.pluginListView.ContextMenuStrip = this.pluginContextStrip;
+            this.pluginListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pluginListView.Location = new System.Drawing.Point(3, 16);
+            this.pluginListView.Name = "pluginListView";
+            this.pluginListView.Size = new System.Drawing.Size(153, 104);
+            this.pluginListView.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.pluginListView.TabIndex = 0;
+            this.pluginListView.UseCompatibleStateImageBehavior = false;
+            this.pluginListView.View = System.Windows.Forms.View.List;
             // 
             // groupBox3
             // 
@@ -463,9 +506,9 @@ namespace Demoder.PlanetMapViewer.Forms
             this.followCharacterGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.followCharacterGroupBox.Controls.Add(this.followCharacterPanel);
-            this.followCharacterGroupBox.Location = new System.Drawing.Point(5, 303);
+            this.followCharacterGroupBox.Location = new System.Drawing.Point(5, 432);
             this.followCharacterGroupBox.Name = "followCharacterGroupBox";
-            this.followCharacterGroupBox.Size = new System.Drawing.Size(168, 250);
+            this.followCharacterGroupBox.Size = new System.Drawing.Size(168, 121);
             this.followCharacterGroupBox.TabIndex = 10000;
             this.followCharacterGroupBox.TabStop = false;
             this.followCharacterGroupBox.Text = "Follow Character";
@@ -476,7 +519,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.followCharacterPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.followCharacterPanel.Location = new System.Drawing.Point(3, 16);
             this.followCharacterPanel.Name = "followCharacterPanel";
-            this.followCharacterPanel.Size = new System.Drawing.Size(162, 231);
+            this.followCharacterPanel.Size = new System.Drawing.Size(162, 102);
             this.followCharacterPanel.TabIndex = 0;
             // 
             // regionToolStripMenuItem
@@ -538,13 +581,14 @@ namespace Demoder.PlanetMapViewer.Forms
             this.toolStripSeparator3,
             this.selectCharactersToolStripMenuItem,
             this.selectMapToolStripMenuItem,
+            this.pluginsToolStripMenuItem,
             this.toolStripSeparator4,
             this.optionsToolStripMenuItem1,
             this.exitOverlayModeToolStripMenuItem});
             this.OverlayTitleContextMenuStrip.Name = "contextMenuStrip1";
             this.OverlayTitleContextMenuStrip.ShowCheckMargin = true;
             this.OverlayTitleContextMenuStrip.ShowImageMargin = false;
-            this.OverlayTitleContextMenuStrip.Size = new System.Drawing.Size(192, 264);
+            this.OverlayTitleContextMenuStrip.Size = new System.Drawing.Size(192, 286);
             this.OverlayTitleContextMenuStrip.Text = "Overlay Mode";
             this.OverlayTitleContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.OverlayTitleContextMenuStrip_Opening);
             // 
@@ -579,6 +623,12 @@ namespace Demoder.PlanetMapViewer.Forms
             this.selectMapToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.selectMapToolStripMenuItem.Text = "Select Map";
             // 
+            // pluginsToolStripMenuItem
+            // 
+            this.pluginsToolStripMenuItem.Name = "pluginsToolStripMenuItem";
+            this.pluginsToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.pluginsToolStripMenuItem.Text = "Plugins";
+            // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
@@ -597,6 +647,25 @@ namespace Demoder.PlanetMapViewer.Forms
             this.exitOverlayModeToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.exitOverlayModeToolStripMenuItem.Text = "Exit Overlay Mode";
             this.exitOverlayModeToolStripMenuItem.Click += new System.EventHandler(this.exitOverlayModeToolStripMenuItem_Click);
+            // 
+            // eventLog1
+            // 
+            this.eventLog1.SynchronizingObject = this;
+            // 
+            // pluginContextStrip
+            // 
+            this.pluginContextStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.configureToolStripMenuItem});
+            this.pluginContextStrip.Name = "pluginContextStrip";
+            this.pluginContextStrip.Size = new System.Drawing.Size(153, 48);
+            this.pluginContextStrip.Opening += new System.ComponentModel.CancelEventHandler(this.pluginContextStrip_Opening);
+            // 
+            // configureToolStripMenuItem
+            // 
+            this.configureToolStripMenuItem.Name = "configureToolStripMenuItem";
+            this.configureToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.configureToolStripMenuItem.Text = "Configure...";
+            this.configureToolStripMenuItem.Click += new System.EventHandler(this.configureToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
@@ -622,6 +691,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.pluginsPanel.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MagnificationSlider)).EndInit();
@@ -630,6 +700,8 @@ namespace Demoder.PlanetMapViewer.Forms
             this.groupBox2.ResumeLayout(false);
             this.followCharacterGroupBox.ResumeLayout(false);
             this.OverlayTitleContextMenuStrip.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
+            this.pluginContextStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -688,6 +760,13 @@ namespace Demoder.PlanetMapViewer.Forms
         internal System.Windows.Forms.TrackBar MagnificationSlider;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Panel followCharacterPanel;
+        private System.Windows.Forms.ToolStripMenuItem pluginManagerToolStripMenuItem;
+        private System.Windows.Forms.GroupBox pluginsPanel;
+        private System.Windows.Forms.ListView pluginListView;
+        private System.Windows.Forms.ToolStripMenuItem pluginsToolStripMenuItem;
+        private System.Diagnostics.EventLog eventLog1;
+        private System.Windows.Forms.ContextMenuStrip pluginContextStrip;
+        private System.Windows.Forms.ToolStripMenuItem configureToolStripMenuItem;
     }
 }
 

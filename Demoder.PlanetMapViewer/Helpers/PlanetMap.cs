@@ -107,8 +107,8 @@ namespace Demoder.PlanetMapViewer.Helpers
 
             // Find pixel coord
             return new Vector2(
-                (float)Math.Round(pixelX * Context.State.Magnification),
-                (float)Math.Round(pixelY * Context.State.Magnification));
+                (float)Math.Round(pixelX * API.State.Magnification),
+                (float)Math.Round(pixelY * API.State.Magnification));
         }
 
         public Vector2 GetReversePosition(int layer, uint zone, float x, float y)
@@ -123,8 +123,8 @@ namespace Demoder.PlanetMapViewer.Helpers
 
 
             var pixelPos = new Vector2(
-                (float)Math.Round(x / Context.State.Magnification), 
-                (float)Math.Round(y / Context.State.Magnification));
+                (float)Math.Round(x / API.State.Magnification), 
+                (float)Math.Round(y / API.State.Magnification));
 
             float relativeX = pixelPos.X - layerInfo.MapRect.X;
             relativeX /= layerInfo.MapRect.Width - layerInfo.MapRect.X;
@@ -347,12 +347,12 @@ namespace Demoder.PlanetMapViewer.Helpers
         public void Draw()
         {
             this.LastDraw.Restart();
-            var batch = Context.SpriteBatch;
-            var camera = Context.Camera;
-            var graphicsDevice = Context.GraphicsDevice;
-            var display = Context.UiElements.TileDisplay;
+            var batch = API.SpriteBatch;
+            var camera = API.Camera;
+            var graphicsDevice = API.GraphicsDevice;
+            var display = API.UiElements.TileDisplay;
 
-            var txz = (float)Math.Round(this.TextureSize * Context.State.Magnification);
+            var txz = (float)Math.Round(this.TextureSize * API.State.Magnification);
 
             batch.Begin(
                     SpriteSortMode.Texture,

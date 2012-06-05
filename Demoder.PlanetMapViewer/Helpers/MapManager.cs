@@ -65,6 +65,7 @@ namespace Demoder.PlanetMapViewer.Helpers
         #region Events
         public event Action ZoomInEvent;
         public event Action ZoomOutEvent;
+        public event Action MapChangedEvent;
         #endregion
 
         #region Constructors
@@ -75,13 +76,13 @@ namespace Demoder.PlanetMapViewer.Helpers
         public void Initialize()
         {
             // Locate maps
-            this.FindAvailableMaps(Context.State.MapType);
+            this.FindAvailableMaps(API.State.MapType);
 
-            if (this.SelectMap(Context.State.MapType)) { return; }
+            if (this.SelectMap(API.State.MapType)) { return; }
             // Couldn't find selected map. try finding substitute.
             if (this.AvailablePlanetMaps.Count == 0)
             {
-                this.ShowMapNotFoundException(Context.State.MapType.ToString());
+                this.ShowMapNotFoundException(API.State.MapType.ToString());
                 return;
             }
             this.SelectMap(this.AvailablePlanetMaps.First().Key);
@@ -107,27 +108,44 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         public bool SelectMap(MapType mapType)
         {
-            string map;
-            string defaultMap;
+                string map;
+                string defaultMap;
 
-            switch (mapType)
+                switch (mapType)
+                {
+                    case MapType.Rubika:
+                        map = this.settings.SelectedRubikaMap;
+                        defaultMap = @"normal\PlanetMapIndexNormal.txt";
+                        break;
+                    default:
+                    case MapType.Shadowlands:
+                        map = this.settings.SelectedShadowlandsMap;
+                        defaultMap = @"Shadowlands\ShadowlandsMap.txt";
+                        break;
+                }
+
+
+            var retValue = this.SelectMap(map);
+            if (!retValue)
             {
-                case MapType.Rubika:
-                    map = this.settings.SelectedRubikaMap;
-                    defaultMap = @"normal\PlanetMapIndexNormal.txt";
-                    break;
-                default:
-                case MapType.Shadowlands:
-                    map = this.settings.SelectedShadowlandsMap;
-                    defaultMap = @"Shadowlands\ShadowlandsMap.txt";
-                    break;
+                retValue = this.SelectMap(defaultMap);
             }
 
-            if (this.SelectMap(map))
+            if (retValue)
             {
-                return true;
+                this.SendMapChangedEvent();
             }
-            return this.SelectMap(defaultMap);
+            return retValue;
+        }
+
+        private void SendMapChangedEvent()
+        {
+            var e = this.MapChangedEvent;
+            if (e == null) { return; }
+            lock (e)
+            {
+                e();
+            }
         }
 
         /// <summary>
@@ -160,19 +178,19 @@ namespace Demoder.PlanetMapViewer.Helpers
                 }
                 SetCurrentMapZoomLevel(newMap);
                 
-                if (Context.Camera != null)
+                if (API.Camera != null)
                 {
-                    Context.Camera.CenterOnPixel(this.CurrentLayer.Size.X / 2, this.CurrentLayer.Size.Y / 2);
-                    Context.Camera.AdjustScrollbarsToLayer();
+                    API.Camera.CenterOnPixel(this.CurrentLayer.Size.X / 2, this.CurrentLayer.Size.Y / 2);
+                    API.Camera.AdjustScrollbarsToLayer();
                 }
 
-                for (int i = 0; i < Context.UiElements.MapList.Items.Count; i++)
+                for (int i = 0; i < API.UiElements.MapList.Items.Count; i++)
                 {
-                    if ((Context.UiElements.MapList.Items[i] as MapSelectionItem).MapPath.Equals(map, StringComparison.InvariantCultureIgnoreCase))
+                    if ((API.UiElements.MapList.Items[i] as MapSelectionItem).MapPath.Equals(map, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        if (i != Context.UiElements.MapList.SelectedIndex)
+                        if (i != API.UiElements.MapList.SelectedIndex)
                         {
-                            Context.UiElements.MapList.SelectedIndex = i;
+                            API.UiElements.MapList.SelectedIndex = i;
                         }
                         break;
                     }
@@ -216,7 +234,7 @@ namespace Demoder.PlanetMapViewer.Helpers
             lock (this.AvailablePlanetMaps)
             {
                 this.AvailablePlanetMaps.Clear();
-                Context.UiElements.MapList.Items.Clear();
+                API.UiElements.MapList.Items.Clear();
                 var candidates = Directory.GetFiles(this.mapDirectory, "*.txt", SearchOption.AllDirectories);
                 foreach (var candidate in candidates)
                 {
@@ -229,11 +247,11 @@ namespace Demoder.PlanetMapViewer.Helpers
                         if (map.Type != mapType) { continue; }
                         var pathName = candidate.Remove(0, this.mapDirectory.Length + 1);
                         this.AvailablePlanetMaps.Add(pathName, map);
-                        Context.UiElements.MapList.Items.Add(new MapSelectionItem { MapName = map.Name.Trim('"', ' '), MapPath = pathName, Type=map.Type });
+                        API.UiElements.MapList.Items.Add(new MapSelectionItem { MapName = map.Name.Trim('"', ' '), MapPath = pathName, Type=map.Type });
                     }
                     catch(Exception ex)
                     {
-                        Context.ErrorLog.Enqueue(ex.ToString());
+                        API.ErrorLog.Enqueue(ex.ToString());
                         continue;
                     }
                 }
@@ -249,10 +267,10 @@ namespace Demoder.PlanetMapViewer.Helpers
         {
             if (this.CurrentLayerNum < this.CurrentMap.Layers.Length - 1)
             {
-                var relPos = Context.Camera.RelativePosition();
+                var relPos = API.Camera.RelativePosition();
                 this.CurrentLayerNum++;
-                Context.Camera.AdjustScrollbarsToLayer();
-                Context.Camera.CenterOnRelativePosition(relPos);
+                API.Camera.AdjustScrollbarsToLayer();
+                API.Camera.CenterOnRelativePosition(relPos);
                 this.CurrentMap.Layers[this.CurrentLayerNum - 1].UnloadAllTextures();
                 if (this.ZoomInEvent != null)
                 {
@@ -266,10 +284,10 @@ namespace Demoder.PlanetMapViewer.Helpers
         {
             if (this.CurrentLayerNum > 0)
             {
-                var relPos = Context.Camera.RelativePosition();
+                var relPos = API.Camera.RelativePosition();
                 this.CurrentLayerNum--;
-                Context.Camera.AdjustScrollbarsToLayer();
-                Context.Camera.CenterOnRelativePosition(relPos);
+                API.Camera.AdjustScrollbarsToLayer();
+                API.Camera.CenterOnRelativePosition(relPos);
                 this.CurrentMap.Layers[this.CurrentLayerNum + 1].UnloadAllTextures();
                 if (this.ZoomOutEvent != null)
                 {

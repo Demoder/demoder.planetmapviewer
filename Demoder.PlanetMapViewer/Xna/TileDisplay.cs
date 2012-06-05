@@ -82,13 +82,13 @@ namespace Demoder.PlanetMapViewer.Xna
             this.SetStyle(ControlStyles.UserPaint, true);
             this.SetStyle(ControlStyles.ResizeRedraw, true);
 
-            Context.UiElements.TileDisplay = this;
+            API.UiElements.TileDisplay = this;
 
             try
             {
-                Context.ContentManager = new ContentManager(Services, "Content");
-                Context.Content.Fonts.Load();
-                Context.Content.Loaded = true;
+                API.ContentManager = new ContentManager(Services, "Content");
+                API.Content.Fonts.Load();
+                API.Content.Loaded = true;
                 ThreadPool.QueueUserWorkItem(new WaitCallback(this.InvalidateFrame));
             }
             catch (Exception ex)
@@ -121,7 +121,7 @@ namespace Demoder.PlanetMapViewer.Xna
                 }
                 catch (Exception ex)
                 {
-                    Context.ErrorLog.Enqueue(ex.ToString());
+                    API.ErrorLog.Enqueue(ex.ToString());
                 }
             } while (true);
         }
@@ -143,7 +143,7 @@ namespace Demoder.PlanetMapViewer.Xna
             }
             catch (Exception ex)
             {
-                Context.ErrorLog.Enqueue(ex.ToString());
+                API.ErrorLog.Enqueue(ex.ToString());
             }
         }
 
@@ -168,52 +168,52 @@ namespace Demoder.PlanetMapViewer.Xna
         private void OnHorizontalMouseWheel(object sender, int value)
         {
             if (value == 0) { return; }
-            if (Context.Camera == null) { return; }
+            if (API.Camera == null) { return; }
 
-            if (Context.State.CameraControl != CameraControl.Manual)
+            if (API.State.CameraControl != CameraControl.Manual)
             {
-                Context.State.CameraControl = CameraControl.Manual;
+                API.State.CameraControl = CameraControl.Manual;
             }
 
-            float newPos = Context.Camera.Center.X;
+            float newPos = API.Camera.Center.X;
             if (value > 0)
             {
-                newPos += Context.UiElements.HScrollBar.SmallChange * this.mouseScrollSensitivity;
+                newPos += API.UiElements.HScrollBar.SmallChange * this.mouseScrollSensitivity;
             }
             else if (value < 0)
             {
-                newPos -= Context.UiElements.HScrollBar.SmallChange * this.mouseScrollSensitivity;
+                newPos -= API.UiElements.HScrollBar.SmallChange * this.mouseScrollSensitivity;
             }
-            Context.Camera.CenterOnPixel(newPos, Context.Camera.Center.Y);
+            API.Camera.CenterOnPixel(newPos, API.Camera.Center.Y);
             this.ReportMousePosition();
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             var button = e.Button;
-            Context.State.CameraControl = CameraControl.Manual;
+            API.State.CameraControl = CameraControl.Manual;
 
             if (ModifierKeys == System.Windows.Forms.Keys.Shift)
             {
-                var newPos = (Context.Camera.Center.X - (e.Delta * this.mouseScrollSensitivity / 120 * Context.UiElements.HScrollBar.SmallChange));
-                Context.Camera.CenterOnPixel(newPos, Context.Camera.Center.Y);
+                var newPos = (API.Camera.Center.X - (e.Delta * this.mouseScrollSensitivity / 120 * API.UiElements.HScrollBar.SmallChange));
+                API.Camera.CenterOnPixel(newPos, API.Camera.Center.Y);
             }
             else if (ModifierKeys.HasFlag(System.Windows.Forms.Keys.Control))
             {
-                var element = Context.UiElements.ParentForm.MagnificationSlider;
+                var element = API.UiElements.ParentForm.MagnificationSlider;
                 float newVal = element.Value;
                 if (e.Delta > 0) { newVal++; }
                 else if (e.Delta < 0) { newVal--; }
                 else { return; }
 
                 // Magnify to mouse position.
-                if (ModifierKeys.HasFlag(System.Windows.Forms.Keys.Alt) && Context.State.CameraControl == CameraControl.Manual)
+                if (ModifierKeys.HasFlag(System.Windows.Forms.Keys.Alt) && API.State.CameraControl == CameraControl.Manual)
                 {
-                    Context.Camera.CenterOnPixel(
-                        (int)Context.Camera.Position.X + e.X,
-                        (int)Context.Camera.Position.Y + e.Y);
+                    API.Camera.CenterOnPixel(
+                        (int)API.Camera.Position.X + e.X,
+                        (int)API.Camera.Position.Y + e.Y);
                 }
-                var curPos = Context.Camera.RelativePosition();
+                var curPos = API.Camera.RelativePosition();
                 
                 element.Value = (int)MathHelper.Clamp(
                         newVal,
@@ -222,13 +222,13 @@ namespace Demoder.PlanetMapViewer.Xna
 
                 if (curPos != Vector2.Zero)
                 {
-                    Context.Camera.CenterOnRelativePosition(curPos);
+                    API.Camera.CenterOnRelativePosition(curPos);
                 }
             }
             else
             {
-                var newPos = (Context.Camera.Center.Y - (e.Delta * this.mouseScrollSensitivity / 120 * Context.UiElements.VScrollBar.SmallChange));
-                Context.Camera.CenterOnPixel(Context.Camera.Center.X, newPos);
+                var newPos = (API.Camera.Center.Y - (e.Delta * this.mouseScrollSensitivity / 120 * API.UiElements.VScrollBar.SmallChange));
+                API.Camera.CenterOnPixel(API.Camera.Center.X, newPos);
             }
 
             this.ReportMousePosition();
@@ -242,15 +242,15 @@ namespace Demoder.PlanetMapViewer.Xna
             switch (e.Button)
             {
                 case System.Windows.Forms.MouseButtons.Left:
-                    Context.Camera.CenterOnPixel(
-                        (int)Context.Camera.Position.X + e.X,
-                        (int)Context.Camera.Position.Y + e.Y);
+                    API.Camera.CenterOnPixel(
+                        (int)API.Camera.Position.X + e.X,
+                        (int)API.Camera.Position.Y + e.Y);
                     this.ZoomIn();                    
                     break;
                 case System.Windows.Forms.MouseButtons.Right:
-                    Context.Camera.CenterOnPixel(
-                        (int)Context.Camera.Position.X + e.X,
-                        (int)Context.Camera.Position.Y + e.Y);
+                    API.Camera.CenterOnPixel(
+                        (int)API.Camera.Position.X + e.X,
+                        (int)API.Camera.Position.Y + e.Y);
                     this.ZoomOut();                    
                     break;
             }
@@ -262,9 +262,9 @@ namespace Demoder.PlanetMapViewer.Xna
             switch (e.Button)
             {
                 case System.Windows.Forms.MouseButtons.Middle:
-                    Context.Camera.CenterOnPixel(
-                        (int)Context.Camera.Position.X + e.X,
-                        (int)Context.Camera.Position.Y + e.Y);
+                    API.Camera.CenterOnPixel(
+                        (int)API.Camera.Position.X + e.X,
+                        (int)API.Camera.Position.Y + e.Y);
                     break;
             }
             base.OnMouseClick(e);
@@ -278,13 +278,13 @@ namespace Demoder.PlanetMapViewer.Xna
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (Context.Camera == null) { return; }
+            if (API.Camera == null) { return; }
             if (this.mousePosition == Vector2.Zero)
             {
                 this.mousePosition.X = e.X;
                 this.mousePosition.Y = e.Y;
             }
-            var matrix = Context.Camera.TransformMatrix;
+            var matrix = API.Camera.TransformMatrix;
             this.ReportMousePosition();
 
             var mouseState = Mouse.GetState();
@@ -292,13 +292,13 @@ namespace Demoder.PlanetMapViewer.Xna
             var deltaX = e.X - this.mousePosition.X;
             var deltaY = e.Y - this.mousePosition.Y;
             
-            if (Context.State.CameraControl != CameraControl.Manual)
+            if (API.State.CameraControl != CameraControl.Manual)
             {
                 // If we're not already in manual control mode, require some delta. 
                 // Prevents accidential scrolling.
                 if (Math.Abs(deltaX) > 15 || Math.Abs(deltaY) > 15)
                 {
-                    Context.State.CameraControl = CameraControl.Manual;
+                    API.State.CameraControl = CameraControl.Manual;
                 }
                 // Otherwise, discard the scroll.
                 else
@@ -310,8 +310,8 @@ namespace Demoder.PlanetMapViewer.Xna
             this.mousePosition.X = e.X;
             this.mousePosition.Y = e.Y;
 
-            var camPos = Context.Camera.Center;
-            Context.Camera.CenterOnPixel(
+            var camPos = API.Camera.Center;
+            API.Camera.CenterOnPixel(
                 (int)(camPos.X - deltaX),
                 (int)(camPos.Y - deltaY));
 
@@ -320,9 +320,9 @@ namespace Demoder.PlanetMapViewer.Xna
 
         private void ReportMousePosition()
         {
-            var matrix = Context.Camera.TransformMatrix;
+            var matrix = API.Camera.TransformMatrix;
             var mouseState = Mouse.GetState();
-            Context.UiElements.ParentForm.ToolStripStatusLabel1.Text = String.Format(
+            API.UiElements.ParentForm.ToolStripStatusLabel1.Text = String.Format(
                 "Mouse: {0}x{1}",
                 mouseState.X - matrix.Translation.X,
                 mouseState.Y - matrix.Translation.Y);
@@ -356,9 +356,9 @@ namespace Demoder.PlanetMapViewer.Xna
 
         protected override void OnResize(EventArgs e)
         {
-            if (Context.Camera == null) { return; }
+            if (API.Camera == null) { return; }
             //this.Invalidate();            
-            Context.Camera.AdjustScrollbarsToLayer();
+            API.Camera.AdjustScrollbarsToLayer();
             this.ReportMousePosition();
             base.OnResize(e);
         }
@@ -411,7 +411,7 @@ namespace Demoder.PlanetMapViewer.Xna
         private void PanMap(KeyEventArgs e)
         {
             if (e.Control || e.Alt) { return; }
-            if (Context.Camera == null) { return; }
+            if (API.Camera == null) { return; }
             var x = 0;
             var y = 0;
             if (e.KeyData == System.Windows.Forms.Keys.W)
@@ -437,9 +437,9 @@ namespace Demoder.PlanetMapViewer.Xna
 
             if (e.SuppressKeyPress)
             {
-                Context.Camera.CenterOnPixel(
-                    Context.Camera.Center.X + Context.UiElements.HScrollBar.SmallChange * x,
-                    Context.Camera.Center.Y + Context.UiElements.VScrollBar.SmallChange * y);
+                API.Camera.CenterOnPixel(
+                    API.Camera.Center.X + API.UiElements.HScrollBar.SmallChange * x,
+                    API.Camera.Center.Y + API.UiElements.VScrollBar.SmallChange * y);
                 this.ReportMousePosition();
                 return;
             }
@@ -450,15 +450,15 @@ namespace Demoder.PlanetMapViewer.Xna
 
         public void ZoomIn()
         {
-            if (Context.MapManager == null) { return; }
-            Context.MapManager.ZoomIn();
+            if (API.MapManager == null) { return; }
+            API.MapManager.ZoomIn();
             this.ReportMousePosition();
         }
 
         public void ZoomOut()
         {
-            if (Context.MapManager == null) { return; }
-            Context.MapManager.ZoomOut();
+            if (API.MapManager == null) { return; }
+            API.MapManager.ZoomOut();
             this.ReportMousePosition();
         }
     }

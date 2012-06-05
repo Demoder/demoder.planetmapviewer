@@ -82,6 +82,7 @@
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -92,6 +93,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataClasses\MapTextureText.cs" />
     <Compile Include="DataClasses\PositionDefinition.cs" />
     <Compile Include="DataClasses\SimpleColor.cs" />
     <Compile Include="DataClasses\Texture2DCacheItem.cs" />
@@ -104,13 +106,29 @@
     <Compile Include="DataClasses\XnaContentSpriteFonts.cs" />
     <Compile Include="DataClasses\XnaContentTextures.cs" />
     <Compile Include="delegates.cs" />
+    <Compile Include="Forms\PluginConfigurationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PluginConfigurationForm.Designer.cs">
+      <DependentUpon>PluginConfigurationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PluginManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PluginManagerForm.Designer.cs">
+      <DependentUpon>PluginManagerForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\MapTextBuilder.cs" />
-    <Compile Include="Plugins\DefaultPlugin.cs" />
+    <Compile Include="Helpers\PluginConfig.cs" />
+    <Compile Include="Plugins\CharacterLocatorPlugin.cs" />
+    <Compile Include="Plugins\PluginSetting.cs" />
+    <Compile Include="Plugins\TowerStatusPlugin.cs" />
     <Compile Include="Plugins\TutorialPlugin.cs" />
     <Compile Include="PmvApi\CustomMapOverlay.cs" />
     <Compile Include="PmvApi\IPlugin.cs" />
     <Compile Include="PmvApi\PluginInfo.cs" />
     <Compile Include="PmvApi\PluginManager.cs" />
+    <Compile Include="PmvApi\PluginAttribute.cs" />
     <Compile Include="Properties\MapFonts.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -149,7 +167,7 @@
       <DependentUpon>ErrorLog.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Camera.cs" />
-    <Compile Include="DataClasses\Context.cs" />
+    <Compile Include="API.cs" />
     <Compile Include="DataClasses\ZoneInfo.cs" />
     <Compile Include="Helpers\FrameDrawer.cs" />
     <Compile Include="Properties\NormalTutorial.Designer.cs">
@@ -199,6 +217,12 @@
     </Compile>
     <Compile Include="Xna\GraphicsDeviceService.cs" />
     <Compile Include="Xna\ServiceContainer.cs" />
+    <EmbeddedResource Include="Forms\PluginConfigurationForm.resx">
+      <DependentUpon>PluginConfigurationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PluginManagerForm.resx">
+      <DependentUpon>PluginManagerForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\CharacterTrackerControlResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>CharacterTrackerControlResources.Designer.cs</LastGenOutput>

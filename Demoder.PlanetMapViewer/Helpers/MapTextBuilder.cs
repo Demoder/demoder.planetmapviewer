@@ -81,7 +81,7 @@ namespace Demoder.PlanetMapViewer.Helpers
 
             if (breaks > 0)
             {
-                this.nextPosition.Y += (breaks * Context.Content.Fonts.GetFont(this.font).MeasureString("S").Y);
+                this.nextPosition.Y += (breaks * API.Content.Fonts.GetFont(this.font).MeasureString("S").Y);
             }
             this.didBreakOnLastTextAlready = true;
             return this;
@@ -220,7 +220,7 @@ namespace Demoder.PlanetMapViewer.Helpers
         public void Draw(DrawMode mode, int x, int y)
         {
             var items = this.ToMapItem(mode, x, y);
-            Context.FrameDrawer.Draw(items);
+            API.FrameDrawer.Draw(items);
         }
     }
 }

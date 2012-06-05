@@ -25,22 +25,44 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Demoder.PlanetMapViewer.DataClasses;
 
 namespace Demoder.PlanetMapViewer.PmvApi
 {
-    public class CustomMapOverlay
+    public class PluginAttribute : Attribute
     {
-        public CustomMapOverlay()
-        {
-            this.MapItems = new List<IMapItem>();
-        }
+        /// <summary>
+        /// Interval between re-drawing of this plugins CustomMapOverlay
+        /// </summary>
+        public long RefreshInterval { get;private set; }
 
-        public CustomMapOverlay(int expectedCount)
-        {
-            this.MapItems = new List<IMapItem>(expectedCount);
-        }
+        /// <summary>
+        /// Name of this plugin
+        /// </summary>
+        public string Name { get; private set; }
 
-        public List<IMapItem> MapItems { get; private set; }
+        /// <summary>
+        /// Defines a plugin name, and sets refresh interval to once per frame.
+        /// </summary>
+        /// <param name="name">Plugin name</param>
+        public PluginAttribute(string name)
+            : this(name, -1)
+        {}
+
+        /// <summary>
+        /// Sets a custom refresh interval.<br/> 
+        /// Use this if the data isn't expected to change for every frame.
+        /// </summary>
+        /// <param name="name">Plugin name</param>
+        /// <param name="interval">Seconds between each refresh.</param>
+        public PluginAttribute(string name, double interval)
+        {
+            this.RefreshInterval = (long)(interval * 1000);
+            this.Name = name;
+
+            if (this.RefreshInterval < 5)
+            {
+                this.RefreshInterval = -1;
+            }
+        }
     }
 }

@@ -34,7 +34,8 @@ namespace Demoder.PlanetMapViewer
         ZoomIn,
         ZoomOut,
         OverlayMode,
-        OverlayTitlebarMenu,
+        OverlayTitlebarMenuOpen,
+        OverlayTitlebarMenuClose,
         OverlayResizeWindow,
         OverlayExit
 
@@ -57,7 +58,8 @@ namespace Demoder.PlanetMapViewer
     {
         Unknown = 0,
         Texture = 1,
-        SpriteFont = 2
+        SpriteFont = 2,
+        TextureWithAttachedSpriteFont=3,
     }
 
     public enum DrawMode

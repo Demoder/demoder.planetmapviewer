@@ -74,7 +74,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
                 return new Vector2(this.X, this.Y);
             }
 
-            return Context.MapManager.GetPosition(this.Zone, this.X, this.Y);
+            return API.MapManager.GetPosition(this.Zone, this.X, this.Y);
         }
     }
 }

@@ -52,8 +52,8 @@ namespace Demoder.PlanetMapViewer.Helpers
         {
             get
             {
-                int x = (int)(this.centerPosition.X - Context.GraphicsDevice.Viewport.Width / 2);
-                int y = (int)(this.centerPosition.Y - Context.GraphicsDevice.Viewport.Height / 2);
+                int x = (int)(this.centerPosition.X - API.GraphicsDevice.Viewport.Width / 2);
+                int y = (int)(this.centerPosition.Y - API.GraphicsDevice.Viewport.Height / 2);
                 return new Vector2(x, y);
             }
         }
@@ -71,12 +71,12 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         public void CenterOnPixel(int x, int y)
         {
-            if (Context.MapManager == null) { return; }
-            if (Context.MapManager.CurrentLayer == null) { return; }
+            if (API.MapManager == null) { return; }
+            if (API.MapManager.CurrentLayer == null) { return; }
 
-            if (Context.UiElements.HScrollBar.InvokeRequired)
+            if (API.UiElements.HScrollBar.InvokeRequired)
             {
-                Context.UiElements.HScrollBar.Invoke((Action)delegate()
+                API.UiElements.HScrollBar.Invoke((Action)delegate()
                 {
                     this.RealCenterOnPixel(x, y);
                 });
@@ -94,8 +94,8 @@ namespace Demoder.PlanetMapViewer.Helpers
                 // Sanitize numbers
                 x = Math.Max(x, 0);
                 y = Math.Max(y, 0);
-                x = (int)Math.Min(x, Context.MapManager.CurrentLayer.Size.X * Context.State.Magnification);
-                y = (int)Math.Min(y, Context.MapManager.CurrentLayer.Size.Y * Context.State.Magnification);
+                x = (int)Math.Min(x, API.MapManager.CurrentLayer.Size.X * API.State.Magnification);
+                y = (int)Math.Min(y, API.MapManager.CurrentLayer.Size.Y * API.State.Magnification);
 
                 // Set position
                 this.centerPosition.X = (int)Math.Floor((float)x);
@@ -105,12 +105,12 @@ namespace Demoder.PlanetMapViewer.Helpers
                 var pos = this.Position;
                 try
                 {
-                    Context.UiElements.HScrollBar.Value = (int)pos.X;
-                    Context.UiElements.VScrollBar.Value = (int)pos.Y;
+                    API.UiElements.HScrollBar.Value = (int)pos.X;
+                    API.UiElements.VScrollBar.Value = (int)pos.Y;
                 }
                 catch (Exception ex)
                 {
-                    Context.ErrorLog.Enqueue(ex.ToString());
+                    API.ErrorLog.Enqueue(ex.ToString());
                 }
             }
         }
@@ -137,18 +137,18 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         public void CenterOnScrollbars()
         {
-            var x = Context.UiElements.HScrollBar.Value + Context.GraphicsDevice.Viewport.Width / 2;
-            var y = Context.UiElements.VScrollBar.Value + Context.GraphicsDevice.Viewport.Height / 2;
+            var x = API.UiElements.HScrollBar.Value + API.GraphicsDevice.Viewport.Width / 2;
+            var y = API.UiElements.VScrollBar.Value + API.GraphicsDevice.Viewport.Height / 2;
             this.CenterOnPixel(x, y);
         }
   
         public void CenterOnRelativePosition(Vector2 relativePosition)
         {
-            if (Context.MapManager == null) { return; }
-            if (Context.MapManager.CurrentMap == null) { return; }
+            if (API.MapManager == null) { return; }
+            if (API.MapManager.CurrentMap == null) { return; }
             //var pfId = this.mapManager.CurrentMap.CoordsFile.Playfields.First(pf=>pf.XScale==1 && pf.YScale==1).ID;
-            var pfId = Context.MapManager.CurrentMap.CoordsFile.Playfields[0].ID;
-            var centerPos = Context.MapManager.GetPosition(pfId, relativePosition.X,relativePosition.Y);
+            var pfId = API.MapManager.CurrentMap.CoordsFile.Playfields[0].ID;
+            var centerPos = API.MapManager.GetPosition(pfId, relativePosition.X,relativePosition.Y);
             this.CenterOnVector(centerPos);
         }
 
@@ -156,40 +156,40 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         public Vector2 RelativePosition()
         {
-            if (Context.MapManager == null) { return default(Vector2); }
-            if (Context.MapManager.CurrentMap == null) { return default(Vector2); }
+            if (API.MapManager == null) { return default(Vector2); }
+            if (API.MapManager.CurrentMap == null) { return default(Vector2); }
 
             //var pfId = this.mapManager.CurrentMap.CoordsFile.Playfields.First(pf => pf.XScale == 1 && pf.YScale == 1).ID;
-            var pfId = Context.MapManager.CurrentMap.CoordsFile.Playfields[0].ID;
-            return Context.MapManager.GetReversePosition(pfId, this.Center.X, this.Center.Y);
+            var pfId = API.MapManager.CurrentMap.CoordsFile.Playfields[0].ID;
+            return API.MapManager.GetReversePosition(pfId, this.Center.X, this.Center.Y);
         }
        
         internal void AdjustScrollbarsToLayer()
         {
-            if (Context.UiElements.TileDisplay == null) { return; }
-            if (Context.UiElements.HScrollBar == null) { return; }
-            if (Context.UiElements.VScrollBar == null) { return; }
-            if (Context.MapManager == null) { return; }
-            if (Context.MapManager.CurrentLayer == null) { return; }
+            if (API.UiElements.TileDisplay == null) { return; }
+            if (API.UiElements.HScrollBar == null) { return; }
+            if (API.UiElements.VScrollBar == null) { return; }
+            if (API.MapManager == null) { return; }
+            if (API.MapManager.CurrentLayer == null) { return; }
 
             #region Horizontal scrollbar
-            int horModifier = Context.UiElements.TileDisplay.Width / 2;
-            Context.UiElements.HScrollBar.Maximum = (int)(Context.MapManager.CurrentLayer.Size.X * Context.State.Magnification) + horModifier;
-            Context.UiElements.HScrollBar.Minimum = -horModifier;
+            int horModifier = API.UiElements.TileDisplay.Width / 2;
+            API.UiElements.HScrollBar.Maximum = (int)(API.MapManager.CurrentLayer.Size.X * API.State.Magnification) + horModifier;
+            API.UiElements.HScrollBar.Minimum = -horModifier;
 
-            Context.UiElements.HScrollBar.LargeChange = Context.UiElements.TileDisplay.Width;
-            Context.UiElements.HScrollBar.SmallChange = Context.UiElements.TileDisplay.Width / 10;
-            Context.UiElements.HScrollBar.Invalidate();
+            API.UiElements.HScrollBar.LargeChange = API.UiElements.TileDisplay.Width;
+            API.UiElements.HScrollBar.SmallChange = API.UiElements.TileDisplay.Width / 10;
+            API.UiElements.HScrollBar.Invalidate();
             #endregion
 
             #region Vertical scrollbar
-            var verModifier = Context.UiElements.TileDisplay.Height / 2;
-            Context.UiElements.VScrollBar.Maximum = (int)(Context.MapManager.CurrentLayer.Size.Y * Context.State.Magnification)+ verModifier;
-            Context.UiElements.VScrollBar.Minimum = -verModifier;
+            var verModifier = API.UiElements.TileDisplay.Height / 2;
+            API.UiElements.VScrollBar.Maximum = (int)(API.MapManager.CurrentLayer.Size.Y * API.State.Magnification)+ verModifier;
+            API.UiElements.VScrollBar.Minimum = -verModifier;
 
-            Context.UiElements.VScrollBar.LargeChange = Context.UiElements.TileDisplay.Height;
-            Context.UiElements.VScrollBar.SmallChange = Context.UiElements.TileDisplay.Height / 10;
-            Context.UiElements.VScrollBar.Invalidate();
+            API.UiElements.VScrollBar.LargeChange = API.UiElements.TileDisplay.Height;
+            API.UiElements.VScrollBar.SmallChange = API.UiElements.TileDisplay.Height / 10;
+            API.UiElements.VScrollBar.Invalidate();
             #endregion
         }
     }

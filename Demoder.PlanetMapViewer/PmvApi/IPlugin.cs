@@ -29,8 +29,12 @@ using Demoder.PlanetMapViewer.DataClasses;
 
 namespace Demoder.PlanetMapViewer.PmvApi
 {
-    public interface IPlugin
+    public interface IPlugin : IDisposable
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         CustomMapOverlay GetCustomOverlay();
     }
 }

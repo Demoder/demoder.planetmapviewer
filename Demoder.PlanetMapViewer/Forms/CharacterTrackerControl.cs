@@ -43,7 +43,7 @@ namespace Demoder.PlanetMapViewer.Forms
         #region Constructors
         public CharacterTrackerControl()
         {
-            Context.UiElements.CharacterTrackerControl = this;
+            API.UiElements.CharacterTrackerControl = this;
             InitializeComponent();
 
             // Initialize component!
@@ -83,15 +83,15 @@ namespace Demoder.PlanetMapViewer.Forms
         }
         protected override void OnGotFocus(EventArgs e)
         {
-            Context.UiElements.TileDisplay.Focus();
+            API.UiElements.TileDisplay.Focus();
         }
         #endregion
 
         private void ItemCheckedChanged(object sender, ItemCheckedEventArgs e)
         {
-            lock (Context.State.PlayerInfo)
+            lock (API.State.PlayerInfo)
             {
-                Context.State.PlayerInfo[(uint)e.Item.Tag].IsTrackedByCamera = e.Item.Checked;
+                API.State.PlayerInfo[(uint)e.Item.Tag].IsTrackedByCamera = e.Item.Checked;
             }
         }
         #endregion
@@ -107,9 +107,11 @@ namespace Demoder.PlanetMapViewer.Forms
             lock (this.lockObject)
             {
                 this.listView1.BeginUpdate();
+                var oldItems = new ListViewItem[this.listView1.Items.Count];
+                this.listView1.Items.CopyTo(oldItems, 0);
                 this.listView1.Items.Clear();
 
-                var playerInfo = Context.State.PlayerInfo.ToArray();
+                var playerInfo = API.State.PlayerInfo.ToArray();
                 foreach (var kvp in playerInfo)
                 {
                     var pid = kvp.Key;
@@ -134,11 +136,17 @@ namespace Demoder.PlanetMapViewer.Forms
                     if (!item.IsHooked)
                     {
                         li.ForeColor = SystemColors.GrayText;
-                    }                    
+                    }
+
+                    var oldItem = oldItems.FirstOrDefault(i => ((uint)i.Tag) == ((uint)li.Tag));
+                    if (oldItem != null)
+                    {
+                        li.Checked = oldItem.Checked;
+                    }
 
                     this.listView1.Items.Add(li);
                 }
-                Demoder.Common.Forms.AutoResizeHeaders(this.listView1, ColumnHeaderAutoResizeStyle.ColumnContent);
+                this.listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
                 this.listView1.EndUpdate();
             }
         }

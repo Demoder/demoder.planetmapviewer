@@ -45,6 +45,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Demoder.PlanetMapViewer.PmvApi;
 using Demoder.PlanetMapViewer.Plugins;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Demoder.PlanetMapViewer.Forms
 {
@@ -52,8 +54,6 @@ namespace Demoder.PlanetMapViewer.Forms
     {
         #region Members
         private Stopwatch lastException;
-
-        private PluginManager pluginManager = new PluginManager();
 
         #region Timers
         private thrd.Timer topMostTimer;
@@ -89,9 +89,9 @@ namespace Demoder.PlanetMapViewer.Forms
                 Program.WriteLog("");
                 Program.WriteLog("MainWindow->MainWindow() Exception: {0}", ex.ToString());
                 Program.WriteLog("");
-                if (Context.ErrorLog != null)
+                if (API.ErrorLog != null)
                 {
-                    Context.ErrorLog.Enqueue(ex.ToString());
+                    API.ErrorLog.Enqueue(ex.ToString());
                 }
                 this.ShowExceptionError(ex);
             }
@@ -102,10 +102,10 @@ namespace Demoder.PlanetMapViewer.Forms
             try
             {
                 Program.WriteLog("MainWindow->Form1_Load() A");
-                Context.UiElements.HScrollBar = this.tileDisplay1_hScrollBar;
-                Context.UiElements.VScrollBar = this.tileDisplay1_vScrollBar;
-                Context.UiElements.MapList = this.mapComboBox;
-                Context.UiElements.ParentForm = this;
+                API.UiElements.HScrollBar = this.tileDisplay1_hScrollBar;
+                API.UiElements.VScrollBar = this.tileDisplay1_vScrollBar;
+                API.UiElements.MapList = this.mapComboBox;
+                API.UiElements.ParentForm = this;
 
                 Program.WriteLog("MainWindow->Form1_Load() B");
                 // Check if we should attempt to upgrade settings
@@ -134,13 +134,13 @@ namespace Demoder.PlanetMapViewer.Forms
                 }
 
                 Program.WriteLog("MainWindow->Form1_Load() Initializing SpriteBatch");
-                Context.SpriteBatch = new SpriteBatch(Context.GraphicsDevice);
+                API.SpriteBatch = new SpriteBatch(API.GraphicsDevice);
                 Program.WriteLog("MainWindow->Form1_Load() Initializing MapManager");
-                Context.MapManager = new MapManager();
+                API.MapManager = new MapManager();
                 Program.WriteLog("MainWindow->Form1_Load() Initializing Camera");
-                Context.Camera = new Camera();
+                API.Camera = new Camera();
                 Program.WriteLog("MainWindow->Form1_Load() Initializing MapManager (stage 2)");
-                Context.MapManager.Initialize();
+                API.MapManager.Initialize();
 
                 Program.WriteLog("MainWindow->Form1_Load() Assigning events");
                 this.bgwVersionCheck.DoWork += bgwVersionCheck_DoWork;
@@ -148,7 +148,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 Program.WriteLog("MainWindow->Form1_Load() Applying settings");
                 this.ApplySettings();
                 Program.WriteLog("MainWindow->Form1_Load() Adjusting scrollbars to layer");
-                Context.Camera.AdjustScrollbarsToLayer();
+                API.Camera.AdjustScrollbarsToLayer();
 
                 // Setup the tile display.
                 Program.WriteLog("MainWindow->Form1_Load() Assigning window handle to tileDisplay1.Handle");
@@ -168,9 +168,9 @@ namespace Demoder.PlanetMapViewer.Forms
                 Program.WriteLog("");
                 Program.WriteLog("MainWindow->Form1_Load() Exception caught: {0}", ex.ToString());
                 Program.WriteLog("");
-                if (Context.ErrorLog != null)
+                if (API.ErrorLog != null)
                 {
-                    Context.ErrorLog.Enqueue(ex.ToString());
+                    API.ErrorLog.Enqueue(ex.ToString());
                 }
                 this.ShowExceptionError(ex);
                 Application.Exit();
@@ -178,15 +178,65 @@ namespace Demoder.PlanetMapViewer.Forms
 
             try
             {
-                Context.AoHookProvider = new Provider();
-                this.pluginManager.RegisterPlugins(this.GetType().Assembly);
-                this.pluginManager.LoadPlugin<DefaultPlugin>();
-                this.pluginManager.LoadPlugin<TutorialPlugin>();
-                Context.AoHookProvider.HookAo();
+                API.AoHookProvider = new Provider();
+                API.PluginManager.RegisterPlugins(this.GetType().Assembly);
+                if (String.IsNullOrWhiteSpace(Properties.GeneralSettings.Default.EnabledPlugins))
+                {
+                    var plugins = from p in API.PluginManager.AllPlugins
+                                  where p.Type == typeof(CharacterLocatorPlugin) || p.Type == typeof(TutorialPlugin)
+                                  select p.Type.FullName;
+                    Properties.GeneralSettings.Default.EnabledPlugins =
+                        String.Join(";;", plugins);
+                }
+
+                // Load any enabled plugins
+                API.PluginManager.LoadEnabledPlugins();
+                API.AoHookProvider.HookAo();
             }
-            finally
+            catch (Exception ex)
             {
 
+            }
+
+            API.PluginManager.PluginStateChangeEvent += this.PopulatePluginList;
+            this.PopulatePluginList();
+        }
+
+        private void PopulatePluginList()
+        {
+            if (this.pluginListView.InvokeRequired)
+            {
+                this.pluginListView.Invoke((Action)this.PopulatePluginList);
+                return;
+            }
+            lock (this.pluginListView)
+            {
+                this.pluginListView.BeginUpdate();
+                this.pluginListView.ItemChecked -= this.listView1_ItemChecked;
+                this.pluginListView.Items.Clear();
+                foreach (var plugin in API.PluginManager.AllPlugins)
+                {
+                    var lvi = new ListViewItem(plugin.Name);
+                    lvi.Checked = plugin.Instance != null;
+                    lvi.Tag = plugin;
+                    pluginListView.Items.Add(lvi);
+                }
+
+                this.pluginListView.EndUpdate();
+                this.pluginListView.ItemChecked += this.listView1_ItemChecked;
+                return;
+            }
+        }
+
+        private void listView1_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            if (e.Item.Checked)
+            {
+                API.PluginManager.LoadPlugin((e.Item.Tag as PluginInfo).Type);
+            }
+            else
+            {
+                API.PluginManager.UnloadPlugin((e.Item.Tag as PluginInfo).Type);
             }
         }
 
@@ -290,8 +340,6 @@ namespace Demoder.PlanetMapViewer.Forms
         }
         #endregion
 
-
-
         /// <summary>
         /// Applies form-related settings.
         /// </summary>
@@ -304,13 +352,13 @@ namespace Demoder.PlanetMapViewer.Forms
             if (windowSettings.WindowFullscreen)
             {
                 this.fullscreenToolStripMenuItem.Checked = true;
-                Context.State.WindowMode = WindowMode.Fullscreen;
+                API.State.WindowMode = WindowMode.Fullscreen;
                 this.ToggleFullscreenSetting();
             }
             else
             {
                 this.WindowState = windowSettings.WindowState;
-                Context.State.WindowMode = WindowMode.Normal;
+                API.State.WindowMode = WindowMode.Normal;
                 if (this.WindowState == FormWindowState.Normal)
                 {
                     this.Width = windowSettings.WindowSize.X;
@@ -359,40 +407,42 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void tileDisplay1_OnDraw(object sender, EventArgs e)
         {
-            if (Context.Camera == null) { return; }
-            if (Context.MapManager == null) { return; }
-            if (Context.MapManager.CurrentLayer == null) { return; }
+            if (API.Camera == null) { return; }
+            if (API.MapManager == null) { return; }
+            if (API.MapManager.CurrentLayer == null) { return; }
             this.Logic();
             this.Render();
         }
 
 
+        // Todo: Implement this in TileDisplay
         private void Logic()
         {
-            if (Context.Camera == null) { return; }
-            switch (Context.State.CameraControl)
+            if (API.Camera == null) { return; }
+            switch (API.State.CameraControl)
             {
                 case CameraControl.Character:
                     this.MoveCameraToCharacter();
                     break;
                 case CameraControl.Manual:
-                    Context.Camera.CenterOnScrollbars();
+                    API.Camera.CenterOnScrollbars();
                     break;
             }
         }
 
         #region Camera controls
+        // Todo: Move this to a static logics class
         private void MoveCameraToCharacter()
         {
             try
             {
-                int textureSize = Context.MapManager.CurrentLayer.TextureSize;
+                int textureSize = API.MapManager.CurrentLayer.TextureSize;
                 var vectors = new List<Vector2>();
                 int shadowlandsCharacters = 0;
                 int rubikaCharacters = 0;
 
 
-                var playerInfo = Context.State.PlayerInfo.Values.ToArray().Where(i=>i.IsTrackedByCamera);
+                var playerInfo = API.State.PlayerInfo.Values.ToArray().Where(i=>i.IsTrackedByCamera);
                 foreach (var item in playerInfo)
                 {
                     var info = item as PlayerInfo;
@@ -407,58 +457,58 @@ namespace Demoder.PlanetMapViewer.Forms
                         rubikaCharacters++;
                     }
 
-                    if (info.InShadowlands && Context.MapManager.CurrentMap.Type != MapType.Shadowlands) { continue; }
+                    if (info.InShadowlands && API.MapManager.CurrentMap.Type != MapType.Shadowlands) { continue; }
 
-                    var charPos = Context.MapManager.GetPosition(info.Zone.ID, info.Position.X, info.Position.Z);
+                    var charPos = API.MapManager.GetPosition(info.Zone.ID, info.Position.X, info.Position.Z);
                     if (charPos == Vector2.Zero) { continue; }
                     vectors.Add(charPos);
                 }
 
-                if (Context.State.MapTypeAutoSwitching)
+                if (API.State.MapTypeAutoSwitching)
                 {
-                    if (rubikaCharacters > shadowlandsCharacters && Context.MapManager.CurrentMap.Type != MapType.Rubika)
+                    if (rubikaCharacters > shadowlandsCharacters && API.MapManager.CurrentMap.Type != MapType.Rubika)
                     {
-                        Context.MapManager.FindAvailableMaps(MapType.Rubika);
-                        Context.MapManager.SelectMap(MapType.Rubika);
+                        API.MapManager.FindAvailableMaps(MapType.Rubika);
+                        API.MapManager.SelectMap(MapType.Rubika);
                     }
-                    else if (shadowlandsCharacters > rubikaCharacters && Context.MapManager.CurrentMap.Type != MapType.Shadowlands)
+                    else if (shadowlandsCharacters > rubikaCharacters && API.MapManager.CurrentMap.Type != MapType.Shadowlands)
                     {
-                        Context.MapManager.FindAvailableMaps(MapType.Shadowlands);
-                        Context.MapManager.SelectMap(MapType.Shadowlands);
+                        API.MapManager.FindAvailableMaps(MapType.Shadowlands);
+                        API.MapManager.SelectMap(MapType.Shadowlands);
                     }
                 }
 
                 if (vectors.Count == 0) { return; }
 
-                Context.Camera.CenterOnVectors(vectors.ToArray());
+                API.Camera.CenterOnVectors(vectors.ToArray());
             }
             catch (Exception ex)
             {
-                Context.ErrorLog.Enqueue(ex.ToString());
+                API.ErrorLog.Enqueue(ex.ToString());
                 this.ShowExceptionError(ex);
             }
         }
 
         #endregion
 
+        // Todo: Implement this in TileDisplay
         private void Render()
         {
-            lock (Context.Camera)
+            lock (API.Camera)
             {
-                Context.GraphicsDevice.Clear(Color.Black);
+                API.GraphicsDevice.Clear(Color.Black);
 
-                Context.MapManager.CurrentLayer.Draw();
-                if (!Context.Content.Loaded) { return; }
+                API.MapManager.CurrentLayer.Draw();
+                if (!API.Content.Loaded) { return; }
 
                 #region Draw stuff from plugins here
                 // TODO: Implement this.       
-                foreach (var overlay in this.pluginManager.GetMapOverlays())
+                foreach (var overlay in API.PluginManager.GetMapOverlays())
                 {
                     if (overlay == null || overlay.MapItems.Count == 0) { continue; }
-                    Context.FrameDrawer.Draw(overlay.MapItems);                    
+                    API.FrameDrawer.Draw(overlay.MapItems);                    
                 }
                 #endregion
-               
             }
         }
         
@@ -518,11 +568,11 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             if (fullscreenToolStripMenuItem.Checked)
             {
-                Context.State.WindowMode = WindowMode.Fullscreen;
+                API.State.WindowMode = WindowMode.Fullscreen;
             }
             else
             {
-                Context.State.WindowMode = WindowMode.Normal;
+                API.State.WindowMode = WindowMode.Normal;
             }
             this.ToggleFullscreenSetting();
         }
@@ -530,7 +580,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void tileDisplay1_ScrollBar_Scroll(object sender, ScrollEventArgs e)
         {
-            Context.State.CameraControl = CameraControl.Manual;
+            API.State.CameraControl = CameraControl.Manual;
         }
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -551,9 +601,9 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void mapComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Context.MapManager == null) { return; }
-            Context.UiElements.VScrollBar.Value = 0;
-            Context.UiElements.HScrollBar.Value = 0;
+            if (API.MapManager == null) { return; }
+            API.UiElements.VScrollBar.Value = 0;
+            API.UiElements.HScrollBar.Value = 0;
 
             var mapInfo = (this.mapComboBox.SelectedItem as MapSelectionItem);
             if (mapInfo == null) { return; }
@@ -566,8 +616,8 @@ namespace Demoder.PlanetMapViewer.Forms
                 Properties.MapSettings.Default.SelectedShadowlandsMap = mapInfo.MapPath;
             }
 
-            Context.MapManager.SelectMap(mapInfo.MapPath);
-            Context.Camera.AdjustScrollbarsToLayer();
+            API.MapManager.SelectMap(mapInfo.MapPath);
+            API.Camera.AdjustScrollbarsToLayer();
             this.tileDisplay1.Focus();
         }
 
@@ -601,37 +651,37 @@ namespace Demoder.PlanetMapViewer.Forms
             // Automatic selection
             if (this.RadioButtonMapSelectionAuto.Checked)
             {
-                Context.State.MapTypeAutoSwitching = true;
+                API.State.MapTypeAutoSwitching = true;
                 return;
             }
 
             // RK selected
             if (this.RadioButtonMapSelectionRubika.Checked)
             {
-                Context.State.MapType = MapType.Rubika;
+                API.State.MapType = MapType.Rubika;
             }
             // SL selected
             else if (this.RadioButtonMapSelectionShadowlands.Checked)
             {
-                Context.State.MapType = MapType.Shadowlands;
+                API.State.MapType = MapType.Shadowlands;
             }
             
             this.SelectMap();
-            Context.State.MapTypeAutoSwitching = false;
+            API.State.MapTypeAutoSwitching = false;
             return;
         }
 
         private void SelectMap()
         {
-            if (Context.MapManager == null) { return; }
+            if (API.MapManager == null) { return; }
 
             if (this.RadioButtonMapSelectionAuto.Checked == true)
             {
                 return;
             }
 
-            Context.MapManager.FindAvailableMaps(Context.State.MapType);
-            Context.MapManager.SelectMap(Context.State.MapType);
+            API.MapManager.FindAvailableMaps(API.State.MapType);
+            API.MapManager.SelectMap(API.State.MapType);
             this.tileDisplay1.Focus();
         }
 
@@ -659,7 +709,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
         internal void ToggleFullscreenSetting()
         {
-            var oldMode = Context.State.WindowMode;
+            var oldMode = API.State.WindowMode;
             if (this.fullscreenToolStripMenuItem.Checked)
             {
                 this.OverlayModeToolStripMenuItem.Checked = false;
@@ -694,7 +744,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
         internal void ToggleOverlayMode()
         {
-            var oldMode = Context.State.WindowMode;
+            var oldMode = API.State.WindowMode;
 
             if (this.OverlayModeToolStripMenuItem.Checked)
             {
@@ -725,7 +775,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
                 this.ControlBox = Properties.WindowSettings.Default.OverlaymodeShowControlbox;
                 this.splitContainer1.Panel2Collapsed = true;
-                Context.State.WindowMode = WindowMode.Overlay;
+                API.State.WindowMode = WindowMode.Overlay;
 
                 if (this.ModeChanged != null)
                 {
@@ -754,7 +804,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.tileDisplay1_vScrollBar.Visible = true;
 
                 this.ControlBox = true;
-                Context.State.WindowMode = WindowMode.Normal;
+                API.State.WindowMode = WindowMode.Normal;
 
                 if (this.ModeChanged != null)
                 {
@@ -763,6 +813,7 @@ namespace Demoder.PlanetMapViewer.Forms
             }
         }
 
+        // TODO: Move this to a static logics class
         private void ForceTopMost()
         {
             if (this.InvokeRequired)
@@ -784,12 +835,12 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void followCharactersToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            Context.State.CameraControl = CameraControl.Character;
+            API.State.CameraControl = CameraControl.Character;
         }
 
         private void missionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Context.State.CameraControl = CameraControl.Manual;
+            API.State.CameraControl = CameraControl.Manual;
             this.MoveCameraToMission();
         }   
         private void rubikaToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -817,7 +868,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.autoToolStripMenuItem.Checked = this.RadioButtonMapSelectionAuto.Checked;
 
                 // Camera controls
-                this.followCharactersToolStripMenuItem1.Checked = Context.State.CameraControl == CameraControl.Character;
+                this.followCharactersToolStripMenuItem1.Checked = API.State.CameraControl == CameraControl.Character;
 
                 #region Map selection
                 {
@@ -860,13 +911,13 @@ namespace Demoder.PlanetMapViewer.Forms
                     }
 
                     this.selectCharactersToolStripMenuItem.DropDownItems.Clear();
-                    var characters = Context.State.PlayerInfo.Values.ToArray();
+                    var characters = API.State.PlayerInfo.Values.ToArray();
                     foreach (var character in characters)
                     {
                         try
                         {
                             if (String.IsNullOrWhiteSpace(character.Name)) { continue; }
-                            
+
                             var item = new ToolStripMenuItem(character.Name);
                             if (character.InShadowlands)
                             {
@@ -887,15 +938,54 @@ namespace Demoder.PlanetMapViewer.Forms
                             item.Click += this.OverlayTitleContextMenu_CharacterSelectionItemClickEventHandler;
                             this.selectCharactersToolStripMenuItem.DropDownItems.Add(item);
                         }
-                        catch(Exception ex) 
+                        catch (Exception ex)
                         {
-                            Context.ErrorLog.Enqueue(ex.ToString());
+                            API.ErrorLog.Enqueue(ex.ToString());
                         }
                     }
                     this.selectCharactersToolStripMenuItem.Enabled = this.selectCharactersToolStripMenuItem.DropDownItems.Count != 0;
                 }
                 #endregion
+
+                #region Plugin management
+                {
+                   var menuItems = new ToolStripMenuItem[pluginsToolStripMenuItem.DropDownItems.Count];
+                    this.pluginsToolStripMenuItem.DropDownItems.CopyTo(menuItems, 0);
+                    foreach (ToolStripMenuItem i in menuItems)
+                    {
+                        i.CheckedChanged -= lvi_CheckedChanged;
+                        i.Dispose();
+                    }
+
+                    foreach (var plugin in API.PluginManager.AllPlugins.OrderBy(p=>p.Name))
+                    {
+                        var tsi = new ToolStripMenuItem(plugin.Name);
+                        tsi.Checked = plugin.Instance != null;
+                        tsi.Tag = plugin;
+                        tsi.CheckedChanged += lvi_CheckedChanged;
+                        tsi.CheckOnClick = true;
+                        pluginsToolStripMenuItem.DropDownItems.Add(tsi);
+                    }
+                }
+                #endregion
             }
+        }
+
+        private void lvi_CheckedChanged(object sender, EventArgs e)
+        {
+            var item = sender as ToolStripMenuItem;
+            var plugin = item.Tag as PluginInfo;
+            if (item.Checked)
+            {
+                API.PluginManager.LoadPlugin(plugin.Type);
+            }
+            else 
+            {
+                API.PluginManager.UnloadPlugin(plugin.Type);
+            }
+
+            this.OverlayTitleContextMenuStrip.Show();
+            this.pluginsToolStripMenuItem.ShowDropDown();
         }
 
         void OverlayTitleContextMenu_MapSelectionItemClickEventHandler(object sender, EventArgs e)
@@ -903,7 +993,7 @@ namespace Demoder.PlanetMapViewer.Forms
             if (sender is ToolStripMenuItem)
             {
                 var item = sender as ToolStripMenuItem;
-                Context.MapManager.SelectMap(item.Tag.ToString());
+                API.MapManager.SelectMap(item.Tag.ToString());
             }
         }
 
@@ -917,17 +1007,17 @@ namespace Demoder.PlanetMapViewer.Forms
                     var charId = (uint)item.Tag;
                     if (!item.Checked)
                     {
-                        Context.State.CameraControl = CameraControl.Character;
+                        API.State.CameraControl = CameraControl.Character;
                     }
 
-                    Context.State.PlayerInfo[charId].IsTrackedByCamera = !item.Checked;
+                    API.State.PlayerInfo[charId].IsTrackedByCamera = !item.Checked;
 
                     this.OverlayTitleContextMenuStrip.Show();
                     this.selectCharactersToolStripMenuItem.ShowDropDown();
                 }
                 catch (Exception ex)
                 {
-                    Context.ErrorLog.Enqueue(ex.ToString());
+                    API.ErrorLog.Enqueue(ex.ToString());
                 }
             }
         }
@@ -945,19 +1035,19 @@ namespace Demoder.PlanetMapViewer.Forms
         private void errorLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var err = new ErrorLog();
-            var errors = Context.ErrorLog.ToArray();
+            var errors = API.ErrorLog.ToArray();
             err.textBox1.Text = String.Join("\r\n\r\n", errors);
             err.ShowDialog();
         }
 
         private void MainWindow_Resize(object sender, EventArgs e)
         {
-            if (Context.State == null)
+            if (API.State == null)
             {
                 Program.WriteLog("MainWindow_Resize: Context.State is null.");
                 return;
             }
-            if (Context.State.WindowMode != WindowMode.Overlay) { return; }
+            if (API.State.WindowMode != WindowMode.Overlay) { return; }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -977,12 +1067,12 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void CameraFollowCharacer_Click(object sender, EventArgs e)
         {
-            Context.State.CameraControl = CameraControl.Character;
+            API.State.CameraControl = CameraControl.Character;
         }
 
         private void CameraFollowMission_Click(object sender, EventArgs e)
         {
-            Context.State.CameraControl = CameraControl.Manual;
+            API.State.CameraControl = CameraControl.Manual;
             // Insert code to move camera to mission marker here.
             this.MoveCameraToMission();
         }
@@ -1023,23 +1113,61 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void MagnificationSlider_ValueChanged(object sender, EventArgs e)
         {
-            var pos = Context.Camera.RelativePosition();
+            var pos = API.Camera.RelativePosition();
             switch (this.MagnificationSlider.Value)
             {
-                case -3: Context.State.Magnification = 0.25f; break;
-                case -2: Context.State.Magnification = 0.50f; break;
-                case -1: Context.State.Magnification = 0.75f; break;
-                case 0: Context.State.Magnification = 1.00f; break;
-                case 1: Context.State.Magnification = 2.00f; break;
-                case 2: Context.State.Magnification = 4.00f; break;
+                case -3: API.State.Magnification = 0.25f; break;
+                case -2: API.State.Magnification = 0.50f; break;
+                case -1: API.State.Magnification = 0.75f; break;
+                case 0: API.State.Magnification = 1.00f; break;
+                case 1: API.State.Magnification = 2.00f; break;
+                case 2: API.State.Magnification = 4.00f; break;
             }
 
-            this.magnificationLabel.Text = (Context.State.Magnification * 100).ToString() + "%";
+            this.magnificationLabel.Text = (API.State.Magnification * 100).ToString() + "%";
             
-            Context.Camera.AdjustScrollbarsToLayer();
-            Context.Camera.CenterOnRelativePosition(pos);
+            API.Camera.AdjustScrollbarsToLayer();
+            API.Camera.CenterOnRelativePosition(pos);
             this.tileDisplay1.Focus();
         }
+
+        private void pluginManagerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = new PluginManagerForm();
+            form.StartPosition = FormStartPosition.CenterParent;
+            form.Show();
+        }
+
+        private void configureToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.pluginListView.SelectedItems.Count == 1)
+            {
+                var pi = ((PluginInfo)this.pluginListView.SelectedItems[0].Tag);
+                if (pi.Instance == null) { return; }
+                if (pi.Settings.Length == 0)
+                {
+                    return;
+                }
+                var config = new PluginConfigurationForm(pi);
+                config.ShowDialog();
+            }
+        }
+
+        private void pluginContextStrip_Opening(object sender, CancelEventArgs e)
+        {
+            if (this.pluginListView.SelectedItems.Count!=1)
+            {
+                e.Cancel = true;
+                return;
+            }
+            if ((this.pluginListView.SelectedItems[0].Tag as PluginInfo).Instance == null)
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            configureToolStripMenuItem.Enabled = (this.pluginListView.SelectedItems[0].Tag as PluginInfo).Settings.Length > 0;
+        }    
     }
 
     public class MapSelectionItem

@@ -47,7 +47,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
                 {
                     continue;
                 }
-                this.fonts[fontType] = Context.ContentManager.Load<SpriteFont>(@"Fonts\" + contentName);
+                this.fonts[fontType] = API.ContentManager.Load<SpriteFont>(@"Fonts\" + contentName);
             }
         }
 

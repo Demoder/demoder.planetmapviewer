@@ -25,22 +25,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Demoder.PlanetMapViewer.DataClasses;
+using System.Xml.Serialization;
 
-namespace Demoder.PlanetMapViewer.PmvApi
+namespace Demoder.PlanetMapViewer.Plugins
 {
-    public class CustomMapOverlay
+    public class PluginSetting
     {
-        public CustomMapOverlay()
-        {
-            this.MapItems = new List<IMapItem>();
-        }
+        [XmlAttribute("name")]
+        public string Name { get; set; }
 
-        public CustomMapOverlay(int expectedCount)
-        {
-            this.MapItems = new List<IMapItem>(expectedCount);
-        }
-
-        public List<IMapItem> MapItems { get; private set; }
+        [XmlAttribute("value")]
+        public string Value { get; set; }
     }
 }

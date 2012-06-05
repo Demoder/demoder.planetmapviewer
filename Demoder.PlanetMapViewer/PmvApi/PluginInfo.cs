@@ -25,13 +25,64 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
+using Demoder.PlanetMapViewer.Helpers;
 
 namespace Demoder.PlanetMapViewer.PmvApi
 {
     internal class PluginInfo
     {
-        public bool Enabled { get; set; }
+        internal PluginInfo()
+        {
+            this.GenerationMre = new ManualResetEvent(false);
+        }
+
+        #region Plugin information
+        /// <summary>
+        /// Whether to display this plugins output
+        /// </summary>
+        public bool Visible { get; set; }
         public Type Type { get; set; }
         public IPlugin Instance { get; set; }
+
+        internal ManualResetEvent GenerationMre { get; set; }
+
+        /// <summary>
+        /// Time between each refresh of CustomMapOverlay
+        /// </summary>
+        public long RefreshInterval { get; set; }
+
+        /// <summary>
+        /// Plugin name
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Plugin description
+        /// </summary>
+        public string Description { get; set; }
+
+        public bool AutoLoad { get; set; }
+        #endregion
+
+        #region Runtime information
+        /// <summary>
+        /// How long time, in milliseconds, did it take to get information from this plugin the last time?
+        /// </summary>
+        public long LastExecutionTime { get; set;}
+
+        /// <summary>
+        /// Task used to generate overlays.
+        /// </summary>
+        public Task GenerationTask { get; set; }
+        
+        /// <summary>
+        /// The generated overlay
+        /// </summary>
+        public CustomMapOverlay GeneratedOverlay { get; set; }
+
+        public SettingInfo[] Settings { get; set; }
+        #endregion
     }
 }

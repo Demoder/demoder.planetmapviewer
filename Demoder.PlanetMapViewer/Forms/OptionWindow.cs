@@ -133,7 +133,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void textTypes_SelectedValueChanged(object sender, EventArgs e)
         {
-            this.selectedFont.SelectedItem = Context.Content.Fonts.GetLoadedFont((FontType)this.textTypes.SelectedItem);
+            this.selectedFont.SelectedItem = API.Content.Fonts.GetLoadedFont((FontType)this.textTypes.SelectedItem);
         }
 
         private void selectedFont_SelectedValueChanged(object sender, EventArgs e)
@@ -141,8 +141,8 @@ namespace Demoder.PlanetMapViewer.Forms
             var font = (LoadedFont)this.selectedFont.SelectedItem;
             var type = (FontType)this.textTypes.SelectedItem;
 
-            if (font == Context.Content.Fonts.GetLoadedFont(type)) { return; }
-            Context.Content.Fonts.SetLoadedFont(type, font);
+            if (font == API.Content.Fonts.GetLoadedFont(type)) { return; }
+            API.Content.Fonts.SetLoadedFont(type, font);
             
 
         }
@@ -168,9 +168,9 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.windowSettings.OverlaymodeShowControlbox = this.overlayModeShowExitButton.Checked;
                 this.windowSettings.OverlaymodeTopmostWorkaround = this.overlayModeWorkaroundTopmost.Checked;
 
-                if (Context.UiElements.ParentForm.OverlayModeToolStripMenuItem.Checked)
+                if (API.UiElements.ParentForm.OverlayModeToolStripMenuItem.Checked)
                 {
-                    Context.UiElements.ParentForm.ToggleOverlayMode();
+                    API.UiElements.ParentForm.ToggleOverlayMode();
                 }
 
                 Properties.GuiFonts.Default.Save();

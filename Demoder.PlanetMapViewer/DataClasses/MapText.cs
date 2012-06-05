@@ -48,7 +48,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
         {
             get
             {
-                return Context.Content.Fonts.GetFont(this.Font).MeasureString(this.Text);
+                return API.Content.Fonts.GetFont(this.Font).MeasureString(this.Text);
             }
         }
 
@@ -79,7 +79,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
                 Position = (PositionDefinition)this.Position.Clone(),
                 Shadow = this.Shadow,
                 ShadowColor = this.ShadowColor,
-                Text = (string)this.Text.Clone(),
+                Text = this.Text!=null ? (string)this.Text.Clone() : null,
                 PositionAlignment = this.PositionAlignment,
                 TextColor = this.TextColor
             };
