@@ -75,22 +75,19 @@ namespace Demoder.PlanetMapViewer.Forms
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tileDisplay1_vScrollBar = new System.Windows.Forms.VScrollBar();
             this.tileDisplay1_hScrollBar = new System.Windows.Forms.HScrollBar();
+            this.tileDisplay1 = new Demoder.PlanetMapViewer.Xna.TileDisplay();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.pluginsPanel = new System.Windows.Forms.GroupBox();
+            this.pluginListControl1 = new Demoder.PlanetMapViewer.Forms.PluginListControl();
+            this.followCharacterGroupBox = new System.Windows.Forms.GroupBox();
+            this.followCharacterPanel = new System.Windows.Forms.Panel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.magnificationLabel = new System.Windows.Forms.Label();
             this.MagnificationSlider = new System.Windows.Forms.TrackBar();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.RadioButtonMapSelectionAuto = new System.Windows.Forms.RadioButton();
-            this.RadioButtonMapSelectionShadowlands = new System.Windows.Forms.RadioButton();
-            this.RadioButtonMapSelectionRubika = new System.Windows.Forms.RadioButton();
-            this.mapComboBox = new System.Windows.Forms.ComboBox();
+            this.mapSelectionControl1 = new Demoder.PlanetMapViewer.Forms.MapSelectionControl();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.CameraFollowMission = new System.Windows.Forms.Button();
-            this.CameraFollowCharacer = new System.Windows.Forms.Button();
-            this.ButtonZoomOut = new System.Windows.Forms.Button();
-            this.ButtonZoomIn = new System.Windows.Forms.Button();
-            this.followCharacterGroupBox = new System.Windows.Forms.GroupBox();
-            this.followCharacterPanel = new System.Windows.Forms.Panel();
+            this.cameraUserControl1 = new Demoder.PlanetMapViewer.Forms.CameraUserControl();
             this.regionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rubikaToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.shadowlandsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -98,7 +95,6 @@ namespace Demoder.PlanetMapViewer.Forms
             this.cameraControlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.followCharactersToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.OverlayTitleContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.missionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.selectCharactersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -107,28 +103,23 @@ namespace Demoder.PlanetMapViewer.Forms
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exitOverlayModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.eventLog1 = new System.Diagnostics.EventLog();
-            this.tileDisplay1 = new Demoder.PlanetMapViewer.Xna.TileDisplay();
-            this.pluginListControl1 = new Demoder.PlanetMapViewer.Forms.PluginListControl();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.pluginsPanel.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.MagnificationSlider)).BeginInit();
-            this.groupBox4.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.followCharacterGroupBox.SuspendLayout();
-            this.OverlayTitleContextMenuStrip.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.pluginsPanel.SuspendLayout();
+            this.followCharacterGroupBox.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MagnificationSlider)).BeginInit();
+            this.groupBox4.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.OverlayTitleContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -300,7 +291,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
             this.splitContainer1.Panel2MinSize = 0;
             this.splitContainer1.Size = new System.Drawing.Size(725, 567);
-            this.splitContainer1.SplitterDistance = 549;
+            this.splitContainer1.SplitterDistance = 550;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 5;
             // 
@@ -308,7 +299,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // 
             this.tileDisplay1_vScrollBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tileDisplay1_vScrollBar.Location = new System.Drawing.Point(535, 0);
+            this.tileDisplay1_vScrollBar.Location = new System.Drawing.Point(536, 0);
             this.tileDisplay1_vScrollBar.Name = "tileDisplay1_vScrollBar";
             this.tileDisplay1_vScrollBar.Size = new System.Drawing.Size(15, 552);
             this.tileDisplay1_vScrollBar.TabIndex = 3;
@@ -325,6 +316,36 @@ namespace Demoder.PlanetMapViewer.Forms
             this.tileDisplay1_hScrollBar.Value = 1;
             this.tileDisplay1_hScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.tileDisplay1_ScrollBar_Scroll);
             // 
+            // tileDisplay1
+            // 
+            this.tileDisplay1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tileDisplay1.Location = new System.Drawing.Point(0, 0);
+            this.tileDisplay1.Name = "tileDisplay1";
+            this.tileDisplay1.Size = new System.Drawing.Size(550, 567);
+            this.tileDisplay1.TabIndex = 1;
+            this.tileDisplay1.Text = "PlanetMap";
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.splitContainer2.IsSplitterFixed = true;
+            this.splitContainer2.Location = new System.Drawing.Point(5, 303);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.pluginsPanel);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.followCharacterGroupBox);
+            this.splitContainer2.Size = new System.Drawing.Size(166, 259);
+            this.splitContainer2.SplitterDistance = 129;
+            this.splitContainer2.SplitterWidth = 1;
+            this.splitContainer2.TabIndex = 10005;
+            // 
             // pluginsPanel
             // 
             this.pluginsPanel.Controls.Add(this.pluginListControl1);
@@ -335,6 +356,34 @@ namespace Demoder.PlanetMapViewer.Forms
             this.pluginsPanel.TabIndex = 10004;
             this.pluginsPanel.TabStop = false;
             this.pluginsPanel.Text = "Plugins";
+            // 
+            // pluginListControl1
+            // 
+            this.pluginListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pluginListControl1.Location = new System.Drawing.Point(3, 16);
+            this.pluginListControl1.Name = "pluginListControl1";
+            this.pluginListControl1.Size = new System.Drawing.Size(160, 110);
+            this.pluginListControl1.TabIndex = 0;
+            // 
+            // followCharacterGroupBox
+            // 
+            this.followCharacterGroupBox.Controls.Add(this.followCharacterPanel);
+            this.followCharacterGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.followCharacterGroupBox.Location = new System.Drawing.Point(0, 0);
+            this.followCharacterGroupBox.Name = "followCharacterGroupBox";
+            this.followCharacterGroupBox.Size = new System.Drawing.Size(166, 129);
+            this.followCharacterGroupBox.TabIndex = 10000;
+            this.followCharacterGroupBox.TabStop = false;
+            this.followCharacterGroupBox.Text = "Follow Character";
+            // 
+            // followCharacterPanel
+            // 
+            this.followCharacterPanel.AutoScroll = true;
+            this.followCharacterPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.followCharacterPanel.Location = new System.Drawing.Point(3, 16);
+            this.followCharacterPanel.Name = "followCharacterPanel";
+            this.followCharacterPanel.Size = new System.Drawing.Size(160, 110);
+            this.followCharacterPanel.TabIndex = 0;
             // 
             // groupBox3
             // 
@@ -371,10 +420,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.RadioButtonMapSelectionAuto);
-            this.groupBox4.Controls.Add(this.RadioButtonMapSelectionShadowlands);
-            this.groupBox4.Controls.Add(this.RadioButtonMapSelectionRubika);
-            this.groupBox4.Controls.Add(this.mapComboBox);
+            this.groupBox4.Controls.Add(this.mapSelectionControl1);
             this.groupBox4.Location = new System.Drawing.Point(3, 3);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(168, 118);
@@ -382,123 +428,31 @@ namespace Demoder.PlanetMapViewer.Forms
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Map Selection";
             // 
-            // RadioButtonMapSelectionAuto
+            // mapSelectionControl1
             // 
-            this.RadioButtonMapSelectionAuto.AutoSize = true;
-            this.RadioButtonMapSelectionAuto.Checked = true;
-            this.RadioButtonMapSelectionAuto.Location = new System.Drawing.Point(8, 65);
-            this.RadioButtonMapSelectionAuto.Name = "RadioButtonMapSelectionAuto";
-            this.RadioButtonMapSelectionAuto.Size = new System.Drawing.Size(47, 17);
-            this.RadioButtonMapSelectionAuto.TabIndex = 4;
-            this.RadioButtonMapSelectionAuto.TabStop = true;
-            this.RadioButtonMapSelectionAuto.Text = "Auto";
-            this.RadioButtonMapSelectionAuto.UseVisualStyleBackColor = true;
-            // 
-            // RadioButtonMapSelectionShadowlands
-            // 
-            this.RadioButtonMapSelectionShadowlands.AutoSize = true;
-            this.RadioButtonMapSelectionShadowlands.Location = new System.Drawing.Point(8, 42);
-            this.RadioButtonMapSelectionShadowlands.Name = "RadioButtonMapSelectionShadowlands";
-            this.RadioButtonMapSelectionShadowlands.Size = new System.Drawing.Size(89, 17);
-            this.RadioButtonMapSelectionShadowlands.TabIndex = 3;
-            this.RadioButtonMapSelectionShadowlands.Text = "Shadowlands";
-            this.RadioButtonMapSelectionShadowlands.UseVisualStyleBackColor = true;
-            this.RadioButtonMapSelectionShadowlands.CheckedChanged += new System.EventHandler(this.RadioMapTypeCheckedChanged);
-            // 
-            // RadioButtonMapSelectionRubika
-            // 
-            this.RadioButtonMapSelectionRubika.AutoSize = true;
-            this.RadioButtonMapSelectionRubika.Location = new System.Drawing.Point(8, 19);
-            this.RadioButtonMapSelectionRubika.Name = "RadioButtonMapSelectionRubika";
-            this.RadioButtonMapSelectionRubika.Size = new System.Drawing.Size(63, 17);
-            this.RadioButtonMapSelectionRubika.TabIndex = 2;
-            this.RadioButtonMapSelectionRubika.Text = "Rubi-Ka";
-            this.RadioButtonMapSelectionRubika.UseVisualStyleBackColor = true;
-            this.RadioButtonMapSelectionRubika.CheckedChanged += new System.EventHandler(this.RadioMapTypeCheckedChanged);
-            // 
-            // mapComboBox
-            // 
-            this.mapComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.mapComboBox.FormattingEnabled = true;
-            this.mapComboBox.Location = new System.Drawing.Point(2, 91);
-            this.mapComboBox.Name = "mapComboBox";
-            this.mapComboBox.Size = new System.Drawing.Size(159, 21);
-            this.mapComboBox.Sorted = true;
-            this.mapComboBox.TabIndex = 3;
-            this.mapComboBox.SelectedIndexChanged += new System.EventHandler(this.mapComboBox_SelectedIndexChanged);
+            this.mapSelectionControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mapSelectionControl1.Location = new System.Drawing.Point(3, 16);
+            this.mapSelectionControl1.Name = "mapSelectionControl1";
+            this.mapSelectionControl1.Size = new System.Drawing.Size(162, 99);
+            this.mapSelectionControl1.TabIndex = 0;
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.CameraFollowMission);
-            this.groupBox2.Controls.Add(this.CameraFollowCharacer);
-            this.groupBox2.Controls.Add(this.ButtonZoomOut);
-            this.groupBox2.Controls.Add(this.ButtonZoomIn);
+            this.groupBox2.Controls.Add(this.cameraUserControl1);
             this.groupBox2.Location = new System.Drawing.Point(3, 127);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(168, 97);
+            this.groupBox2.Size = new System.Drawing.Size(165, 97);
             this.groupBox2.TabIndex = 10000;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Camera Controls";
             // 
-            // CameraFollowMission
+            // cameraUserControl1
             // 
-            this.CameraFollowMission.Location = new System.Drawing.Point(86, 19);
-            this.CameraFollowMission.Name = "CameraFollowMission";
-            this.CameraFollowMission.Size = new System.Drawing.Size(75, 23);
-            this.CameraFollowMission.TabIndex = 8;
-            this.CameraFollowMission.Text = "Mission";
-            this.CameraFollowMission.UseVisualStyleBackColor = true;
-            this.CameraFollowMission.Click += new System.EventHandler(this.CameraFollowMission_Click);
-            // 
-            // CameraFollowCharacer
-            // 
-            this.CameraFollowCharacer.Location = new System.Drawing.Point(6, 19);
-            this.CameraFollowCharacer.Name = "CameraFollowCharacer";
-            this.CameraFollowCharacer.Size = new System.Drawing.Size(75, 23);
-            this.CameraFollowCharacer.TabIndex = 7;
-            this.CameraFollowCharacer.Text = "Character";
-            this.CameraFollowCharacer.UseVisualStyleBackColor = true;
-            this.CameraFollowCharacer.Click += new System.EventHandler(this.CameraFollowCharacer_Click);
-            // 
-            // ButtonZoomOut
-            // 
-            this.ButtonZoomOut.Location = new System.Drawing.Point(76, 65);
-            this.ButtonZoomOut.Name = "ButtonZoomOut";
-            this.ButtonZoomOut.Size = new System.Drawing.Size(62, 23);
-            this.ButtonZoomOut.TabIndex = 6;
-            this.ButtonZoomOut.Text = "Zoom Out";
-            this.ButtonZoomOut.UseVisualStyleBackColor = true;
-            this.ButtonZoomOut.Click += new System.EventHandler(this.ButtonZoomOut_Click);
-            // 
-            // ButtonZoomIn
-            // 
-            this.ButtonZoomIn.Location = new System.Drawing.Point(8, 65);
-            this.ButtonZoomIn.Name = "ButtonZoomIn";
-            this.ButtonZoomIn.Size = new System.Drawing.Size(62, 23);
-            this.ButtonZoomIn.TabIndex = 5;
-            this.ButtonZoomIn.Text = "Zoom In";
-            this.ButtonZoomIn.UseVisualStyleBackColor = true;
-            this.ButtonZoomIn.Click += new System.EventHandler(this.ButtonZoomIn_Click);
-            // 
-            // followCharacterGroupBox
-            // 
-            this.followCharacterGroupBox.Controls.Add(this.followCharacterPanel);
-            this.followCharacterGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.followCharacterGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.followCharacterGroupBox.Name = "followCharacterGroupBox";
-            this.followCharacterGroupBox.Size = new System.Drawing.Size(166, 129);
-            this.followCharacterGroupBox.TabIndex = 10000;
-            this.followCharacterGroupBox.TabStop = false;
-            this.followCharacterGroupBox.Text = "Follow Character";
-            // 
-            // followCharacterPanel
-            // 
-            this.followCharacterPanel.AutoScroll = true;
-            this.followCharacterPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.followCharacterPanel.Location = new System.Drawing.Point(3, 16);
-            this.followCharacterPanel.Name = "followCharacterPanel";
-            this.followCharacterPanel.Size = new System.Drawing.Size(160, 110);
-            this.followCharacterPanel.TabIndex = 0;
+            this.cameraUserControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cameraUserControl1.Location = new System.Drawing.Point(3, 16);
+            this.cameraUserControl1.Name = "cameraUserControl1";
+            this.cameraUserControl1.Size = new System.Drawing.Size(159, 78);
+            this.cameraUserControl1.TabIndex = 0;
             // 
             // regionToolStripMenuItem
             // 
@@ -550,7 +504,6 @@ namespace Demoder.PlanetMapViewer.Forms
             this.OverlayTitleContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cameraControlsToolStripMenuItem,
             this.followCharactersToolStripMenuItem1,
-            this.missionToolStripMenuItem,
             this.toolStripSeparator2,
             this.regionToolStripMenuItem,
             this.rubikaToolStripMenuItem1,
@@ -566,16 +519,9 @@ namespace Demoder.PlanetMapViewer.Forms
             this.OverlayTitleContextMenuStrip.Name = "contextMenuStrip1";
             this.OverlayTitleContextMenuStrip.ShowCheckMargin = true;
             this.OverlayTitleContextMenuStrip.ShowImageMargin = false;
-            this.OverlayTitleContextMenuStrip.Size = new System.Drawing.Size(192, 286);
+            this.OverlayTitleContextMenuStrip.Size = new System.Drawing.Size(192, 264);
             this.OverlayTitleContextMenuStrip.Text = "Overlay Mode";
             this.OverlayTitleContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.OverlayTitleContextMenuStrip_Opening);
-            // 
-            // missionToolStripMenuItem
-            // 
-            this.missionToolStripMenuItem.Name = "missionToolStripMenuItem";
-            this.missionToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.missionToolStripMenuItem.Text = "Mission";
-            this.missionToolStripMenuItem.Click += new System.EventHandler(this.missionToolStripMenuItem_Click);
             // 
             // autoToolStripMenuItem
             // 
@@ -626,48 +572,6 @@ namespace Demoder.PlanetMapViewer.Forms
             this.exitOverlayModeToolStripMenuItem.Text = "Exit Overlay Mode";
             this.exitOverlayModeToolStripMenuItem.Click += new System.EventHandler(this.exitOverlayModeToolStripMenuItem_Click);
             // 
-            // eventLog1
-            // 
-            this.eventLog1.SynchronizingObject = this;
-            // 
-            // tileDisplay1
-            // 
-            this.tileDisplay1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tileDisplay1.Location = new System.Drawing.Point(0, 0);
-            this.tileDisplay1.Name = "tileDisplay1";
-            this.tileDisplay1.Size = new System.Drawing.Size(549, 567);
-            this.tileDisplay1.TabIndex = 1;
-            this.tileDisplay1.Text = "PlanetMap";
-            // 
-            // pluginListControl1
-            // 
-            this.pluginListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pluginListControl1.Location = new System.Drawing.Point(3, 16);
-            this.pluginListControl1.Name = "pluginListControl1";
-            this.pluginListControl1.Size = new System.Drawing.Size(160, 110);
-            this.pluginListControl1.TabIndex = 0;
-            // 
-            // splitContainer2
-            // 
-            this.splitContainer2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.splitContainer2.IsSplitterFixed = true;
-            this.splitContainer2.Location = new System.Drawing.Point(5, 303);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer2.Panel1
-            // 
-            this.splitContainer2.Panel1.Controls.Add(this.pluginsPanel);
-            // 
-            // splitContainer2.Panel2
-            // 
-            this.splitContainer2.Panel2.Controls.Add(this.followCharacterGroupBox);
-            this.splitContainer2.Size = new System.Drawing.Size(166, 259);
-            this.splitContainer2.SplitterDistance = 129;
-            this.splitContainer2.SplitterWidth = 1;
-            this.splitContainer2.TabIndex = 10005;
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -692,20 +596,18 @@ namespace Demoder.PlanetMapViewer.Forms
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.pluginsPanel.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.MagnificationSlider)).EndInit();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.followCharacterGroupBox.ResumeLayout(false);
-            this.OverlayTitleContextMenuStrip.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.pluginsPanel.ResumeLayout(false);
+            this.followCharacterGroupBox.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MagnificationSlider)).EndInit();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.OverlayTitleContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -725,13 +627,8 @@ namespace Demoder.PlanetMapViewer.Forms
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.HScrollBar tileDisplay1_hScrollBar;
         private System.Windows.Forms.VScrollBar tileDisplay1_vScrollBar;
-        private System.Windows.Forms.ComboBox mapComboBox;
         private System.Windows.Forms.ToolStripMenuItem checkVersionToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox4;
-        internal System.Windows.Forms.RadioButton RadioButtonMapSelectionRubika;
-        internal System.Windows.Forms.RadioButton RadioButtonMapSelectionShadowlands;
-        private System.Windows.Forms.Button ButtonZoomOut;
-        private System.Windows.Forms.Button ButtonZoomIn;
         private System.Windows.Forms.ToolStripMenuItem readmeToolStripMenuItem;
         internal System.Windows.Forms.ToolStripStatusLabel ToolStripStatusLabel1;
         private System.Windows.Forms.ToolStripMenuItem regionToolStripMenuItem;
@@ -755,21 +652,18 @@ namespace Demoder.PlanetMapViewer.Forms
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.RadioButton RadioButtonMapSelectionAuto;
         private System.Windows.Forms.ToolStripMenuItem autoToolStripMenuItem;
-        private System.Windows.Forms.Button CameraFollowMission;
-        private System.Windows.Forms.Button CameraFollowCharacer;
         private System.Windows.Forms.Label magnificationLabel;
-        private System.Windows.Forms.ToolStripMenuItem missionToolStripMenuItem;
         internal System.Windows.Forms.TrackBar MagnificationSlider;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Panel followCharacterPanel;
         private System.Windows.Forms.ToolStripMenuItem pluginManagerToolStripMenuItem;
         private System.Windows.Forms.GroupBox pluginsPanel;
         private System.Windows.Forms.ToolStripMenuItem pluginsToolStripMenuItem;
-        private System.Diagnostics.EventLog eventLog1;
         private PluginListControl pluginListControl1;
         private System.Windows.Forms.SplitContainer splitContainer2;
+        private MapSelectionControl mapSelectionControl1;
+        private CameraUserControl cameraUserControl1;
     }
 }
 
