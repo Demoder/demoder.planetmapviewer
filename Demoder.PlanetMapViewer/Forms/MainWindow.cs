@@ -95,11 +95,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 }
                 this.ShowExceptionError(ex);
             }
-
-            
         }
-
-        
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -443,6 +439,29 @@ namespace Demoder.PlanetMapViewer.Forms
             }
             this.ToggleFullscreenSetting();
         }
+
+
+        /////////////////////////////////////
+        // Help
+        ////////////////////////////////////
+
+        // Update
+        private void checkVersionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.bgwVersionCheck.IsBusy)
+            {
+                MessageBox.Show("Already checking version!", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            this.bgwVersionCheck.RunWorkerAsync();
+        }
+
+        // About
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var a = new AboutBox1();
+            a.ShowDialog();
+        }
         #endregion
 
         private void tileDisplay1_ScrollBar_Scroll(object sender, ScrollEventArgs e)
@@ -465,25 +484,6 @@ namespace Demoder.PlanetMapViewer.Forms
             }
             return options.ShowDialog();
         }
-
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var a = new AboutBox1();
-            a.ShowDialog();
-        }
-
-       
-        private void checkVersionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (this.bgwVersionCheck.IsBusy)
-            {
-                MessageBox.Show("Already checking version!", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            this.bgwVersionCheck.RunWorkerAsync();
-        }
-
-       
 
         private void readmeToolStripMenuItem_Click(object sender, EventArgs e)
         {
