@@ -331,7 +331,6 @@ namespace Demoder.PlanetMapViewer.Forms
             this.tileDisplay1.Size = new System.Drawing.Size(605, 556);
             this.tileDisplay1.TabIndex = 1;
             this.tileDisplay1.Text = "PlanetMap";
-            this.tileDisplay1.OnDraw += new System.EventHandler(this.tileDisplay1_OnDraw);
             // 
             // pluginsPanel
             // 
