@@ -153,8 +153,6 @@ namespace Demoder.PlanetMapViewer.Forms
                 // Setup the tile display.
                 Program.WriteLog("MainWindow->Form1_Load() Assigning window handle to tileDisplay1.Handle");
                 Mouse.WindowHandle = this.tileDisplay1.Handle;
-                Program.WriteLog("MainWindow->Form1_Load() Registring tileDisplay OnDraw event");
-                this.tileDisplay1.OnDraw += tileDisplay1_OnDraw;
 
 #if DEBUG
                 this.errorLogToolStripMenuItem.Visible = true;
@@ -404,114 +402,7 @@ namespace Demoder.PlanetMapViewer.Forms
             }
             base.OnKeyDown(e);
         }
-
-        private void tileDisplay1_OnDraw(object sender, EventArgs e)
-        {
-            if (API.Camera == null) { return; }
-            if (API.MapManager == null) { return; }
-            if (API.MapManager.CurrentLayer == null) { return; }
-            this.Logic();
-            this.Render();
-        }
-
-
-        // Todo: Implement this in TileDisplay
-        private void Logic()
-        {
-            if (API.Camera == null) { return; }
-            switch (API.State.CameraControl)
-            {
-                case CameraControl.Character:
-                    this.MoveCameraToCharacter();
-                    break;
-                case CameraControl.Manual:
-                    API.Camera.CenterOnScrollbars();
-                    break;
-            }
-        }
-
-        #region Camera controls
-        // Todo: Move this to a static logics class
-        private void MoveCameraToCharacter()
-        {
-            try
-            {
-                int textureSize = API.MapManager.CurrentLayer.TextureSize;
-                var vectors = new List<Vector2>();
-                int shadowlandsCharacters = 0;
-                int rubikaCharacters = 0;
-
-
-                var playerInfo = API.State.PlayerInfo.Values.ToArray().Where(i=>i.IsTrackedByCamera);
-                foreach (var item in playerInfo)
-                {
-                    var info = item as PlayerInfo;
-
-                    // Track rk/sl characters
-                    if (info.InShadowlands)
-                    {
-                        shadowlandsCharacters++;
-                    }
-                    else
-                    {
-                        rubikaCharacters++;
-                    }
-
-                    if (info.InShadowlands && API.MapManager.CurrentMap.Type != MapType.Shadowlands) { continue; }
-
-                    var charPos = API.MapManager.GetPosition(info.Zone.ID, info.Position.X, info.Position.Z);
-                    if (charPos == Vector2.Zero) { continue; }
-                    vectors.Add(charPos);
-                }
-
-                if (API.State.MapTypeAutoSwitching)
-                {
-                    if (rubikaCharacters > shadowlandsCharacters && API.MapManager.CurrentMap.Type != MapType.Rubika)
-                    {
-                        API.MapManager.FindAvailableMaps(MapType.Rubika);
-                        API.MapManager.SelectMap(MapType.Rubika);
-                    }
-                    else if (shadowlandsCharacters > rubikaCharacters && API.MapManager.CurrentMap.Type != MapType.Shadowlands)
-                    {
-                        API.MapManager.FindAvailableMaps(MapType.Shadowlands);
-                        API.MapManager.SelectMap(MapType.Shadowlands);
-                    }
-                }
-
-                if (vectors.Count == 0) { return; }
-
-                API.Camera.CenterOnVectors(vectors.ToArray());
-            }
-            catch (Exception ex)
-            {
-                API.ErrorLog.Enqueue(ex.ToString());
-                this.ShowExceptionError(ex);
-            }
-        }
-
-        #endregion
-
-        // Todo: Implement this in TileDisplay
-        private void Render()
-        {
-            lock (API.Camera)
-            {
-                API.GraphicsDevice.Clear(Color.Black);
-
-                API.MapManager.CurrentLayer.Draw();
-                if (!API.Content.Loaded) { return; }
-
-                #region Draw stuff from plugins here
-                // TODO: Implement this.       
-                foreach (var overlay in API.PluginManager.GetMapOverlays())
-                {
-                    if (overlay == null || overlay.MapItems.Count == 0) { continue; }
-                    API.FrameDrawer.Draw(overlay.MapItems);                    
-                }
-                #endregion
-            }
-        }
-        
+     
 
         
 
@@ -813,24 +704,17 @@ namespace Demoder.PlanetMapViewer.Forms
             }
         }
 
-        // TODO: Move this to a static logics class
         private void ForceTopMost()
         {
             if (this.InvokeRequired)
             {
-                this.Invoke((Action)delegate()
-                {
-                    this.TopMost = false;
-                    this.TopMost = true;
-                    this.SetTopLevel(true);
-                });
+                this.Invoke((Action)this.ForceTopMost);
+                return;
             }
-            else
-            {
-                this.TopMost = false;
-                this.TopMost = true;
-                this.SetTopLevel(true);
-            }
+
+            this.TopMost = false;
+            this.TopMost = true;
+            this.SetTopLevel(true);
         }
 
         private void followCharactersToolStripMenuItem1_Click(object sender, EventArgs e)

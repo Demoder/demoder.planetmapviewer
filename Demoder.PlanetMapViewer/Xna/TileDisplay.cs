@@ -128,22 +128,43 @@ namespace Demoder.PlanetMapViewer.Xna
 
         protected override void Draw()
         {
-            try
+            lock (this.drawLocker)
             {
-                lock (this.drawLocker)
-                {
-                    if (this.OnDraw != null)
-                    {
-                        var curSwVal = this.timeSinceLastDraw.ElapsedMilliseconds;
-                        this.timeSinceLastDraw.Restart();
+                this.DrawLogic();
 
-                        this.OnDraw(this, null);
+                // Clear the screen.
+                API.GraphicsDevice.Clear(Color.Black);
+
+                // Draw current map layer
+                API.MapManager.CurrentLayer.Draw();
+
+                if (!API.Content.Loaded) { return; }
+
+                #region Draw stuff from plugins here
+                foreach (var overlay in API.PluginManager.GetMapOverlays())
+                {
+                    if (overlay == null || overlay.MapItems.Count == 0)
+                    {
+                        // If the overlay is null or empty, skip it.
+                        continue;
                     }
+                    // Draw valid overlays.
+                    API.FrameDrawer.Draw(overlay.MapItems);
                 }
+                #endregion
             }
-            catch (Exception ex)
+
+            this.timeSinceLastDraw.Restart();
+
+
+            // Call the OnDraw event, if necessary.
+            var drawEvent = this.OnDraw;
+            if (drawEvent != null)
             {
-                API.ErrorLog.Enqueue(ex.ToString());
+                lock (drawEvent)
+                {
+                    drawEvent(this, new EventArgs());
+                }
             }
         }
 
@@ -460,6 +481,80 @@ namespace Demoder.PlanetMapViewer.Xna
             if (API.MapManager == null) { return; }
             API.MapManager.ZoomOut();
             this.ReportMousePosition();
+        }
+
+
+        private void DrawLogic()
+        {
+            if (API.Camera == null) { return; }
+            switch (API.State.CameraControl)
+            {
+                case CameraControl.Character:
+                    MoveCameraToCharacter();
+                    break;
+                case CameraControl.Manual:
+                    API.Camera.CenterOnScrollbars();
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Centers camera on character locator(s)
+        /// </summary>
+        private void MoveCameraToCharacter()
+        {
+            try
+            {
+                int textureSize = API.MapManager.CurrentLayer.TextureSize;
+                var vectors = new List<Vector2>();
+                int shadowlandsCharacters = 0;
+                int rubikaCharacters = 0;
+
+
+                var playerInfo = API.State.PlayerInfo.Values.ToArray().Where(i => i.IsTrackedByCamera);
+                foreach (var item in playerInfo)
+                {
+                    var info = item as PlayerInfo;
+
+                    // Track rk/sl characters
+                    if (info.InShadowlands)
+                    {
+                        shadowlandsCharacters++;
+                    }
+                    else
+                    {
+                        rubikaCharacters++;
+                    }
+
+                    if (info.InShadowlands && API.MapManager.CurrentMap.Type != MapType.Shadowlands) { continue; }
+
+                    var charPos = API.MapManager.GetPosition(info.Zone.ID, info.Position.X, info.Position.Z);
+                    if (charPos == Vector2.Zero) { continue; }
+                    vectors.Add(charPos);
+                }
+
+                if (API.State.MapTypeAutoSwitching)
+                {
+                    if (rubikaCharacters > shadowlandsCharacters && API.MapManager.CurrentMap.Type != MapType.Rubika)
+                    {
+                        API.MapManager.FindAvailableMaps(MapType.Rubika);
+                        API.MapManager.SelectMap(MapType.Rubika);
+                    }
+                    else if (shadowlandsCharacters > rubikaCharacters && API.MapManager.CurrentMap.Type != MapType.Shadowlands)
+                    {
+                        API.MapManager.FindAvailableMaps(MapType.Shadowlands);
+                        API.MapManager.SelectMap(MapType.Shadowlands);
+                    }
+                }
+
+                if (vectors.Count == 0) { return; }
+
+                API.Camera.CenterOnVectors(vectors.ToArray());
+            }
+            catch (Exception ex)
+            {
+                Program.WriteLog(ex.ToString());
+            }
         }
     }
 }
