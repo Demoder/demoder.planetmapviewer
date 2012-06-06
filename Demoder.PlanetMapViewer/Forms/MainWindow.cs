@@ -75,6 +75,7 @@ namespace Demoder.PlanetMapViewer.Forms
             {
                 Program.WriteLog("MainWindow->MainWindow()");
                 InitializeComponent();
+                this.splitContainer1.SplitterDistance = 550;
                 Program.WriteLog("MainWindow->MainWindow(): InitializeComponent was successfull.");
 
                 // Add manual components
@@ -94,7 +95,11 @@ namespace Demoder.PlanetMapViewer.Forms
                 }
                 this.ShowExceptionError(ex);
             }
+
+            
         }
+
+        
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -103,7 +108,6 @@ namespace Demoder.PlanetMapViewer.Forms
                 Program.WriteLog("MainWindow->Form1_Load() A");
                 API.UiElements.HScrollBar = this.tileDisplay1_hScrollBar;
                 API.UiElements.VScrollBar = this.tileDisplay1_vScrollBar;
-                API.UiElements.MapList = this.mapComboBox;
                 API.UiElements.ParentForm = this;
 
                 Program.WriteLog("MainWindow->Form1_Load() B");
@@ -111,11 +115,17 @@ namespace Demoder.PlanetMapViewer.Forms
                 Program.WriteLog("MainWindow->Form1_Load(): Checking settings");
                 if (Properties.GeneralSettings.Default.SettingVersion != this.ProductVersion.ToString())
                 {
+                    Properties.GeneralSettings.Default.SettingVersion = this.ProductVersion.ToString();
+
                     var settings = new ApplicationSettingsBase[]
                     {
                         Properties.GeneralSettings.Default,
                         Properties.MapSettings.Default,
-                        Properties.WindowSettings.Default
+                        Properties.WindowSettings.Default,
+                        Properties.NormalTutorial.Default,
+                        Properties.OverlayTutorial.Default,
+                        Properties.GuiFonts.Default,
+                        Properties.MapFonts.Default
                     };
 
                     foreach (var s in settings)
@@ -123,9 +133,6 @@ namespace Demoder.PlanetMapViewer.Forms
                         s.Upgrade();
                         s.Save();
                     }
-
-                    Properties.GeneralSettings.Default.SettingVersion = this.ProductVersion.ToString();
-                    Properties.GeneralSettings.Default.Save();
                 }
                 Program.WriteLog("MainWindow->Form1_Load() Settings OK");
 
@@ -172,6 +179,7 @@ namespace Demoder.PlanetMapViewer.Forms
             }
             catch (Exception ex)
             {
+                
                 Program.WriteLog("");
                 Program.WriteLog("MainWindow->Form1_Load() Exception caught: {0}", ex.ToString());
                 Program.WriteLog("");
@@ -458,28 +466,6 @@ namespace Demoder.PlanetMapViewer.Forms
             return options.ShowDialog();
         }
 
-        private void mapComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (API.MapManager == null) { return; }
-            API.UiElements.VScrollBar.Value = 0;
-            API.UiElements.HScrollBar.Value = 0;
-
-            var mapInfo = (this.mapComboBox.SelectedItem as MapSelectionItem);
-            if (mapInfo == null) { return; }
-            if (mapInfo.Type == MapType.Rubika)
-            {
-                Properties.MapSettings.Default.SelectedRubikaMap = mapInfo.MapPath;
-            }
-            else
-            {
-                Properties.MapSettings.Default.SelectedShadowlandsMap = mapInfo.MapPath;
-            }
-
-            API.MapManager.SelectMap(mapInfo.MapPath);
-            API.Camera.AdjustScrollbarsToLayer();
-            this.tileDisplay1.Focus();
-        }
-
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var a = new AboutBox1();
@@ -497,64 +483,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.bgwVersionCheck.RunWorkerAsync();
         }
 
-        private void RadioMapTypeCheckedChanged(object sender, EventArgs e)
-        {
-            // User clicking on a RadioButton will send two statechange messages.
-            // One for the unchecked and one for the checked RadioButton.
-            // We only need to process one of the events.
-            if (!((RadioButton)sender).Checked)
-            {
-                return;
-            }
-
-            // Automatic selection
-            if (this.RadioButtonMapSelectionAuto.Checked)
-            {
-                API.State.MapTypeAutoSwitching = true;
-                return;
-            }
-
-            // RK selected
-            if (this.RadioButtonMapSelectionRubika.Checked)
-            {
-                API.State.MapType = MapType.Rubika;
-            }
-            // SL selected
-            else if (this.RadioButtonMapSelectionShadowlands.Checked)
-            {
-                API.State.MapType = MapType.Shadowlands;
-            }
-            
-            this.SelectMap();
-            API.State.MapTypeAutoSwitching = false;
-            return;
-        }
-
-        private void SelectMap()
-        {
-            if (API.MapManager == null) { return; }
-
-            if (this.RadioButtonMapSelectionAuto.Checked == true)
-            {
-                return;
-            }
-
-            API.MapManager.FindAvailableMaps(API.State.MapType);
-            API.MapManager.SelectMap(API.State.MapType);
-            this.tileDisplay1.Focus();
-        }
-
-        private void ButtonZoomIn_Click(object sender, EventArgs e)
-        {
-            this.tileDisplay1.ZoomIn();
-            this.tileDisplay1.Focus();
-        }
-
-        private void ButtonZoomOut_Click(object sender, EventArgs e)
-        {
-            this.tileDisplay1.ZoomOut();
-            this.tileDisplay1.Focus();
-        }
+       
 
         private void readmeToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -685,39 +614,14 @@ namespace Demoder.PlanetMapViewer.Forms
             this.SetTopLevel(true);
         }
 
-        private void followCharactersToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            API.State.CameraControl = CameraControl.Character;
-        }
-
-        private void missionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            API.State.CameraControl = CameraControl.Manual;
-            this.MoveCameraToMission();
-        }   
-        private void rubikaToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            this.RadioButtonMapSelectionRubika.Select();
-        }
-
-        private void shadowlandsToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            this.RadioButtonMapSelectionShadowlands.Select();
-        }
-        private void autoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.RadioButtonMapSelectionAuto.Select();
-        }
-
-
         private void OverlayTitleContextMenuStrip_Opening(object sender, CancelEventArgs e)
         {
             lock (this.OverlayTitleContextMenuStrip)
             {
                 // Region
-                this.rubikaToolStripMenuItem1.Checked = this.RadioButtonMapSelectionRubika.Checked;
-                this.shadowlandsToolStripMenuItem1.Checked = this.RadioButtonMapSelectionShadowlands.Checked;
-                this.autoToolStripMenuItem.Checked = this.RadioButtonMapSelectionAuto.Checked;
+                this.rubikaToolStripMenuItem1.Checked = this.mapSelectionControl1.RadioRK.Checked;
+                this.shadowlandsToolStripMenuItem1.Checked = this.mapSelectionControl1.RadioSL.Checked;
+                this.autoToolStripMenuItem.Checked = this.mapSelectionControl1.RadioAuto.Checked;
 
                 // Camera controls
                 this.followCharactersToolStripMenuItem1.Checked = API.State.CameraControl == CameraControl.Character;
@@ -733,13 +637,13 @@ namespace Demoder.PlanetMapViewer.Forms
                         i.Dispose();
                     }
                     selectMapToolStripMenuItem.DropDownItems.Clear();
-                    foreach (var i in this.mapComboBox.Items)
+                    foreach (var i in this.mapSelectionControl1.MapComboBox.Items)
                     {
                         var map = i as MapSelectionItem;
                         var item = new ToolStripMenuItem(map.MapName);
                         item.Tag = map.MapPath;
                         item.Click += this.OverlayTitleContextMenu_MapSelectionItemClickEventHandler;
-                        if (this.mapComboBox.SelectedItem == map)
+                        if (this.mapSelectionControl1.MapComboBox.SelectedItem == map)
                         {
                             item.Checked = true;
                             item.Enabled = false;
@@ -922,47 +826,6 @@ namespace Demoder.PlanetMapViewer.Forms
             API.State.CameraControl = CameraControl.Character;
         }
 
-        private void CameraFollowMission_Click(object sender, EventArgs e)
-        {
-            API.State.CameraControl = CameraControl.Manual;
-            // Insert code to move camera to mission marker here.
-            this.MoveCameraToMission();
-        }
-
-        private void MoveCameraToMission()
-        {
-            return;
-            /*
-            try
-            {
-                var vectors = new List<Vector2>();
-                this.followCharacter.Invoke((Action)delegate()
-                {
-                    lock (Context.HookInfo.Processes)
-                    {
-                        foreach (var item in this.followCharacter.CheckedItems)
-                        {
-                            var info = item as AoInfo;
-
-                            var questPos = Context.MapManager.GetPosition(info.Mission.Zone.ID, info.Mission.ZonePosition.X, info.Mission.ZonePosition.Z);
-                            if (questPos == Vector2.Zero) { continue; }
-                            vectors.Add(questPos);
-                        }
-                    }
-                });
-                if (vectors.Count == 0) { return; }
-
-                Context.Camera.CenterOnVectors(vectors.ToArray());
-             
-            }
-            catch (Exception ex)
-            {
-                Context.ErrorLog.Enqueue(ex.ToString());
-                this.ShowExceptionError(ex);
-            }
-             */
-        }
-
         private void MagnificationSlider_ValueChanged(object sender, EventArgs e)
         {
             var pos = API.Camera.RelativePosition();
@@ -988,6 +851,28 @@ namespace Demoder.PlanetMapViewer.Forms
             var form = new PluginManagerForm();
             form.StartPosition = FormStartPosition.CenterParent;
             form.Show();
+        }
+
+        #region Overlay ContextMenu: Map selection method
+        private void rubikaToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            this.mapSelectionControl1.RadioRK.Select();
+        }
+
+        private void shadowlandsToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            this.mapSelectionControl1.RadioSL.Select();
+        }
+
+        private void autoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.mapSelectionControl1.RadioAuto.Select();
+        }
+        #endregion
+
+        private void followCharactersToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            API.State.CameraControl = CameraControl.Character;
         }
     }
 

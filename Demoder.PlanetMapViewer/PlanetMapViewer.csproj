@@ -106,6 +106,18 @@
     <Compile Include="DataClasses\XnaContentSpriteFonts.cs" />
     <Compile Include="DataClasses\XnaContentTextures.cs" />
     <Compile Include="delegates.cs" />
+    <Compile Include="Forms\CameraUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\CameraUserControl.Designer.cs">
+      <DependentUpon>CameraUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MapSelectionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\MapSelectionControl.Designer.cs">
+      <DependentUpon>MapSelectionControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\PluginConfigurationForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -223,6 +235,12 @@
     </Compile>
     <Compile Include="Xna\GraphicsDeviceService.cs" />
     <Compile Include="Xna\ServiceContainer.cs" />
+    <EmbeddedResource Include="Forms\CameraUserControl.resx">
+      <DependentUpon>CameraUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MapSelectionControl.resx">
+      <DependentUpon>MapSelectionControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\PluginConfigurationForm.resx">
       <DependentUpon>PluginConfigurationForm.cs</DependentUpon>
     </EmbeddedResource>
