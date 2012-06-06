@@ -112,6 +112,12 @@
     <Compile Include="Forms\PluginConfigurationForm.Designer.cs">
       <DependentUpon>PluginConfigurationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\PluginListControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\PluginListControl.Designer.cs">
+      <DependentUpon>PluginListControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\PluginManagerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -219,6 +225,9 @@
     <Compile Include="Xna\ServiceContainer.cs" />
     <EmbeddedResource Include="Forms\PluginConfigurationForm.resx">
       <DependentUpon>PluginConfigurationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PluginListControl.resx">
+      <DependentUpon>PluginListControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PluginManagerForm.resx">
       <DependentUpon>PluginManagerForm.cs</DependentUpon>

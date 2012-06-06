@@ -47,6 +47,7 @@ using Demoder.PlanetMapViewer.PmvApi;
 using Demoder.PlanetMapViewer.Plugins;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Configuration;
 
 namespace Demoder.PlanetMapViewer.Forms
 {
@@ -75,8 +76,6 @@ namespace Demoder.PlanetMapViewer.Forms
                 Program.WriteLog("MainWindow->MainWindow()");
                 InitializeComponent();
                 Program.WriteLog("MainWindow->MainWindow(): InitializeComponent was successfull.");
-                this.splitContainer1.FixedPanel = FixedPanel.Panel2;
-                this.splitContainer1.SplitterDistance = 605;
 
                 // Add manual components
                 var charTrackControl = new CharacterTrackerControl();
@@ -112,9 +111,19 @@ namespace Demoder.PlanetMapViewer.Forms
                 Program.WriteLog("MainWindow->Form1_Load(): Checking settings");
                 if (Properties.GeneralSettings.Default.SettingVersion != this.ProductVersion.ToString())
                 {
-                    Properties.GeneralSettings.Default.Upgrade();
-                    Properties.MapSettings.Default.Upgrade();
-                    Properties.WindowSettings.Default.Upgrade();
+                    var settings = new ApplicationSettingsBase[]
+                    {
+                        Properties.GeneralSettings.Default,
+                        Properties.MapSettings.Default,
+                        Properties.WindowSettings.Default
+                    };
+
+                    foreach (var s in settings)
+                    {
+                        s.Upgrade();
+                        s.Save();
+                    }
+
                     Properties.GeneralSettings.Default.SettingVersion = this.ProductVersion.ToString();
                     Properties.GeneralSettings.Default.Save();
                 }
@@ -194,47 +203,6 @@ namespace Demoder.PlanetMapViewer.Forms
             catch (Exception ex)
             {
 
-            }
-
-            API.PluginManager.PluginStateChangeEvent += this.PopulatePluginList;
-            this.PopulatePluginList();
-        }
-
-        private void PopulatePluginList()
-        {
-            if (this.pluginListView.InvokeRequired)
-            {
-                this.pluginListView.Invoke((Action)this.PopulatePluginList);
-                return;
-            }
-            lock (this.pluginListView)
-            {
-                this.pluginListView.BeginUpdate();
-                this.pluginListView.ItemChecked -= this.listView1_ItemChecked;
-                this.pluginListView.Items.Clear();
-                foreach (var plugin in API.PluginManager.AllPlugins)
-                {
-                    var lvi = new ListViewItem(plugin.Name);
-                    lvi.Checked = plugin.Instance != null;
-                    lvi.Tag = plugin;
-                    pluginListView.Items.Add(lvi);
-                }
-
-                this.pluginListView.EndUpdate();
-                this.pluginListView.ItemChecked += this.listView1_ItemChecked;
-                return;
-            }
-        }
-
-        private void listView1_ItemChecked(object sender, ItemCheckedEventArgs e)
-        {
-            if (e.Item.Checked)
-            {
-                API.PluginManager.LoadPlugin((e.Item.Tag as PluginInfo).Type);
-            }
-            else
-            {
-                API.PluginManager.UnloadPlugin((e.Item.Tag as PluginInfo).Type);
             }
         }
 
@@ -1021,37 +989,6 @@ namespace Demoder.PlanetMapViewer.Forms
             form.StartPosition = FormStartPosition.CenterParent;
             form.Show();
         }
-
-        private void configureToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (this.pluginListView.SelectedItems.Count == 1)
-            {
-                var pi = ((PluginInfo)this.pluginListView.SelectedItems[0].Tag);
-                if (pi.Instance == null) { return; }
-                if (pi.Settings.Length == 0)
-                {
-                    return;
-                }
-                var config = new PluginConfigurationForm(pi);
-                config.ShowDialog();
-            }
-        }
-
-        private void pluginContextStrip_Opening(object sender, CancelEventArgs e)
-        {
-            if (this.pluginListView.SelectedItems.Count!=1)
-            {
-                e.Cancel = true;
-                return;
-            }
-            if ((this.pluginListView.SelectedItems[0].Tag as PluginInfo).Instance == null)
-            {
-                e.Cancel = true;
-                return;
-            }
-
-            configureToolStripMenuItem.Enabled = (this.pluginListView.SelectedItems[0].Tag as PluginInfo).Settings.Length > 0;
-        }    
     }
 
     public class MapSelectionItem
