@@ -80,7 +80,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.pluginsPanel = new System.Windows.Forms.GroupBox();
             this.pluginListControl1 = new Demoder.PlanetMapViewer.Forms.PluginListControl();
             this.followCharacterGroupBox = new System.Windows.Forms.GroupBox();
-            this.followCharacterPanel = new System.Windows.Forms.Panel();
+            this.characterTrackerControl1 = new Demoder.PlanetMapViewer.Forms.CharacterTrackerControl();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.magnificationLabel = new System.Windows.Forms.Label();
             this.MagnificationSlider = new System.Windows.Forms.TrackBar();
@@ -224,33 +224,33 @@ namespace Demoder.PlanetMapViewer.Forms
             // checkVersionToolStripMenuItem
             // 
             this.checkVersionToolStripMenuItem.Name = "checkVersionToolStripMenuItem";
-            this.checkVersionToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.checkVersionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.checkVersionToolStripMenuItem.Text = "Update...";
             this.checkVersionToolStripMenuItem.Click += new System.EventHandler(this.checkVersionToolStripMenuItem_Click);
             // 
             // readmeToolStripMenuItem
             // 
             this.readmeToolStripMenuItem.Name = "readmeToolStripMenuItem";
-            this.readmeToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.readmeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.readmeToolStripMenuItem.Text = "Readme";
             this.readmeToolStripMenuItem.Click += new System.EventHandler(this.readmeToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(119, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(149, 6);
             // 
             // errorLogToolStripMenuItem
             // 
             this.errorLogToolStripMenuItem.Name = "errorLogToolStripMenuItem";
-            this.errorLogToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.errorLogToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.errorLogToolStripMenuItem.Text = "Error Log";
             this.errorLogToolStripMenuItem.Click += new System.EventHandler(this.errorLogToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "&About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -367,7 +367,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // 
             // followCharacterGroupBox
             // 
-            this.followCharacterGroupBox.Controls.Add(this.followCharacterPanel);
+            this.followCharacterGroupBox.Controls.Add(this.characterTrackerControl1);
             this.followCharacterGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.followCharacterGroupBox.Location = new System.Drawing.Point(0, 0);
             this.followCharacterGroupBox.Name = "followCharacterGroupBox";
@@ -376,14 +376,13 @@ namespace Demoder.PlanetMapViewer.Forms
             this.followCharacterGroupBox.TabStop = false;
             this.followCharacterGroupBox.Text = "Follow Character";
             // 
-            // followCharacterPanel
+            // characterTrackerControl1
             // 
-            this.followCharacterPanel.AutoScroll = true;
-            this.followCharacterPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.followCharacterPanel.Location = new System.Drawing.Point(3, 16);
-            this.followCharacterPanel.Name = "followCharacterPanel";
-            this.followCharacterPanel.Size = new System.Drawing.Size(160, 110);
-            this.followCharacterPanel.TabIndex = 0;
+            this.characterTrackerControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.characterTrackerControl1.Location = new System.Drawing.Point(3, 16);
+            this.characterTrackerControl1.Name = "characterTrackerControl1";
+            this.characterTrackerControl1.Size = new System.Drawing.Size(160, 110);
+            this.characterTrackerControl1.TabIndex = 0;
             // 
             // groupBox3
             // 
@@ -585,8 +584,8 @@ namespace Demoder.PlanetMapViewer.Forms
             this.MinimumSize = new System.Drawing.Size(400, 500);
             this.Name = "MainWindow";
             this.Text = "Demoder\'s Planet Map Viewer";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindowFormClosing);
+            this.Load += new System.EventHandler(this.MainWindowFormLoad);
             this.Resize += new System.EventHandler(this.MainWindow_Resize);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -656,7 +655,6 @@ namespace Demoder.PlanetMapViewer.Forms
         private System.Windows.Forms.Label magnificationLabel;
         internal System.Windows.Forms.TrackBar MagnificationSlider;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Panel followCharacterPanel;
         private System.Windows.Forms.ToolStripMenuItem pluginManagerToolStripMenuItem;
         private System.Windows.Forms.GroupBox pluginsPanel;
         private System.Windows.Forms.ToolStripMenuItem pluginsToolStripMenuItem;
@@ -664,6 +662,7 @@ namespace Demoder.PlanetMapViewer.Forms
         private System.Windows.Forms.SplitContainer splitContainer2;
         private MapSelectionControl mapSelectionControl1;
         private CameraUserControl cameraUserControl1;
+        private CharacterTrackerControl characterTrackerControl1;
     }
 }
 

@@ -46,13 +46,8 @@ namespace Demoder.PlanetMapViewer.Forms
             API.UiElements.CharacterTrackerControl = this;
             InitializeComponent();
 
-            // Initialize component!
-            this.listView1.Dock = DockStyle.Fill;
-            this.listView1.View = View.Details;
-            this.listView1.CheckBoxes = true;
-            
             // Add columns
-            this.listView1.Columns.Add("Character", 40, HorizontalAlignment.Center);
+            this.listView1.Columns.Add("Character", this.listView1.Width, HorizontalAlignment.Center);
 
             // Add images
             var imgList = new ImageList
@@ -146,7 +141,12 @@ namespace Demoder.PlanetMapViewer.Forms
 
                     this.listView1.Items.Add(li);
                 }
-                this.listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+
+                if (this.listView1.Items.Count != 0 && oldItems.Length == 0)
+                {
+                    this.listView1.Items[0].Checked = true;
+                }
+
                 this.listView1.EndUpdate();
             }
         }

@@ -55,6 +55,16 @@ namespace Demoder.PlanetMapViewer.Forms
     {
         #region Members
         private Stopwatch lastException;
+        private ApplicationSettingsBase[] availableSettings = new ApplicationSettingsBase[]
+                {
+                    Properties.GeneralSettings.Default,
+                    Properties.MapSettings.Default,
+                    Properties.WindowSettings.Default,
+                    Properties.NormalTutorial.Default,
+                    Properties.OverlayTutorial.Default,
+                    Properties.GuiFonts.Default,
+                    Properties.MapFonts.Default
+                };
 
         #region Timers
         private thrd.Timer topMostTimer;
@@ -77,12 +87,6 @@ namespace Demoder.PlanetMapViewer.Forms
                 InitializeComponent();
                 this.splitContainer1.SplitterDistance = 550;
                 Program.WriteLog("MainWindow->MainWindow(): InitializeComponent was successfull.");
-
-                // Add manual components
-                var charTrackControl = new CharacterTrackerControl();
-                charTrackControl.Dock = DockStyle.Fill;
-                this.followCharacterPanel.Controls.Add(charTrackControl);
-                Program.WriteLog("MainWindow->MainWindow(): Constructor was successful.");
             }
             catch (Exception ex)
             {
@@ -97,7 +101,7 @@ namespace Demoder.PlanetMapViewer.Forms
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void MainWindowFormLoad(object sender, EventArgs e)
         {
             try
             {
@@ -109,22 +113,12 @@ namespace Demoder.PlanetMapViewer.Forms
                 Program.WriteLog("MainWindow->Form1_Load() B");
                 // Check if we should attempt to upgrade settings
                 Program.WriteLog("MainWindow->Form1_Load(): Checking settings");
+                
                 if (Properties.GeneralSettings.Default.SettingVersion != this.ProductVersion.ToString())
                 {
                     Properties.GeneralSettings.Default.SettingVersion = this.ProductVersion.ToString();
 
-                    var settings = new ApplicationSettingsBase[]
-                    {
-                        Properties.GeneralSettings.Default,
-                        Properties.MapSettings.Default,
-                        Properties.WindowSettings.Default,
-                        Properties.NormalTutorial.Default,
-                        Properties.OverlayTutorial.Default,
-                        Properties.GuiFonts.Default,
-                        Properties.MapFonts.Default
-                    };
-
-                    foreach (var s in settings)
+                    foreach (var s in this.availableSettings)
                     {
                         s.Upgrade();
                         s.Save();
@@ -219,7 +213,7 @@ namespace Demoder.PlanetMapViewer.Forms
             }
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void MainWindowFormClosing(object sender, FormClosingEventArgs e)
         {
             if (this.OverlayModeToolStripMenuItem.Checked)
             {
@@ -242,8 +236,10 @@ namespace Demoder.PlanetMapViewer.Forms
             }
 
             // Save setting files
-            Properties.MapSettings.Default.Save();
-            Properties.WindowSettings.Default.Save();
+            foreach (var setting in this.availableSettings)
+            {
+                setting.Save();
+            }
         }
         #endregion
 
@@ -252,7 +248,7 @@ namespace Demoder.PlanetMapViewer.Forms
         {
             if (e.Result == null)
             {
-                MessageBox.Show("Unexpected server response, try again later.", "Version information", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Unexpected server response, please try again later.", "Version information", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             var res = e.Result as VersionInfo;

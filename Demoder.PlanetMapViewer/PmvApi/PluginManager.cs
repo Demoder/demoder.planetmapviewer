@@ -54,6 +54,11 @@ namespace Demoder.PlanetMapViewer.PmvApi
 
         private void SendPluginStateChangeEvent()
         {
+            Task.Factory.StartNew(this.RealSendPluginStateChangeEvent);
+        }
+
+        private void RealSendPluginStateChangeEvent()
+        {
             var e = this.PluginStateChangeEvent;
             if (e == null) { return; }
             lock (e)
@@ -92,7 +97,7 @@ namespace Demoder.PlanetMapViewer.PmvApi
             this.registeredPlugins.TryAdd(type, pi);
         }
 
-        internal bool LoadPlugin(Type type)
+        internal bool LoadPlugin(Type type, bool sendEvent=true)
         {
             PluginInfo pi;
             if (!this.registeredPlugins.TryGetValue(type, out pi))
@@ -106,7 +111,7 @@ namespace Demoder.PlanetMapViewer.PmvApi
             pi.Instance = Activator.CreateInstance(pi.Type) as IPlugin;
             API.PluginConfig.LoadConfig(pi.Instance);
             this.StartGenerationTask(pi);
-            this.SendPluginStateChangeEvent();
+            if (sendEvent) { this.SendPluginStateChangeEvent(); }
             return pi.Instance != null;
         }
 
@@ -129,9 +134,10 @@ namespace Demoder.PlanetMapViewer.PmvApi
                 if (pluginTypes.Contains(p.Type.FullName))
                 {
                     p.AutoLoad = true;
-                    this.LoadPlugin(p.Type);
+                    this.LoadPlugin(p.Type, false);
                 }
             }
+            this.SendPluginStateChangeEvent();
         }
 
         internal void UnloadPlugin(Type plugin)
