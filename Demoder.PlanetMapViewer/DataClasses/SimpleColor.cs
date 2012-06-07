@@ -56,7 +56,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
 
         public static implicit operator Color(SimpleColor color)
         {
-            return new Color(color.red, color.green, color.blue, color.red);
+            return new Color(color.red, color.green, color.blue, color.alpha);
         }
         public static implicit operator SimpleColor(Color color)
         {

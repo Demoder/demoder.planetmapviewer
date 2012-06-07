@@ -98,13 +98,15 @@ namespace Demoder.PlanetMapViewer.Plugins
                 switch (site.Faction)
                 {
                     case Common.AO.Faction.Neutral:
-                        tex.KeyColor = Color.White;
+                        //tex.KeyColor = Color.White;
+                        tex.KeyColor = Color.MediumAquamarine;
                         break;
                     case Common.AO.Faction.Clan:
                         tex.KeyColor = Color.DarkOrange;
                         break;
                     case Common.AO.Faction.Omni:
-                        tex.KeyColor = Color.DeepSkyBlue;
+                        //tex.KeyColor = Color.DeepSkyBlue;
+                        tex.KeyColor = Color.SkyBlue;
                         break;
                     default:
                         tex.KeyColor = Color.Purple;

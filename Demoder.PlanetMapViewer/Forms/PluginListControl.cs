@@ -53,6 +53,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.pluginList.Invoke((Action)this.PopulatePluginList);
                 return;
             }
+
             lock (this.pluginList)
             {
                 this.pluginList.BeginUpdate();

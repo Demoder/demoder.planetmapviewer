@@ -64,7 +64,6 @@ namespace Demoder.PlanetMapViewer.Forms
             this.RadioRK.Name = "RadioRK";
             this.RadioRK.Size = new System.Drawing.Size(62, 17);
             this.RadioRK.TabIndex = 0;
-            this.RadioRK.TabStop = true;
             this.RadioRK.Text = "Rubi-ka";
             this.RadioRK.UseVisualStyleBackColor = true;
             this.RadioRK.CheckedChanged += new System.EventHandler(this.RadioMapTypeCheckedChanged);
@@ -76,13 +75,13 @@ namespace Demoder.PlanetMapViewer.Forms
             this.RadioSL.Name = "RadioSL";
             this.RadioSL.Size = new System.Drawing.Size(89, 17);
             this.RadioSL.TabIndex = 1;
-            this.RadioSL.TabStop = true;
             this.RadioSL.Text = "Shadowlands";
             this.RadioSL.UseVisualStyleBackColor = true;
             // 
             // RadioAuto
             // 
             this.RadioAuto.AutoSize = true;
+            this.RadioAuto.Checked = true;
             this.RadioAuto.Location = new System.Drawing.Point(3, 49);
             this.RadioAuto.Name = "RadioAuto";
             this.RadioAuto.Size = new System.Drawing.Size(47, 17);
@@ -93,6 +92,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // 
             // MapComboBox
             // 
+            this.MapComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.MapComboBox.FormattingEnabled = true;
             this.MapComboBox.Location = new System.Drawing.Point(3, 72);
             this.MapComboBox.Name = "MapComboBox";

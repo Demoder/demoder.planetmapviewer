@@ -105,8 +105,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
         public static bool IsValidAoFolder(string folder)
         {
-            if (!File.Exists(Path.Combine(folder, "Anarchy.exe"))) { return false; }
-            return true;
+            return File.Exists(Path.Combine(folder, "Anarchy.exe"));
         }
 
         private void OkButtonClick(object sender, EventArgs e)
