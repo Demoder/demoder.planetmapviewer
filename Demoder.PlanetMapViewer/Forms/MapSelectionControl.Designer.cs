@@ -77,6 +77,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.RadioSL.TabIndex = 1;
             this.RadioSL.Text = "Shadowlands";
             this.RadioSL.UseVisualStyleBackColor = true;
+            this.RadioSL.CheckedChanged += new System.EventHandler(this.RadioMapTypeCheckedChanged);
             // 
             // RadioAuto
             // 
@@ -89,6 +90,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.RadioAuto.TabStop = true;
             this.RadioAuto.Text = "Auto";
             this.RadioAuto.UseVisualStyleBackColor = true;
+            this.RadioAuto.CheckedChanged += new System.EventHandler(this.RadioMapTypeCheckedChanged);
             // 
             // MapComboBox
             // 
