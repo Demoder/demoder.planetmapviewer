@@ -33,12 +33,43 @@ using System.Threading;
 using Demoder.PlanetMapViewer.Xna;
 using System.ComponentModel;
 using Demoder.PlanetMapViewer.Helpers;
+using Demoder.PlanetMapViewer.Events;
 
 namespace Demoder.PlanetMapViewer.PmvApi
 {
     public class PluginManager
     {
-        public event Action PluginStateChangeEvent;
+        #region Events
+        internal event PmvEvent<PluginStateChangeEventArgs> PluginStateChangeEvent;
+        #endregion
+
+        private BlockingCollection<EventArgs> events = new BlockingCollection<EventArgs>();
+
+        public PluginManager()
+        {
+            Task.Factory.StartNew(this.SendEvents, TaskCreationOptions.LongRunning);
+        }
+
+        private void SendEvents()
+        {
+            foreach (var e in this.events.GetConsumingEnumerable())
+            {
+                if (e.GetType() == typeof(PluginStateChangeEventArgs))
+                {
+                    this.SendEvent(this.PluginStateChangeEvent, e);
+                }
+            }
+        }
+
+        private void SendEvent(dynamic sendTo, dynamic e)
+        {
+            if (sendTo == null) { return; }
+            lock (sendTo)
+            {
+                sendTo(this, e);
+            }
+        }
+
 
         private ConcurrentDictionary<Type, PluginInfo> registeredPlugins = new ConcurrentDictionary<Type, PluginInfo>();
 
@@ -49,21 +80,6 @@ namespace Demoder.PlanetMapViewer.PmvApi
             foreach (var plugin in assembly.GetTypes().Where(t => typeof(IPlugin).IsAssignableFrom(t) && t != typeof(IPlugin)))
             {
                 this.RegisterPlugin(plugin);
-            }
-        }
-
-        private void SendPluginStateChangeEvent()
-        {
-            Task.Factory.StartNew(this.RealSendPluginStateChangeEvent);
-        }
-
-        private void RealSendPluginStateChangeEvent()
-        {
-            var e = this.PluginStateChangeEvent;
-            if (e == null) { return; }
-            lock (e)
-            {
-                e();
             }
         }
 
@@ -95,23 +111,32 @@ namespace Demoder.PlanetMapViewer.PmvApi
 
             pi.Settings = SettingInfo.Generate(pi.Type).OrderBy(s => s.PropertyInfo.Name).ToArray();
             this.registeredPlugins.TryAdd(type, pi);
+            Program.WriteLog("Registering plugin: {0}", type);
         }
 
-        internal bool LoadPlugin(Type type, bool sendEvent=true)
+        internal bool LoadPlugin(Type type)
         {
+            Program.WriteLog("Loading plugin {0}", type);
             PluginInfo pi;
             if (!this.registeredPlugins.TryGetValue(type, out pi))
             {
+                Program.WriteLog("\tFailed to load plugin; Type isn't registered as plugin");
                 return false;
             }
             if (pi.Instance != null)
             {
+                Program.WriteLog("\tFailed to load plugin: Already loaded.");
                 return false;
             }
+            Program.WriteLog("\tCreating instance of plugin");
             pi.Instance = Activator.CreateInstance(pi.Type) as IPlugin;
+            Program.WriteLog("\tLoading configuration for plugin");
             API.PluginConfig.LoadConfig(pi.Instance);
+            Program.WriteLog("\tStarting generation task for plugin");
             this.StartGenerationTask(pi);
-            if (sendEvent) { this.SendPluginStateChangeEvent(); }
+
+            Program.WriteLog("\tSending PluginStateChangeEvent because of loading plugin");
+            this.events.Add(new PluginStateChangeEventArgs(pi, pi.Instance != null));
             return pi.Instance != null;
         }
 
@@ -128,34 +153,42 @@ namespace Demoder.PlanetMapViewer.PmvApi
 
         internal void LoadEnabledPlugins()
         {
+            Program.WriteLog("------------");
             var pluginTypes = Properties.GeneralSettings.Default.EnabledPlugins.Split(new string[] { ";;" }, StringSplitOptions.RemoveEmptyEntries);
+            Program.WriteLog("Loading enabled plugins:\r\n\t{0}", String.Join("\r\n\t", pluginTypes));
             foreach (var p in this.AllPlugins)
             {
                 if (pluginTypes.Contains(p.Type.FullName))
                 {
+                    Program.WriteLog("--- Plugin is configured to autoload: {0} ---", p.Type);
                     p.AutoLoad = true;
-                    this.LoadPlugin(p.Type, false);
+                    this.LoadPlugin(p.Type);
                 }
             }
-            this.SendPluginStateChangeEvent();
+            Program.WriteLog("------------");
         }
 
         internal void UnloadPlugin(Type plugin)
         {
+            Program.WriteLog("Unloading plugin {0}", plugin);
             PluginInfo pi;
             if (!this.registeredPlugins.TryGetValue(plugin, out pi))
             {
+                Program.WriteLog("\tFailed to unload plugin because it's not a registered plugin: {0}", plugin);
                 return;
             }
             if (pi.Instance == null)
             {
+                Program.WriteLog("\tFailed to unload plugin because it's not loaded: {0}", plugin);
                 return;
             }
 
             var instance = pi.Instance;
             pi.Instance = null;
+            Program.WriteLog("\tDisposing plugin: {0}", plugin);
             instance.Dispose();
-            this.SendPluginStateChangeEvent();
+            Program.WriteLog("\tSending plugin state change event.");
+            this.events.Add(new PluginStateChangeEventArgs(pi, pi.Instance != null));
         }
 
         public T GetPlugin<T>()
@@ -197,10 +230,15 @@ namespace Demoder.PlanetMapViewer.PmvApi
         }
 
 
-        internal void SignalGenerationMre(Type type)
+        internal void SignalGenerationMre(Type plugin)
         {
-            var pi = this.AllPlugins.FirstOrDefault(p => p.Type == type);
-            if (pi == null) { return; }
+            Program.WriteLog("Signaling generation MRE for plugin {0}", plugin);
+            var pi = this.AllPlugins.FirstOrDefault(p => p.Type == plugin);
+            if (pi == null)
+            {
+                Program.WriteLog("\tFailed to signal generation MRE for plugin because plugin isn't registered: {0}", plugin);
+                return;
+            }
             pi.GenerationMre.Set();
         }
 
@@ -226,7 +264,7 @@ namespace Demoder.PlanetMapViewer.PmvApi
                 }
                 catch (Exception ex)
                 {
-                    Program.WriteLog(ex.ToString());
+                    Program.WriteLog(ex);
                 }
                 sw.Stop();
                 info.LastExecutionTime = sw.ElapsedMilliseconds;

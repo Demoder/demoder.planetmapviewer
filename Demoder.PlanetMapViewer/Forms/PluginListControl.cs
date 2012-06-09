@@ -42,7 +42,12 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void PluginListControl_Load(object sender, EventArgs e)
         {
-            API.PluginManager.PluginStateChangeEvent += this.PopulatePluginList;
+            API.PluginManager.PluginStateChangeEvent += new PmvEvent<PlanetMapViewer.Events.PluginStateChangeEventArgs>(PluginManagerPluginStateChangeEvent);
+            this.PopulatePluginList();
+        }
+
+        void PluginManagerPluginStateChangeEvent(object sender, Events.PluginStateChangeEventArgs e)
+        {
             this.PopulatePluginList();
         }
 

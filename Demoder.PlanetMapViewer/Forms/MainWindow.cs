@@ -93,10 +93,6 @@ namespace Demoder.PlanetMapViewer.Forms
                 Program.WriteLog("");
                 Program.WriteLog("MainWindow->MainWindow() Exception: {0}", ex.ToString());
                 Program.WriteLog("");
-                if (API.ErrorLog != null)
-                {
-                    API.ErrorLog.Enqueue(ex.ToString());
-                }
                 this.ShowExceptionError(ex);
             }
         }
@@ -175,24 +171,12 @@ namespace Demoder.PlanetMapViewer.Forms
                 // Setup the tile display.
                 Program.WriteLog("MainWindow->Form1_Load() Assigning window handle to tileDisplay1.Handle");
                 Mouse.WindowHandle = this.tileDisplay1.Handle;
-
-#if DEBUG
-                this.errorLogToolStripMenuItem.Visible = true;
-#else 
-                this.errorLogToolStripMenuItem.Visible = false;
-#endif
-
             }
             catch (Exception ex)
             {
-                
                 Program.WriteLog("");
                 Program.WriteLog("MainWindow->Form1_Load() Exception caught: {0}", ex.ToString());
                 Program.WriteLog("");
-                if (API.ErrorLog != null)
-                {
-                    API.ErrorLog.Enqueue(ex.ToString());
-                }
                 this.ShowExceptionError(ex);
                 Application.Exit();
             }
@@ -708,7 +692,7 @@ namespace Demoder.PlanetMapViewer.Forms
                         }
                         catch (Exception ex)
                         {
-                            API.ErrorLog.Enqueue(ex.ToString());
+                            Program.WriteLog(ex);
                         }
                     }
                     this.selectCharactersToolStripMenuItem.Enabled = this.selectCharactersToolStripMenuItem.DropDownItems.Count != 0;
@@ -785,7 +769,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 }
                 catch (Exception ex)
                 {
-                    API.ErrorLog.Enqueue(ex.ToString());
+                    Program.WriteLog(ex);
                 }
             }
         }
@@ -798,14 +782,6 @@ namespace Demoder.PlanetMapViewer.Forms
         private void optionsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             this.ShowOptionsDialog();
-        }
-
-        private void errorLogToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var err = new ErrorLog();
-            var errors = API.ErrorLog.ToArray();
-            err.textBox1.Text = String.Join("\r\n\r\n", errors);
-            err.ShowDialog();
         }
 
         private void MainWindow_Resize(object sender, EventArgs e)

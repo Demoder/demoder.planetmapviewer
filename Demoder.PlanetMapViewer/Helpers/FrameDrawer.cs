@@ -148,7 +148,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 }
                 catch (Exception ex)
                 {
-                    Program.WriteLog(ex.ToString());
+                    Program.WriteLog(ex);
                     throw ex;
                 }
                 finally
@@ -180,7 +180,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 }
                 catch (Exception ex)
                 {
-                    Program.WriteLog(ex.ToString());
+                    Program.WriteLog(ex);
                     throw ex;
                 }
                 finally
@@ -191,7 +191,7 @@ namespace Demoder.PlanetMapViewer.Helpers
             }
             catch (Exception ex)
             {
-                Program.WriteLog(ex.ToString());
+                Program.WriteLog(ex);
             }
         }
 
@@ -261,7 +261,7 @@ namespace Demoder.PlanetMapViewer.Helpers
             }
             catch (Exception ex)
             {
-                Program.WriteLog(ex.ToString());
+                Program.WriteLog(ex);
             }
             finally
             {

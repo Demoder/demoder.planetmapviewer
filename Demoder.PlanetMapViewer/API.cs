@@ -57,8 +57,6 @@ namespace Demoder.PlanetMapViewer
                     );
         }
 
-        public static Queue<string> ErrorLog = new Queue<string>();
-
         public static FrameDrawer FrameDrawer { get; private set; }
         public static MapManager MapManager;
         public static Camera Camera;

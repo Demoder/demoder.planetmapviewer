@@ -25,10 +25,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Demoder.PlanetMapViewer.PmvApi;
 
-namespace Demoder.PlanetMapViewer
+namespace Demoder.PlanetMapViewer.Events
 {
-    public delegate void MainFormModeChangeDelegate(WindowMode fromMode, WindowMode toMode);
-
-    public delegate void PmvEvent<T>(object sender, T e);
+    internal class PluginStateChangeEventArgs : EventArgs
+    {
+        public PluginInfo Plugin { get; private set; }
+        public bool Loaded { get; private set; }
+        internal PluginStateChangeEventArgs(PluginInfo plugin, bool loaded)
+        {
+            this.Plugin = plugin;
+            this.Loaded = loaded;
+        }
+    }
 }
