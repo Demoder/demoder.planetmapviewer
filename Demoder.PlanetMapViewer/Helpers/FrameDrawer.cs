@@ -128,14 +128,22 @@ namespace Demoder.PlanetMapViewer.Helpers
                         if (String.IsNullOrEmpty(sd.Text)) { continue; }
                         var textSize = sd.Size;
                         var pos = GetRealPosition(item);
-                        pos.X++;
+                        for (int x = -1; x <= 1; x++)
+                        {
+                            for (int y = -1; y <= 1; y++)
+                            {
+                                if (x == 0 && y == 0) { continue; }
+                                API.SpriteBatch.DrawString(
+                                    API.Content.Fonts.GetFont(sd.Font),
+                                    sd.Text,
+                                    new Vector2(pos.X + x, pos.Y + y),
+                                    sd.ShadowColor
+                                    );
+                            }
+                        }
+                            pos.X++;
                         pos.Y++;
-                        API.SpriteBatch.DrawString(
-                            API.Content.Fonts.GetFont(sd.Font),
-                            sd.Text,
-                            pos,
-                            sd.ShadowColor
-                            );
+                        
                     }
                 }
                 catch (Exception ex)
@@ -149,6 +157,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 }
                 #endregion
 
+                
                 #region Normal
                 this.SpriteBatchBegin(drawMode);
                 try

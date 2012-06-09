@@ -150,8 +150,8 @@ namespace Demoder.PlanetMapViewer.Plugins
                 if (!norm.OverlayMode) { return TutorialStage.OverlayMode; }
                 if (!over.TitlebarMenu) { return TutorialStage.OverlayTitlebarMenuOpen; }
                 if (!over.TitlebarMenuClosed) { return TutorialStage.OverlayTitlebarMenuClose; }
-                if (!over.ResizeWindow) { return TutorialStage.OverlayResizeWindow; }
                 if (!over.ExitOverlayMode) { return TutorialStage.OverlayExit; }
+                if (!over.ResizeWindow) { return TutorialStage.OverlayResizeWindow; }
                 
                 this.isComplete = true;
                 return TutorialStage.Completed;
@@ -255,7 +255,7 @@ namespace Demoder.PlanetMapViewer.Plugins
             items.MapItems.Add(this.GetTutorialStamp(500, 200));
             var txts = new MapTextBuilder(FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top | MapItemAlignment.Left);
             txts.Text("Tutorial: Window Size", textColor: Color.Red, font: FontType.GuiXLarge).Break();
-            txts.Text("You may resize the window by dragging the window border using the mouse.", 470).Break();
+            txts.Text("You may resize the window by dragging the window border using the mouse.", 450).Break();
             txts.Break();
             txts.Text("Please resize the window now.", textColor: Color.Green).Break();
             items.MapItems.AddRange(txts.ToMapItem(DrawMode.ViewPort, (int)(this.TutorialFramePosition.X - items.MapItems.First().Size.X / 2.5), this.TutorialFramePosition.Y));

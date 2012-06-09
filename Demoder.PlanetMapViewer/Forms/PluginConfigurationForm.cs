@@ -44,6 +44,8 @@ namespace Demoder.PlanetMapViewer.Forms
             this.DialogResult = System.Windows.Forms.DialogResult.Cancel; // Default to cancel.
             this.plugin = pluginInfo.Instance;
             this.settings = pluginInfo.Settings;
+
+            this.Text = String.Format("Plugin Configuration: {0}", pluginInfo.Name);
         }
 
         private void PluginConfigurationForm_Load(object sender, EventArgs e)

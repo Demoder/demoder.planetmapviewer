@@ -148,6 +148,22 @@ namespace Demoder.PlanetMapViewer.Forms
                 Program.WriteLog("MainWindow->Form1_Load() Initializing MapManager (stage 2)");
                 API.MapManager.Initialize();
 
+                // "Gracefully" handle situations where we have no valid maps.
+                if (API.MapManager.CurrentMap == null)
+                {
+                    var dr = this.ShowOptionsDialog("Demoder's Planet Map Viewer - Options");
+                    if (dr == DialogResult.Cancel)
+                    {
+                        Application.Exit();
+                    }
+                    API.MapManager.Initialize();
+                    if (API.MapManager.CurrentMap == null)
+                    {
+                        Application.Exit();
+                    }
+
+                }
+
                 Program.WriteLog("MainWindow->Form1_Load() Assigning events");
                 this.bgwVersionCheck.DoWork += bgwVersionCheck_DoWork;
                 this.bgwVersionCheck.RunWorkerCompleted += bgwVersionCheck_RunWorkerCompleted;
@@ -869,6 +885,12 @@ namespace Demoder.PlanetMapViewer.Forms
         private void followCharactersToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             API.State.CameraControl = CameraControl.Character;
+        }
+
+        private void pluginManagerToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var pm = new PluginManagerForm();
+            pm.ShowDialog();
         }
     }
 
