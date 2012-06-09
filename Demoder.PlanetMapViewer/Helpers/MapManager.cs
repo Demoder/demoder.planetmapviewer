@@ -251,7 +251,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                     }
                     catch(Exception ex)
                     {
-                        API.ErrorLog.Enqueue(ex.ToString());
+                        Program.WriteLog(ex);
                         continue;
                     }
                 }

@@ -106,6 +106,7 @@
     <Compile Include="DataClasses\XnaContentSpriteFonts.cs" />
     <Compile Include="DataClasses\XnaContentTextures.cs" />
     <Compile Include="delegates.cs" />
+    <Compile Include="Events\PluginStateChangeEventArgs.cs" />
     <Compile Include="Forms\CameraUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

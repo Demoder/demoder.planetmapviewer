@@ -121,7 +121,7 @@ namespace Demoder.PlanetMapViewer.Xna
                 }
                 catch (Exception ex)
                 {
-                    API.ErrorLog.Enqueue(ex.ToString());
+                    Program.WriteLog(ex);
                 }
             } while (true);
         }
@@ -553,7 +553,7 @@ namespace Demoder.PlanetMapViewer.Xna
             }
             catch (Exception ex)
             {
-                Program.WriteLog(ex.ToString());
+                Program.WriteLog(ex);
             }
         }
     }

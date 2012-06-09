@@ -50,16 +50,52 @@ namespace Demoder.PlanetMapViewer
             WriteLog("");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainWindow());
+            Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
+            try
+            {
+                Application.Run(new MainWindow());
+            }
+            catch (Exception ex)
+            {
+                WriteLog(ex);
+            }
+
+            if (writer != null)
+            {
+                writer.Flush();
+                writer.Dispose();
+                writer = null;
+            }
+        }
+
+        static void Application_ApplicationExit(object sender, EventArgs e)
+        {
+            if (writer != null)
+            {
+                writer.Flush();
+                writer.Dispose();
+                writer = null;
+            }
         }
      
 
         internal static void WriteLog(string format, params object[] parameters)
         {
 #if DEBUG
+            if (writer == null) { return; }
             var log = String.Format(format, parameters);
-            writer.WriteLine(String.Format("[{0}] {1}", DateTime.Now.ToShortTimeString(), log));
+            lock (writer)
+            {
+                writer.WriteLine(String.Format("[{0}] {1}", DateTime.Now.ToShortTimeString(), log));
+            }
 #endif
+        }
+
+        internal static void WriteLog(Exception ex)
+        {
+            WriteLog("");
+            WriteLog(ex.ToString());
+            WriteLog("");
         }
 
     }

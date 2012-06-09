@@ -108,9 +108,13 @@ namespace Demoder.PlanetMapViewer.Helpers
                     API.UiElements.HScrollBar.Value = (int)pos.X;
                     API.UiElements.VScrollBar.Value = (int)pos.Y;
                 }
+                catch (ArgumentOutOfRangeException ex)
+                {
+
+                }
                 catch (Exception ex)
                 {
-                    API.ErrorLog.Enqueue(ex.ToString());
+                    Program.WriteLog(ex);
                 }
             }
         }

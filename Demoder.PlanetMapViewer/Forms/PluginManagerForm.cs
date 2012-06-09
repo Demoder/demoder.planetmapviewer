@@ -31,6 +31,7 @@ using System.Text;
 using System.Windows.Forms;
 using Demoder.PlanetMapViewer.PmvApi;
 using Demoder.PlanetMapViewer.Helpers;
+using Demoder.PlanetMapViewer.Events;
 
 namespace Demoder.PlanetMapViewer.Forms
 {
@@ -39,10 +40,10 @@ namespace Demoder.PlanetMapViewer.Forms
         public PluginManagerForm()
         {
             InitializeComponent();
-            API.PluginManager.PluginStateChangeEvent += new Action(PluginManager_PluginStateChangeEvent);
+            API.PluginManager.PluginStateChangeEvent += PluginManager_PluginStateChangeEvent;
         }
 
-        void PluginManager_PluginStateChangeEvent()
+        void PluginManager_PluginStateChangeEvent(object sender, PluginStateChangeEventArgs e)
         {
             this.UpdateList();
         }
