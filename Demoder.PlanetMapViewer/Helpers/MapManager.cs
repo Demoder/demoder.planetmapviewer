@@ -308,6 +308,7 @@ namespace Demoder.PlanetMapViewer.Helpers
         /// <returns></returns>
         public Microsoft.Xna.Framework.Vector2 GetPosition(uint zone, float x, float y)
         {
+            if (this.CurrentMap == null) { return Microsoft.Xna.Framework.Vector2.Zero; }
             return this.CurrentMap.GetPosition(this.CurrentLayerNum, zone, x, y);
         }
         /// <summary>
@@ -319,6 +320,7 @@ namespace Demoder.PlanetMapViewer.Helpers
         /// <returns></returns>
         public Microsoft.Xna.Framework.Vector2 GetReversePosition(uint zone, float x, float y)
         {
+            if (this.CurrentMap == null) { return Microsoft.Xna.Framework.Vector2.Zero; }
             return this.CurrentMap.GetReversePosition(this.CurrentLayerNum, zone, x, y);
         }
     }
