@@ -224,9 +224,12 @@ namespace Demoder.PlanetMapViewer.PmvApi
             foreach (var p in this.registeredPlugins.Values.Where(pi => pi.Instance != null && pi.Visible).ToArray())
             {
                 this.StartGenerationTask(p);
-                overlays.Add(p.GeneratedOverlay);
+                if (p.GeneratedOverlay != null && p.GeneratedOverlay.MapItems.Count != 0)
+                {
+                    overlays.Add(p.GeneratedOverlay);
+                }
             }
-            return overlays.ToArray();
+            return overlays.OrderBy(o=>o.DrawOrder).ToArray();
         }
 
 

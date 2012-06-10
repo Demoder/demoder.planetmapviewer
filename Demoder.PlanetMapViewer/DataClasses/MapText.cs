@@ -48,7 +48,8 @@ namespace Demoder.PlanetMapViewer.DataClasses
         {
             get
             {
-                return API.Content.Fonts.GetFont(this.Font).MeasureString(this.Text);
+                if (this.Font == null) { return Vector2.Zero; }
+                return this.Font.MeasureString(this.Text);
             }
         }
 
@@ -57,7 +58,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
         public SimpleColor ShadowColor = Color.Black;
         public SimpleColor TextColor = Color.White;
         [XmlAttribute("font")]
-        public FontType Font = default(FontType);
+        public SpriteFont Font = null;
         [XmlAttribute("haveShadow")]
         public bool Shadow = true;
 

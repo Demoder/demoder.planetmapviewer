@@ -31,6 +31,7 @@ using Microsoft.Xna.Framework;
 using Demoder.AoHook;
 using System.Threading;
 using System.ComponentModel;
+using Demoder.Common.Attributes;
 
 namespace Demoder.PlanetMapViewer.Plugins
 {
@@ -38,6 +39,11 @@ namespace Demoder.PlanetMapViewer.Plugins
     [Description("Displays character locators on the planet map")]
     public class CharacterLocatorPlugin : IPlugin
     {
+        #region settings
+        [SettingOption(LoadedFont.Silkscreen7)]
+        public LoadedFont CharacterLocatorFont { get; set; }
+        #endregion
+
         private Dictionary<int, uint> ProcessCharacterMap = new Dictionary<int, uint>();
 
         public CharacterLocatorPlugin()
@@ -51,7 +57,11 @@ namespace Demoder.PlanetMapViewer.Plugins
         
         public CustomMapOverlay GetCustomOverlay()
         {
-            var overlay = new CustomMapOverlay();
+            var overlay = new CustomMapOverlay
+            {
+                DrawOrder = int.MaxValue
+            };
+
             overlay.MapItems.AddRange(this.GetCharacterLocators());
             return overlay;
         }
@@ -92,7 +102,7 @@ namespace Demoder.PlanetMapViewer.Plugins
                     TextColor = Color.Yellow,
                     ShadowColor = Color.Black,
                     Shadow = true,
-                    Font = FontType.MapCharLocator
+                    Font = API.Content.Fonts.GetFont(this.CharacterLocatorFont)
                 };
 
                 if (!character.IsHooked)

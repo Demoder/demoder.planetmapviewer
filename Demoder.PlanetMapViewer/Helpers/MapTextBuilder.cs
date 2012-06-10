@@ -38,7 +38,7 @@ namespace Demoder.PlanetMapViewer.Helpers
     {
         #region Members
         private List<IMapItem> mapItems = new List<IMapItem>();
-        private FontType font;
+        private SpriteFont font;
         private Color textColor;
         private Color shadowColor;
         private bool haveShadow;
@@ -55,6 +55,16 @@ namespace Demoder.PlanetMapViewer.Helpers
         #endregion
 
         public MapTextBuilder(FontType font, Color textColor, Color shadowColor, bool haveShadow, MapItemAlignment alignment)
+            : this(API.Content.Fonts.GetFont(font), textColor, shadowColor, haveShadow, alignment)
+        {   
+        }
+
+        public MapTextBuilder(LoadedFont font, Color textColor, Color shadowColor, bool haveShadow, MapItemAlignment alignment)
+            : this(API.Content.Fonts.GetFont(font), textColor, shadowColor, haveShadow, alignment)
+        {
+        }
+
+        public MapTextBuilder(SpriteFont font, Color textColor, Color shadowColor, bool haveShadow, MapItemAlignment alignment)
         {
             this.font = font;
             this.textColor = textColor;
@@ -81,7 +91,7 @@ namespace Demoder.PlanetMapViewer.Helpers
 
             if (breaks > 0)
             {
-                this.nextPosition.Y += (breaks * API.Content.Fonts.GetFont(this.font).MeasureString("S").Y);
+                this.nextPosition.Y += (breaks * this.font.MeasureString("S").Y);
             }
             this.didBreakOnLastTextAlready = true;
             return this;
@@ -172,7 +182,29 @@ namespace Demoder.PlanetMapViewer.Helpers
             return this;
         }
 
-        public MapTextBuilder Text(string text, Color? textColor = null, Color? shadowColor = null, FontType? font = null, bool? haveShadow = null, MapItemAlignment? alignment = null)
+        public MapTextBuilder Text(string text, FontType font, Color? textColor = null, Color? shadowColor = null, bool? haveShadow = null, MapItemAlignment? alignment = null)
+        {
+            this.Text(text,
+                textColor,
+                shadowColor,
+                API.Content.Fonts.GetFont(font),
+                haveShadow,
+                alignment);
+            return this;
+        }
+
+        public MapTextBuilder Text(string text, LoadedFont font, Color? textColor = null, Color? shadowColor = null, bool? haveShadow = null, MapItemAlignment? alignment = null)
+        {
+            this.Text(text, 
+                textColor, 
+                shadowColor, 
+                API.Content.Fonts.GetFont(font), 
+                haveShadow, 
+                alignment);
+            return this;
+        }
+
+        public MapTextBuilder Text(string text, Color? textColor = null, Color? shadowColor = null, SpriteFont font = null, bool? haveShadow = null, MapItemAlignment? alignment = null)
         {
             // Store old values
             var oldTxtColor = this.textColor;
@@ -184,7 +216,7 @@ namespace Demoder.PlanetMapViewer.Helpers
             // Set temporary values
             if (textColor.HasValue) { this.textColor = textColor.Value; }
             if (shadowColor.HasValue) { this.shadowColor = shadowColor.Value; }
-            if (font.HasValue) { this.font = font.Value; }
+            if (font != null) { this.font = font; }
             if (haveShadow.HasValue) { this.haveShadow = haveShadow.Value; }
             if (alignment.HasValue) { this.alignment = alignment.Value; }
 

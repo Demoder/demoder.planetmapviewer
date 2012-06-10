@@ -77,8 +77,6 @@ namespace Demoder.PlanetMapViewer
         GuiNormal,
         GuiLarge,
         GuiXLarge,
-
-        MapCharLocator,
 #if DEBUG
         CourierNew8,
         CourierNew10,

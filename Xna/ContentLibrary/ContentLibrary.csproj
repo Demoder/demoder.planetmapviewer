@@ -91,7 +91,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Content\Content.contentproj">
       <Project>{618DED89-9BA8-44D7-83A0-163041666FAC}</Project>
-      <Name>Content %28Content\Content%29</Name>
+      <Name>Content</Name>
       <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
   </ItemGroup>

@@ -46,6 +46,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.settings = pluginInfo.Settings;
 
             this.Text = String.Format("Plugin Configuration: {0}", pluginInfo.Name);
+            //this.dataGridView1.DataError
         }
 
         private void PluginConfigurationForm_Load(object sender, EventArgs e)
@@ -103,8 +104,23 @@ namespace Demoder.PlanetMapViewer.Forms
                 return cell;
             }
             // Default: Text field.
-            else
+            else if (setting.SettingOptions.Length!=0)
             {
+                var cell = new DataGridViewComboBoxCell
+                {
+                    DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox,
+                    Value = setting.PropertyInfo.GetValue(this.plugin, null),
+                    ValueType = dType
+                };
+
+                foreach (var option in setting.SettingOptions)
+                {
+                    cell.Items.Add(option.Value);
+                }
+
+                return cell;
+            }
+            else {
                 var cell = new DataGridViewTextBoxCell
                 {
                     Value = setting.PropertyInfo.GetValue(this.plugin, null),
