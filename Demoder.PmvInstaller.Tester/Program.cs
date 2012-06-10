@@ -24,24 +24,25 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Demoder.PlanetMapViewer.DataClasses;
+using System.Windows.Forms;
 
-namespace Demoder.PlanetMapViewer.PmvApi
+namespace Demoder.PmvInstaller.Tester
 {
-    public class CustomMapOverlay
+    internal static class Program
     {
-        public CustomMapOverlay()
-        {
-            this.MapItems = new List<IMapItem>();
-            this.DrawOrder = 0;
-        }
-
-        public List<IMapItem> MapItems { get; private set; }
-
+        internal static int ReturnCode = 0;
         /// <summary>
-        /// When multiple layers are available, layer with smallest DrawOrder is drawn first.
+        /// The main entry point for the application.
         /// </summary>
-        public int DrawOrder { get; set; }
+        [STAThread]
+        static int Main(string[] args)
+        {
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1(String.Join(" ", args)));
+
+            return ReturnCode;
+        }
     }
 }

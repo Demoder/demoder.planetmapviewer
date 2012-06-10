@@ -1,16 +1,16 @@
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Demoder's PlanetMap Viewer")]
-[assembly: AssemblyDescription("An application providing AO planet maps in a separate window; Useful for multi-monitor setups. See http://forums.anarchy-online.com/showthread.php?t=529799 for more information.")]
+[assembly: AssemblyTitle("Demoder.PmvInstaller.Tester")]
+[assembly: AssemblyDescription("Used by the PMV installer to ensure no files in the installation directory are in use.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Demoder.PlanetMapViewer")]
-[assembly: AssemblyCopyright("Copyright © Demoder (demoder@demoder.me) 2012")]
+[assembly: AssemblyProduct("Demoder.PmvInstaller.Tester")]
+[assembly: AssemblyCopyright("Copyright ©  2012 Demoder (demoder@demoder.me)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("3d08c823-d842-438a-b8c4-6cc24edf35ca")]
+[assembly: Guid("372a90d3-2978-4486-906b-862538902f3c")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.1.79")]
-[assembly: AssemblyFileVersion("1.0.1.79")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

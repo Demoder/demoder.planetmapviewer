@@ -52,6 +52,12 @@ namespace Demoder.PlanetMapViewer.Plugins
 
         [Setting(true)]
         public bool ShowRecentAttacks { get; set; }
+
+        [Setting(LoadedFont.Silkscreen7)]
+        public LoadedFont RecentAttacksFont { get; set; }
+
+        [Setting(LoadedFont.Silkscreen7)]
+        public LoadedFont LcaOwnerFont { get; set; }
         #endregion
 
         private const string twTowerDistribution="http://towerwars.info/m/TowerDistribution.php";
@@ -106,7 +112,7 @@ namespace Demoder.PlanetMapViewer.Plugins
                     TextColor = Color.White,
                     ShadowColor = Color.Black,
                     Shadow = true,
-                    Font = FontType.MapCharLocator,
+                    Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
                     Text = "Error fetching recent attacks for " + this.Dimension.ToString()
                 });
                 return;
@@ -119,7 +125,7 @@ namespace Demoder.PlanetMapViewer.Plugins
                     TextColor = Color.White,
                     ShadowColor = Color.Black,
                     Shadow = true,
-                    Font = FontType.MapCharLocator,
+                    Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
                     Text = "No recent attacks on " + this.Dimension.ToString()
                 });
                 return; 
@@ -132,7 +138,7 @@ namespace Demoder.PlanetMapViewer.Plugins
                 TextColor = Color.White,
                 ShadowColor = Color.Black,
                 Shadow = true,
-                Font = FontType.MapCharLocator,
+                Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
                 Text = "Recent tower attacks on "+ this.Dimension.ToString()
             });
 
@@ -144,7 +150,7 @@ namespace Demoder.PlanetMapViewer.Plugins
                 // Time
                 overlay.MapItems.Add(new MapText
                 {
-                    Font = FontType.MapCharLocator,
+                    Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
                     Shadow = true,
                     ShadowColor = Color.Black,
                     TextColor = Color.White,
@@ -158,7 +164,7 @@ namespace Demoder.PlanetMapViewer.Plugins
                 // Attacked site ZONE
                 overlay.MapItems.Add(new MapText
                 {
-                    Font = FontType.MapCharLocator,
+                    Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
                     Shadow = true,
                     ShadowColor = Color.Black,
                     TextColor = this.GetFactionColor(attack.DefenderFaction),
@@ -171,7 +177,7 @@ namespace Demoder.PlanetMapViewer.Plugins
                 // Attacked site ID
                 overlay.MapItems.Add(new MapText
                 {
-                    Font = FontType.MapCharLocator,
+                    Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
                     Shadow = true,
                     ShadowColor = Color.Black,
                     TextColor = this.GetFactionColor(attack.DefenderFaction),
@@ -184,7 +190,7 @@ namespace Demoder.PlanetMapViewer.Plugins
                 // Attacker nickname
                 overlay.MapItems.Add(new MapText
                 {
-                    Font = FontType.MapCharLocator,
+                    Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
                     Shadow = true,
                     ShadowColor = Color.Black,
                     TextColor = this.GetFactionColor(attack.AttackerFaction),
@@ -198,7 +204,7 @@ namespace Demoder.PlanetMapViewer.Plugins
                 {
                     overlay.MapItems.Add(new MapText
                     {
-                        Font = FontType.MapCharLocator,
+                        Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
                         Shadow = true,
                         ShadowColor = Color.Black,
                         TextColor = Color.White,
@@ -211,7 +217,7 @@ namespace Demoder.PlanetMapViewer.Plugins
 
                     overlay.MapItems.Add(new MapText
                     {
-                        Font = FontType.MapCharLocator,
+                        Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
                         Shadow = true,
                         ShadowColor = Color.Black,
                         TextColor = this.GetFactionColor(attack.AttackerFaction),
@@ -220,33 +226,7 @@ namespace Demoder.PlanetMapViewer.Plugins
                         Text = attack.AttackerGuildName
                     });
                 }
-
-
             }
-
-            /*
-            var sb = new MapTextBuilder(FontType.MapCharLocator, Color.White, Color.Black, true, MapItemAlignment.Left | MapItemAlignment.Top);
-            sb.Text("Recent tower attacks:").Break();
-            foreach (var attack in towerData.Attacks)
-            {
-                
-
-                // Time of attack
-                sb.Text("["+attack.Time.ToShortTimeString()+"]  ");
-                // Site being attacked
-                sb.Text(String.Format("{0,4}  {1,3} ", attack.ZoneShortName, String.Format("x{0}",attack.SiteID)), textColor: this.GetFactionColor(attack.DefenderFaction));
-                // Attacker
-                sb.Text(String.Format("{0,14}", attack.AttackerNickName), textColor: this.GetFactionColor(attack.AttackerFaction));
-                if (!String.IsNullOrWhiteSpace(attack.AttackerGuildName))
-                {
-                    sb.Text(" of ");
-                    sb.Text(attack.AttackerGuildName, textColor: this.GetFactionColor(attack.AttackerFaction));
-                }
-                sb.Break();
-            }
-            
-            overlay.MapItems.AddRange(sb.ToMapItem(DrawMode.ViewPort, 5, 5));
-            */
         }
 
         private Color GetFactionColor(Faction faction)
@@ -313,7 +293,7 @@ namespace Demoder.PlanetMapViewer.Plugins
                 {
                     text = new MapText
                     {
-                        Font = FontType.GuiSmall,
+                        Font = API.Content.Fonts.GetFont(this.LcaOwnerFont),
                         Shadow = true,
                         Text = site.Guild
                     };
