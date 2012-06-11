@@ -34,7 +34,7 @@ namespace Demoder.PlanetMapViewer.Plugins
 {
     public class TutorialPlugin : IPlugin
     {
-        private bool isComplete = false;
+        private static bool isComplete = false;
         
         /// <summary>
         /// Which stage is set up now.
@@ -44,7 +44,7 @@ namespace Demoder.PlanetMapViewer.Plugins
         public IEnumerable<MapOverlay> GetCustomOverlay()
         {
             if (Properties.GeneralSettings.Default.DisableTutorials) { return null; }
-            var stage = this.CurrentStage;
+            var stage = CurrentStage;
             if (this.setupStage != stage)
             {
                 this.CleanupStage(this.setupStage);
@@ -53,7 +53,7 @@ namespace Demoder.PlanetMapViewer.Plugins
 
             MapOverlay overlay = null;
 
-            switch (this.CurrentStage)
+            switch (CurrentStage)
             {
                 case TutorialStage.ZoomIn:
                     overlay = this.NormalZoomInTutorial();
@@ -151,11 +151,11 @@ namespace Demoder.PlanetMapViewer.Plugins
             }
         }
 
-        private TutorialStage CurrentStage
+        public static TutorialStage CurrentStage
         {
             get
             {
-                if (this.isComplete) { return TutorialStage.Completed; }
+                if (isComplete) { return TutorialStage.Completed; }
                 
                 var norm = Properties.NormalTutorial.Default;
                 var over = Properties.OverlayTutorial.Default;
@@ -167,7 +167,7 @@ namespace Demoder.PlanetMapViewer.Plugins
                 if (!over.ExitOverlayMode) { return TutorialStage.OverlayExit; }
                 if (!over.ResizeWindow) { return TutorialStage.OverlayResizeWindow; }
                 
-                this.isComplete = true;
+                isComplete = true;
                 return TutorialStage.Completed;
             }
         }
@@ -371,7 +371,7 @@ namespace Demoder.PlanetMapViewer.Plugins
 
         public void Dispose()
         {
-            this.CleanupStage(this.CurrentStage);
+            this.CleanupStage(CurrentStage);
         }
     }
 }

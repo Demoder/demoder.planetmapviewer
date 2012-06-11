@@ -45,6 +45,9 @@ namespace Demoder.PlanetMapViewer.Plugins
 
         [Setting(true)]
         public bool DrawOfflineCharacters { get; set; }
+
+        [Setting(false)]
+        public bool DrawCharacterDimension { get; set; }
         #endregion
 
         public CharacterLocatorPlugin()
@@ -109,6 +112,11 @@ namespace Demoder.PlanetMapViewer.Plugins
                     Outline = true,
                     Font = API.Content.Fonts.GetFont(this.CharacterLocatorFont)
                 };
+
+                if (this.DrawCharacterDimension)
+                {
+                    txt.Text += " (" + character.Dimension.ToString().Substring(0, 1) + ")";
+                }
 
                 if (!character.IsHooked)
                 {
