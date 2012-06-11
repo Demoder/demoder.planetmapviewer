@@ -150,7 +150,8 @@ namespace Demoder.PlanetMapViewer.Forms
                     this.listView1.Items[0].Checked = true;
                 }
 
-                this.listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                this.listView1.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
+                this.listView1.AutoResizeColumn(1, ColumnHeaderAutoResizeStyle.HeaderSize);
                 this.listView1.EndUpdate();
             }
         }

@@ -32,19 +32,26 @@ namespace Demoder.PlanetMapViewer
 {
     static class Program
     {
+        static bool debug = false;
         static StreamWriter writer;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
-#if DEBUG
-            var stream = File.Open("stdout.txt", FileMode.Create, FileAccess.ReadWrite, FileShare.Read);
-            writer = new StreamWriter(stream);
-            writer.AutoFlush = true;
-            Console.SetOut(writer);
-#endif
+            if (args != null && args.Length == 1 && args[0]=="--debug")
+            {
+                debug=true;
+            }
+            if (debug)
+            {
+                var stream = File.Open("stdout.txt", FileMode.Create, FileAccess.ReadWrite, FileShare.Read);
+                writer = new StreamWriter(stream);
+                writer.AutoFlush = true;
+                Console.SetOut(writer);
+            }
+
             WriteLog("");
             WriteLog("Starting application!");
             WriteLog("");
@@ -77,18 +84,18 @@ namespace Demoder.PlanetMapViewer
                 writer = null;
             }
         }
-     
+
 
         internal static void WriteLog(string format, params object[] parameters)
         {
-#if DEBUG
+            if (!debug) { return; }
+
             if (writer == null) { return; }
             var log = String.Format(format, parameters);
             lock (writer)
             {
                 writer.WriteLine(String.Format("[{0}] {1}", DateTime.Now.ToShortTimeString(), log));
             }
-#endif
         }
 
         internal static void WriteLog(Exception ex)
