@@ -127,10 +127,15 @@ namespace Demoder.PlanetMapViewer.Helpers
                         var sd = item as MapText;
                         if (String.IsNullOrEmpty(sd.Text)) { continue; }
                         if (sd.Font == null) { continue; }
+                        if (item.Position.Type == DrawMode.World && item.Position.X == -1 && item.Position.Y == -1)                        
+                        {
+                            // Invalid world position.
+                            continue;
+                        }
                         var textSize = sd.Size;
                         var pos = GetRealPosition(item);
 
-                        if (sd.Position.Type == DrawMode.World && !this.IsInsideViewport(pos, sd.Size))
+                        if (sd.Position.Type == DrawMode.World && !this.IsInsideViewport(pos, textSize))
                         {
                             continue;
                         }
@@ -176,10 +181,16 @@ namespace Demoder.PlanetMapViewer.Helpers
                         var sd = item as MapText;
                         if (String.IsNullOrEmpty(sd.Text)) { continue; }
                         if (sd.Font == null) { continue; }
+                        if (item.Position.Type == DrawMode.World && item.Position.X == -1 && item.Position.Y == -1)
+                        {
+                            // Invalid world position.
+                            continue;
+                        }
+
                         var textSize = sd.Size;
                         var pos = GetRealPosition(item);
 
-                        if (sd.Position.Type == DrawMode.World && !this.IsInsideViewport(pos, sd.Size))
+                        if (sd.Position.Type == DrawMode.World && !this.IsInsideViewport(pos, textSize))
                         {
                             continue;
                         }
@@ -283,6 +294,11 @@ namespace Demoder.PlanetMapViewer.Helpers
                 {
                     if (item.Type != MapItemType.Texture) { continue; }
                     Vector2 realPos = GetRealPosition(item);
+
+                    if (item.Position.Type == DrawMode.World && !this.IsInsideViewport(realPos, item.Size))
+                    {
+                        continue;
+                    }
                     var tex = item as MapTexture;
                     API.SpriteBatch.Draw(
                         API.Content.Textures.GetTexture(tex.Texture),

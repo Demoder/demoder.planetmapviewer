@@ -48,7 +48,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
             // Add columns
             this.listView1.Columns.Add("Character", this.listView1.Width, HorizontalAlignment.Center);
-
+            this.listView1.Columns.Add("Dimension", this.listView1.Width, HorizontalAlignment.Center);
             // Add images
             var imgList = new ImageList
             {
@@ -150,6 +150,7 @@ namespace Demoder.PlanetMapViewer.Forms
                     this.listView1.Items[0].Checked = true;
                 }
 
+                this.listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
                 this.listView1.EndUpdate();
             }
         }

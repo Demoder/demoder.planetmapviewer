@@ -85,7 +85,7 @@ namespace Demoder.PlanetMapViewer.Forms
             {
                 Program.WriteLog("MainWindow->MainWindow()");
                 InitializeComponent();
-                this.splitContainer1.SplitterDistance = 550;
+                this.splitContainer1.SplitterDistance = 535;
                 Program.WriteLog("MainWindow->MainWindow(): InitializeComponent was successfull.");
             }
             catch (Exception ex)
@@ -184,7 +184,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 if (String.IsNullOrWhiteSpace(Properties.GeneralSettings.Default.EnabledPlugins))
                 {
                     var plugins = from p in API.PluginManager.AllPlugins
-                                  where p.Type == typeof(CharacterLocatorPlugin) || p.Type == typeof(TutorialPlugin)
+                                  where p.Type == typeof(CharacterLocatorPlugin)
                                   select p.Type.FullName;
                     Properties.GeneralSettings.Default.EnabledPlugins =
                         String.Join(";;", plugins);
@@ -192,6 +192,28 @@ namespace Demoder.PlanetMapViewer.Forms
 
                 // Load any enabled plugins
                 API.PluginManager.LoadEnabledPlugins();
+
+                // Ask about tutorials
+                if (!Properties.GeneralSettings.Default.HaveAskedForTutorials && TutorialPlugin.CurrentStage != TutorialStage.Completed)
+                {
+                    var ret = MessageBox.Show("Do you want to see the tutorial?", "Tutorial", MessageBoxButtons.YesNoCancel);
+                    switch (ret)
+                    {
+                        case System.Windows.Forms.DialogResult.Yes:
+                            Properties.GeneralSettings.Default.HaveAskedForTutorials = true;
+                            Properties.GeneralSettings.Default.DisableTutorials = false;
+                            API.PluginManager.LoadPlugin<TutorialPlugin>();                            
+                            Properties.GeneralSettings.Default.Save();
+                            break;
+                        case System.Windows.Forms.DialogResult.No:
+                            Properties.GeneralSettings.Default.HaveAskedForTutorials = true;
+                            Properties.GeneralSettings.Default.DisableTutorials = true;
+                            API.PluginManager.UnloadPlugin<TutorialPlugin>();
+                            Properties.GeneralSettings.Default.Save();
+                            break;
+                    }
+                }
+
                 API.AoHook.Provider.HookAo();
             }
             catch (Exception ex)
