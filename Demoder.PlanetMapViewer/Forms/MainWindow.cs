@@ -179,7 +179,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
             try
             {
-                API.AoHookProvider = new Provider();
+                API.AoHook = new HookInfoTracker();
                 API.PluginManager.RegisterPlugins(this.GetType().Assembly);
                 if (String.IsNullOrWhiteSpace(Properties.GeneralSettings.Default.EnabledPlugins))
                 {
@@ -192,7 +192,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
                 // Load any enabled plugins
                 API.PluginManager.LoadEnabledPlugins();
-                API.AoHookProvider.HookAo();
+                API.AoHook.Provider.HookAo();
             }
             catch (Exception ex)
             {

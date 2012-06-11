@@ -72,7 +72,10 @@ namespace Demoder.PlanetMapViewer.PmvApi
 
         public GuiOverlay ToGuiOverlay()
         {
-            var overlay = new GuiOverlay();
+            var overlay = new GuiOverlay
+            {
+
+            };
             this.AutoSizeHeaders();
             this.AdjustPositions();
 
@@ -81,7 +84,10 @@ namespace Demoder.PlanetMapViewer.PmvApi
             this.Title.Position.Zone = 0;
 
             // Add items
-            if (this.Title != null) { overlay.MapItems.Add(this.Title); }
+            if (this.Title != null)
+            {
+                overlay.MapItems.Add(this.Title);
+            }
             if (this.HeaderVisible)
             {
                 // Add headers

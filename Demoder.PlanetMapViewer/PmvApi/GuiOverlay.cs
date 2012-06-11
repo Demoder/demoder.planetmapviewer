@@ -65,8 +65,8 @@ namespace Demoder.PlanetMapViewer.PmvApi
             // Add border size * 2 to width & height 
             //  Once to compensate for the extra width/height from the shifted top left corner; 
             //  Once for shifting bottom right corner by borderSize
-            bottomRight.X += this.BorderSize * 2;
-            bottomRight.Y += this.BorderSize * 2;
+            bottomRight.X += this.BorderSize;
+            bottomRight.Y += this.BorderSize;
 
             // Generate the texture definition.
             this.DimmerTexture = new MapTexture

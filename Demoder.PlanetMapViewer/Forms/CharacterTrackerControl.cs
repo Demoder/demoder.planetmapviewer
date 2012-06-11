@@ -88,6 +88,7 @@ namespace Demoder.PlanetMapViewer.Forms
             {
                 API.State.PlayerInfo[(uint)e.Item.Tag].IsTrackedByCamera = e.Item.Checked;
             }
+            API.AoHook.UpdateTrackedDimension();
         }
         #endregion
 
@@ -138,6 +139,8 @@ namespace Demoder.PlanetMapViewer.Forms
                     {
                         li.Checked = oldItem.Checked;
                     }
+
+                    li.SubItems.Add(new ListViewItem.ListViewSubItem(li, item.Dimension.ToString()));
 
                     this.listView1.Items.Add(li);
                 }

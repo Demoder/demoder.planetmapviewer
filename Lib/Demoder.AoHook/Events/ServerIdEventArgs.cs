@@ -1,5 +1,5 @@
 ﻿/*
-* Demoder.PlanetMapViewer
+* Demoder.AoHook
 * Copyright (C) 2012 Demoder (demoder@demoder.me)
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,41 +25,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
-using System.Diagnostics;
-using Demoder.Common.AO;
+using bEvents = Demoder.AoHookBridge.Events;
 
-namespace Demoder.PlanetMapViewer.DataClasses
+namespace Demoder.AoHook.Events
 {
-    public class PlayerInfo
+    [Serializable]
+    public class ServerIdEventArgs : HookEventArgs
     {
-        public uint ID;
-        public string Name;
-        public ZoneInfo Zone = new ZoneInfo();
-        public Vector3 Position = new Vector3();
-        public bool InShadowlands = false;
+        public uint ServerID { get; private set; }
 
-        /// <summary>
-        /// Is this character tracked by camera?
-        /// </summary>
-        public bool IsTrackedByCamera = false;
-
-        /// <summary>
-        /// Is this entrys parent still hooked?
-        /// </summary>
-        public bool IsHooked = true;
-
-        public uint ServerID { get; set; }
-
-        public Dimension Dimension
+        public ServerIdEventArgs(bEvents.ServerIdEventArgs e)
+            : base(e.ProcessId, HookEventType.ServerID, e.Time)
         {
-            get
-            {
-                if (ServerID >= 3000 && ServerID <= 3099) { return Dimension.Atlantean; }
-                if (ServerID >= 3100 && ServerID <= 3199) { return Dimension.Rimor; }
-                if (ServerID >= 3900 && ServerID <= 3999) { return Dimension.Testlive; }
-                else { return Dimension.Unknown; }
-            }
+            this.ServerID = e.ServerID;
         }
     }
 }
