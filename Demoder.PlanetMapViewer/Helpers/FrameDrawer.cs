@@ -127,7 +127,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                         var sd = item as MapText;
                         if (String.IsNullOrEmpty(sd.Text)) { continue; }
                         if (sd.Font == null) { continue; }
-                        if (item.Position.Type == DrawMode.World && item.Position.X == -1 && item.Position.Y == -1)                        
+                        if (item.Position.Type == DrawMode.World && item.Position.X == 0 && item.Position.Y == 0)                        
                         {
                             // Invalid world position.
                             continue;
@@ -181,7 +181,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                         var sd = item as MapText;
                         if (String.IsNullOrEmpty(sd.Text)) { continue; }
                         if (sd.Font == null) { continue; }
-                        if (item.Position.Type == DrawMode.World && item.Position.X == -1 && item.Position.Y == -1)
+                        if (item.Position.Type == DrawMode.World && item.Position.X == 0 && item.Position.Y == 0)
                         {
                             // Invalid world position.
                             continue;
@@ -293,12 +293,19 @@ namespace Demoder.PlanetMapViewer.Helpers
                 foreach (var item in items)
                 {
                     if (item.Type != MapItemType.Texture) { continue; }
+
+                    if (item.Position.Type == DrawMode.World && item.Position.X == 0 && item.Position.Y == 0)
+                    {
+                        // Invalid world position.
+                        continue;
+                    }
                     Vector2 realPos = GetRealPosition(item);
 
                     if (item.Position.Type == DrawMode.World && !this.IsInsideViewport(realPos, item.Size))
                     {
                         continue;
                     }
+
                     var tex = item as MapTexture;
                     API.SpriteBatch.Draw(
                         API.Content.Textures.GetTexture(tex.Texture),
