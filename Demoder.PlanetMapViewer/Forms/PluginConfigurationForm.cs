@@ -71,6 +71,13 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.dataGridView1.Rows.Add(row);
                 row.Cells[0].ReadOnly = true;
             }
+
+            var heightModifier = 0;
+            foreach (DataGridViewRow row in this.dataGridView1.Rows)
+            {
+                heightModifier += row.Height - 1;
+            }
+            this.Height += Math.Min(640, heightModifier) -2;
         }
 
         private DataGridViewCell CreateCell(SettingInfo setting)
