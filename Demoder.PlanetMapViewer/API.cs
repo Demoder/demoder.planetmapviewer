@@ -36,6 +36,7 @@ using Demoder.AoHook;
 using Demoder.PlanetMapViewer.PmvApi;
 using Demoder.PlanetMapViewer.DataClasses;
 using System.IO;
+using Demoder.Common.Cache;
 
 namespace Demoder.PlanetMapViewer
 {
@@ -55,6 +56,12 @@ namespace Demoder.PlanetMapViewer
                         "Demoder.PlanetMapViewer")
                         )
                     );
+
+            XmlCache = new XmlCacheWrapper(
+                new DirectoryInfo(
+                    Path.Combine(
+                        Demoder.Common.Misc.MyTemporaryDirectory,
+                        "XmlCache")));
         }
 
         public static FrameDrawer FrameDrawer { get; private set; }
@@ -64,6 +71,8 @@ namespace Demoder.PlanetMapViewer
         public static Provider AoHookProvider;
         public static ContentManager ContentManager;
         public static XnaContent Content { get; private set; }
+
+        public static XmlCacheWrapper XmlCache { get; private set; }
 
         public static GraphicsDevice GraphicsDevice
         {

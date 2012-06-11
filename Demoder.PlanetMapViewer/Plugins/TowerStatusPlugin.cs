@@ -36,10 +36,11 @@ using Demoder.Common.AO;
 using Demoder.Common.Attributes;
 using Demoder.PlanetMapViewer.Helpers;
 using Demoder.Common.Extensions;
+using Demoder.Common.Cache;
 
 namespace Demoder.PlanetMapViewer.Plugins
 {
-    [Plugin("TowerStatus", 120)]
+    [Plugin("TowerStatus", 60)]
     [Description("Displays current tower war status on the planet map")]
     public class TowerStatusPlugin : IPlugin
     {
@@ -73,6 +74,8 @@ namespace Demoder.PlanetMapViewer.Plugins
         {
             this.Dimension = Dimension.Rimor;
             API.MapManager.MapChangedEvent += new Action(this.HandleMapChangedEvent);
+            API.XmlCache.Create<TowerSites>(5, 20000);
+            API.XmlCache.Create<TowerAttacks>(1, 10000);
         }
 
         public void Dispose()
@@ -113,9 +116,11 @@ namespace Demoder.PlanetMapViewer.Plugins
                 q.chopmethod = "last";
                 q.starttime = Demoder.Common.Misc.Unixtime(DateTime.Now.Subtract(new TimeSpan(6, 0, 0)));
             }
-            var towerData = Xml.Deserialize<TowerAttacks>(qb.ToUri(new Uri(twHistorySearch)));
 
-
+            var towerData = API.XmlCache.Get<TowerAttacks>().Request(
+                XMLCacheFlags.Default,
+                qb.ToUri(new Uri(twHistorySearch)),
+                "all");
 
             if (towerData == null)
             {
@@ -283,7 +288,13 @@ namespace Demoder.PlanetMapViewer.Plugins
                 q.maxlevel = this.LcaMaxLevel;
             }
 
-            var towerData = Xml.Deserialize<TowerSites>(qb.ToUri(new Uri(twTowerDistribution)));
+            var towerData = API.XmlCache.Get<TowerSites>().Request(
+                XMLCacheFlags.Default,
+                qb.ToUri(new Uri(twTowerDistribution)),
+                this.Dimension.ToString(), 
+                this.LcaMinLevel.ToString(), 
+                this.LcaMaxLevel.ToString());
+
             if (towerData == null) { return null; }
             foreach (var site in towerData.Sites)
             {
