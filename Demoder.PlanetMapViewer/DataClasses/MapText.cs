@@ -34,14 +34,12 @@ namespace Demoder.PlanetMapViewer.DataClasses
     /// <summary>
     /// Stores information about text and its position on the map
     /// </summary>
-    [Serializable]
     public class MapText : IMapItem
     {
         #region IMapItem
         [XmlIgnore]
         public MapItemType Type { get { return MapItemType.SpriteFont; } }
         public PositionDefinition Position {get; set;}
-        [XmlAttribute("positionAlignment")]
         public MapItemAlignment PositionAlignment { get; set; }
         [XmlIgnore]
         public Vector2 Size
@@ -55,12 +53,10 @@ namespace Demoder.PlanetMapViewer.DataClasses
 
         public string Text;
 
-        public SimpleColor ShadowColor = Color.Black;
+        public SimpleColor OutlineColor = Color.Black;
         public SimpleColor TextColor = Color.White;
-        [XmlAttribute("font")]
         public SpriteFont Font = null;
-        [XmlAttribute("haveShadow")]
-        public bool Shadow = true;
+        public bool Outline = true;
 
         #endregion
 
@@ -78,8 +74,8 @@ namespace Demoder.PlanetMapViewer.DataClasses
             {
                 Font = this.Font,
                 Position = (PositionDefinition)this.Position.Clone(),
-                Shadow = this.Shadow,
-                ShadowColor = this.ShadowColor,
+                Outline = this.Outline,
+                OutlineColor = this.OutlineColor,
                 Text = this.Text!=null ? (string)this.Text.Clone() : null,
                 PositionAlignment = this.PositionAlignment,
                 TextColor = this.TextColor

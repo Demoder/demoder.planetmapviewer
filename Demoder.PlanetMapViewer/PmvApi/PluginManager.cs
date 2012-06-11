@@ -217,21 +217,29 @@ namespace Demoder.PlanetMapViewer.PmvApi
             pi.Visible = enabled;
         }
         
-        internal CustomMapOverlay[] GetMapOverlays()
+        internal MapOverlay[] GetMapOverlays()
         {
-            var overlays = new List<CustomMapOverlay>();
+            var overlays = new List<MapOverlay>();
             var sw = new Stopwatch();
             foreach (var p in this.registeredPlugins.Values.Where(pi => pi.Instance != null && pi.Visible).ToArray())
             {
                 this.StartGenerationTask(p);
-                if (p.GeneratedOverlay != null && p.GeneratedOverlay.MapItems.Count != 0)
+                if (p.GeneratedOverlay == null || p.GeneratedOverlay.Count() == 0)
                 {
-                    overlays.Add(p.GeneratedOverlay);
+                    continue;
+                }
+                foreach (var overlay in p.GeneratedOverlay)
+                {
+                    if (overlay == null || overlay.MapItems.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    overlays.Add(overlay);
                 }
             }
             return overlays.OrderBy(o=>o.DrawOrder).ToArray();
         }
-
 
         internal void SignalGenerationMre(Type plugin)
         {
@@ -263,7 +271,12 @@ namespace Demoder.PlanetMapViewer.PmvApi
                 var sw = Stopwatch.StartNew();
                 try
                 {
-                    info.GeneratedOverlay = info.Instance.GetCustomOverlay();
+                    var overlays = new List<MapOverlay>();
+                    foreach (var overlay in info.Instance.GetCustomOverlay()) 
+                    {
+                        overlays.Add(overlay);
+                    }
+                    info.GeneratedOverlay = overlays.ToArray();
                 }
                 catch (Exception ex)
                 {

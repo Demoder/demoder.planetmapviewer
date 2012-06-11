@@ -123,9 +123,9 @@ namespace Demoder.PlanetMapViewer.Helpers
             var txt = new MapText
             {
                 Font = this.font,
-                Shadow = this.haveShadow,
+                Outline = this.haveShadow,
                 TextColor = this.textColor,
-                ShadowColor = this.shadowColor,
+                OutlineColor = this.shadowColor,
                 Position = new PositionDefinition(this.nextPosition.X, this.nextPosition.Y),
                 PositionAlignment = this.alignment,
                 Text = text
@@ -149,9 +149,9 @@ namespace Demoder.PlanetMapViewer.Helpers
             var testItem = new MapText
             {
                 Font = this.font,
-                Shadow = this.haveShadow,
+                Outline = this.haveShadow,
                 TextColor = this.textColor,
-                ShadowColor = this.shadowColor,
+                OutlineColor = this.shadowColor,
                 Position = new PositionDefinition(this.nextPosition.X, this.nextPosition.Y),
                 PositionAlignment = this.alignment,
                 Text = text

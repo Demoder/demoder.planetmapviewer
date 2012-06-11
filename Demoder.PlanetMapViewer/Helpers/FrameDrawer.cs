@@ -139,7 +139,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                                     sd.Font,
                                     sd.Text,
                                     new Vector2(pos.X + x, pos.Y + y),
-                                    sd.ShadowColor
+                                    sd.OutlineColor
                                     );
                             }
                         }

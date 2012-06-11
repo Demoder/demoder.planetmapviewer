@@ -58,6 +58,12 @@ namespace Demoder.PlanetMapViewer.Plugins
 
         [Setting(LoadedFont.Silkscreen7)]
         public LoadedFont LcaOwnerFont { get; set; }
+
+        [Setting(1)]
+        public int LcaMinLevel { get; set; }
+
+        [Setting(300)]
+        public int LcaMaxLevel { get; set; }
         #endregion
 
         private const string twTowerDistribution="http://towerwars.info/m/TowerDistribution.php";
@@ -79,17 +85,23 @@ namespace Demoder.PlanetMapViewer.Plugins
             API.PluginManager.ChangePluginStatus<TowerStatusPlugin>(API.MapManager.CurrentMap.Type == MapType.Rubika);
         }   
 
-        public CustomMapOverlay GetCustomOverlay()
+        public IEnumerable<MapOverlay> GetCustomOverlay()
         {
-            var overlay = new CustomMapOverlay();
-            this.GenerateTowerFieldInfo(ref overlay);
-            this.GenerateRecentAttackInfo(ref overlay);
-            return overlay;
+            yield return this.GenerateTowerFieldInfo();
+            yield return this.GenerateRecentAttackInfo();
         }
 
-        private void GenerateRecentAttackInfo(ref CustomMapOverlay overlay)
+        private MapOverlay GenerateRecentAttackInfo()
         {
-            if (!this.ShowRecentAttacks) { return; }
+            if (!this.ShowRecentAttacks) { return null; }
+            var overlay = new GuiTableOverlay
+            {
+                HeaderVisible = false,
+                Position = new Point(5,5),
+                ColumnSpacing = 15,
+                RowSpacing = 0,
+            };
+
             // Get tower data.
             var qb = new UriQueryBuilder();
             {
@@ -99,9 +111,11 @@ namespace Demoder.PlanetMapViewer.Plugins
                 q.limit = 5;
                 q.sortorder = "desc";
                 q.chopmethod = "last";
-                q.starttime = Demoder.Common.Misc.Unixtime(DateTime.Now.Subtract(new TimeSpan(2, 0, 0)));
+                q.starttime = Demoder.Common.Misc.Unixtime(DateTime.Now.Subtract(new TimeSpan(6, 0, 0)));
             }
             var towerData = Xml.Deserialize<TowerAttacks>(qb.ToUri(new Uri(twHistorySearch)));
+
+
 
             if (towerData == null)
             {
@@ -110,123 +124,132 @@ namespace Demoder.PlanetMapViewer.Plugins
                     Position = new PositionDefinition(5, 5),
                     PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
                     TextColor = Color.White,
-                    ShadowColor = Color.Black,
-                    Shadow = true,
+                    OutlineColor = Color.Black,
+                    Outline = true,
                     Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
                     Text = "Error fetching recent attacks for " + this.Dimension.ToString()
                 });
-                return;
+                return overlay;
             }
-            if (towerData.Attacks.Count == 0) {
+            if (towerData.Attacks.Count == 0)
+            {
                 overlay.MapItems.Add(new MapText
                 {
                     Position = new PositionDefinition(5, 5),
                     PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
                     TextColor = Color.White,
-                    ShadowColor = Color.Black,
-                    Shadow = true,
+                    OutlineColor = Color.Black,
+                    Outline = true,
                     Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
                     Text = "No recent attacks on " + this.Dimension.ToString()
                 });
-                return; 
+                return overlay;
             }
 
-            overlay.MapItems.Add(new MapText
+            // Define headers.
+            var headerTexts = new string[]{
+                "Time",
+                "Zone",
+                "#",
+                "Nick",
+                "Org"
+            };
+            for (int i = 0; i < 5; i++)
+            {
+                overlay.Headers[i] = new GuiTableHeader
+                {
+                    AutoSize = true,
+                    Alignment = MapItemAlignment.Left | MapItemAlignment.Top,
+                    Content = new MapText
+                    {
+                        Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
+                        Text = headerTexts[i],
+                        TextColor = Color.White,
+                        Outline = true,
+                        OutlineColor = Color.Black,
+                        PositionAlignment = MapItemAlignment.Center | MapItemAlignment.Top
+                    }
+                };
+            }
+
+            overlay.Title = new MapText
             {
                 Position = new PositionDefinition(5, 5),
                 PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
                 TextColor = Color.White,
-                ShadowColor = Color.Black,
-                Shadow = true,
+                OutlineColor = Color.Black,
+                Outline = true,
                 Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
-                Text = "Recent tower attacks on "+ this.Dimension.ToString()
-            });
+                Text = "Recent tower attacks on " + this.Dimension.ToString()
+            };
 
+            int row = 0;
+            var font = API.Content.Fonts.GetFont(this.RecentAttacksFont);
             foreach (var attack in towerData.Attacks)
             {
-                var last = overlay.MapItems.Last();
-                var y = last.Position.Y + last.Size.Y + 2;
-                var x = 5;
-                // Time
-                overlay.MapItems.Add(new MapText
-                {
-                    Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
-                    Shadow = true,
-                    ShadowColor = Color.Black,
-                    TextColor = Color.White,
-                    PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
-                    Position = new PositionDefinition(x, y),
-                    Text = "[" + attack.Time.ToShortTimeString() + "]"
-                });
 
-                x += 50;
+                // time
+                overlay[row, 0] = new MapText
+                {
+                    Text = attack.Time.ToShortTimeString(),
+                    Font = font,
+                    TextColor = Color.White,
+                    OutlineColor = Color.Black,
+                    Outline = true,
+                };
 
                 // Attacked site ZONE
-                overlay.MapItems.Add(new MapText
+                overlay[row, 1] = new MapText
                 {
-                    Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
-                    Shadow = true,
-                    ShadowColor = Color.Black,
+                    Text = attack.ZoneShortName,
+                    Font = font,
                     TextColor = this.GetFactionColor(attack.DefenderFaction),
-                    PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
-                    Position = new PositionDefinition(x, y),
-                    Text = attack.ZoneShortName
-                });
-                x+=50;
-
+                    OutlineColor = Color.Black,
+                    Outline = true,
+                };
+                                
                 // Attacked site ID
-                overlay.MapItems.Add(new MapText
+                overlay[row, 2] = new MapText
                 {
-                    Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
-                    Shadow = true,
-                    ShadowColor = Color.Black,
+                    Text = String.Format("x{0}", attack.SiteID),
+                    Font = font,
                     TextColor = this.GetFactionColor(attack.DefenderFaction),
-                    PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
-                    Position = new PositionDefinition(x, y),
-                    Text = String.Format("x{0}", attack.SiteID)
-                });
-                x += 30;
+                    OutlineColor = Color.Black,
+                    Outline = true,
+                };
+
 
                 // Attacker nickname
-                overlay.MapItems.Add(new MapText
+                overlay[row, 3] = new MapText
                 {
-                    Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
-                    Shadow = true,
-                    ShadowColor = Color.Black,
+                    Text = attack.AttackerNickName,
+                    Font = font,
                     TextColor = this.GetFactionColor(attack.AttackerFaction),
-                    PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
-                    Position = new PositionDefinition(x, y),
-                    Text = attack.AttackerNickName
-                });
-                x += 75;
+                    OutlineColor = Color.Black,
+                    Outline = true,
+                };
 
+                // Attacker org
+               overlay[row, 4] = new MapText
+                {
+                    Font = font,
+                    TextColor = this.GetFactionColor(attack.AttackerFaction),
+                    OutlineColor = Color.Black,
+                    Outline = true,
+                };
+                
                 if (!String.IsNullOrWhiteSpace(attack.AttackerGuildName))
                 {
-                    overlay.MapItems.Add(new MapText
-                    {
-                        Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
-                        Shadow = true,
-                        ShadowColor = Color.Black,
-                        TextColor = Color.White,
-                        PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
-                        Position = new PositionDefinition(x, y),
-                        Text = "of"
-                    });
-
-                    x += 20;
-
-                    overlay.MapItems.Add(new MapText
-                    {
-                        Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
-                        Shadow = true,
-                        ShadowColor = Color.Black,
-                        TextColor = this.GetFactionColor(attack.AttackerFaction),
-                        PositionAlignment = MapItemAlignment.Top | MapItemAlignment.Left,
-                        Position = new PositionDefinition(x, y),
-                        Text = attack.AttackerGuildName
-                    });
+                    (overlay[row, 4] as MapText).Text = attack.AttackerGuildName;
                 }
+                else 
+                {
+                    (overlay[row, 4] as MapText).Text = "-";
+                }
+
+                row++;
             }
+            return overlay.ToGuiOverlay();
         }
 
         private Color GetFactionColor(Faction faction)
@@ -245,8 +268,10 @@ namespace Demoder.PlanetMapViewer.Plugins
             }
         }
 
-        private void GenerateTowerFieldInfo(ref CustomMapOverlay overlay)
+        private MapOverlay GenerateTowerFieldInfo()
         {
+            var overlay = new MapOverlay();
+
             // Get tower data.
             var qb = new UriQueryBuilder();
             {
@@ -254,12 +279,12 @@ namespace Demoder.PlanetMapViewer.Plugins
                 q.d = (int)this.Dimension;
                 q.output = "xml";
                 q.limit = 300;
-                q.minlevel = 1;
-                q.maxlevel = 300;
+                q.minlevel = this.LcaMinLevel;
+                q.maxlevel = this.LcaMaxLevel;
             }
 
             var towerData = Xml.Deserialize<TowerSites>(qb.ToUri(new Uri(twTowerDistribution)));
-            if (towerData == null) { return; }
+            if (towerData == null) { return null; }
             foreach (var site in towerData.Sites)
             {
                 var tex = new MapTexture
@@ -294,7 +319,7 @@ namespace Demoder.PlanetMapViewer.Plugins
                     text = new MapText
                     {
                         Font = API.Content.Fonts.GetFont(this.LcaOwnerFont),
-                        Shadow = true,
+                        Outline = true,
                         Text = site.Guild
                     };
 
@@ -303,15 +328,15 @@ namespace Demoder.PlanetMapViewer.Plugins
                     {
                         case Common.AO.Faction.Neutral:
                             text.TextColor = Color.LightGray;
-                            text.ShadowColor = Color.Black;
+                            text.OutlineColor = Color.Black;
                             break;
                         case Common.AO.Faction.Clan:
                             text.TextColor = Color.Orange;
-                            text.ShadowColor = Color.Black;
+                            text.OutlineColor = Color.Black;
                             break;
                         case Common.AO.Faction.Omni:
                             text.TextColor = Color.SkyBlue;
-                            text.ShadowColor = Color.Black;
+                            text.OutlineColor = Color.Black;
                             break;
                         default:
                             tex.KeyColor = Color.Purple;
@@ -323,6 +348,7 @@ namespace Demoder.PlanetMapViewer.Plugins
 
                 overlay.MapItems.Add(new MapTextureText(tex, text) { PositionAlignment = MapItemAlignment.Bottom });
             }
+            return overlay;
         }       
     }
 }

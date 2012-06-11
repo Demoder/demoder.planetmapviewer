@@ -836,9 +836,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void pluginManagerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = new PluginManagerForm();
-            form.StartPosition = FormStartPosition.CenterParent;
-            form.Show();
+            PluginManagerForm.CreateShow();
         }
 
         #region Overlay ContextMenu: Map selection method
@@ -865,8 +863,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void pluginManagerToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            var pm = new PluginManagerForm();
-            pm.ShowDialog();
+            PluginManagerForm.CreateShow();
         }
     }
 

@@ -52,57 +52,57 @@ namespace Demoder.PmvInstaller.Tester
         private void InitializeComponent()
         {
             this.listView1 = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // listView1
             // 
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
-            this.listView1.Location = new System.Drawing.Point(12, 45);
+            this.listView1.Location = new System.Drawing.Point(12, 28);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(184, 93);
+            this.listView1.Size = new System.Drawing.Size(309, 179);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Window Title";
+            this.columnHeader1.Width = 287;
             // 
             // label1
             // 
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(195, 33);
+            this.label1.Size = new System.Drawing.Size(309, 16);
             this.label1.TabIndex = 1;
             this.label1.Text = "Please close the following applications before continuing:";
             // 
             // button1
             // 
             this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button1.Location = new System.Drawing.Point(63, 144);
+            this.button1.Location = new System.Drawing.Point(125, 214);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(83, 23);
             this.button1.TabIndex = 2;
             this.button1.Text = "Abort";
             this.button1.UseVisualStyleBackColor = true;
             // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "Window Title";
-            this.columnHeader1.Width = 167;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.button1;
-            this.ClientSize = new System.Drawing.Size(208, 171);
+            this.ClientSize = new System.Drawing.Size(333, 249);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.listView1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "Form1";
-            this.Text = "PlanetMap Viewer - Installer";
+            this.Text = "Demoder\'s PlanetMap Viewer - Installer";
             this.ResumeLayout(false);
 
         }

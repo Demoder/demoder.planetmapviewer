@@ -38,7 +38,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
         /// <summary>
         /// Where on the texture is Position located?
         /// </summary>
-        MapItemAlignment PositionAlignment { get; }
+        MapItemAlignment PositionAlignment { get; set; }
         /// <summary>
         /// Item position on the map
         /// </summary>

@@ -29,9 +29,9 @@ using Demoder.PlanetMapViewer.DataClasses;
 
 namespace Demoder.PlanetMapViewer.PmvApi
 {
-    public class CustomMapOverlay
+    public class MapOverlay
     {
-        public CustomMapOverlay()
+        public MapOverlay()
         {
             this.MapItems = new List<IMapItem>();
             this.DrawOrder = 0;
@@ -40,8 +40,14 @@ namespace Demoder.PlanetMapViewer.PmvApi
         public List<IMapItem> MapItems { get; private set; }
 
         /// <summary>
-        /// When multiple layers are available, layer with smallest DrawOrder is drawn first.
+        /// When multiple layers are available, layer with smallest DrawOrder is drawn first.<br/>
+        /// 
         /// </summary>
         public int DrawOrder { get; set; }
+
+        /// <summary>
+        /// Returns an array containing this instance as its only element.
+        /// </summary>
+        public MapOverlay[] AsArray { get { return new MapOverlay[] { this }; } }
     }
 }

@@ -25,24 +25,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Demoder.PmvInstaller.Tester
 {
     internal static class Program
     {
-        internal static int ReturnCode = 0;
+        internal static ReturnCode ReturnCode = ReturnCode.Abort;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static int Main(string[] args)
         {
+            var dir = new DirectoryInfo(String.Join(" ", args));
+            if (!dir.Exists) { return (int)ReturnCode.OK; }
+            // TODO: Test if files in directory are locked.
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1(String.Join(" ", args)));
+            Application.Run(new Form1());
 
-            return ReturnCode;
+
+            return (int)ReturnCode;
         }
+    }
+
+    public enum ReturnCode : int
+    {
+        Abort = 0,
+        OK = 1
     }
 }

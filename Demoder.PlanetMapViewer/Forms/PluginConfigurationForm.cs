@@ -89,22 +89,22 @@ namespace Demoder.PlanetMapViewer.Forms
                 {
                     cell.Items.Add(val);
                 }
-                
+
                 return cell;
             }
             else if (dType == typeof(bool))
             {
                 var cell = new DataGridViewCheckBoxCell
                 {
-                    FalseValue=false,
-                    TrueValue=true,
+                    FalseValue = false,
+                    TrueValue = true,
                     Value = setting.PropertyInfo.GetValue(this.plugin, null),
                     ValueType = dType
                 };
                 return cell;
             }
             // Default: Text field.
-            else if (setting.SettingOptions.Length!=0)
+            else if (setting.SettingOptions != null && setting.SettingOptions.Length != 0)
             {
                 var cell = new DataGridViewComboBoxCell
                 {
@@ -120,7 +120,8 @@ namespace Demoder.PlanetMapViewer.Forms
 
                 return cell;
             }
-            else {
+            else
+            {
                 var cell = new DataGridViewTextBoxCell
                 {
                     Value = setting.PropertyInfo.GetValue(this.plugin, null),
