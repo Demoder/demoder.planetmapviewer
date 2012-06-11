@@ -62,9 +62,13 @@ Section "Prequesites (required)"
    File "..\Dep\xnafx40_redist.msi"
    ExecWait '"msiexec" /i "$INSTDIR\Redist\xnafx40_redist.msi"  /passive'
 
+   File "..\Demoder.PmvInstaller.Tester\bin\Release\Demoder.PmvInstaller.Tester.exe"
+   ExecWait '"$INSTDIR\Redist\Demoder.PmvInstaller.Tester.exe" "$INSTDIR"'
+
    RMDir /r "$INSTDIR\Redist"
   SetOutPath $INSTDIR
 
+  
 SectionEnd
 
 Section "Demoder.PlanetMapViewer (required)"

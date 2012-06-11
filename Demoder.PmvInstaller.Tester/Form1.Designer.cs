@@ -63,7 +63,7 @@ namespace Demoder.PmvInstaller.Tester
             this.columnHeader1});
             this.listView1.Location = new System.Drawing.Point(12, 28);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(309, 179);
+            this.listView1.Size = new System.Drawing.Size(309, 209);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -84,12 +84,13 @@ namespace Demoder.PmvInstaller.Tester
             // button1
             // 
             this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button1.Location = new System.Drawing.Point(125, 214);
+            this.button1.Location = new System.Drawing.Point(319, 231);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(83, 23);
             this.button1.TabIndex = 2;
             this.button1.Text = "Abort";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
             // 
             // Form1
             // 

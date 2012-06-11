@@ -35,7 +35,9 @@ namespace Demoder.PlanetMapViewer.PmvApi
         {
             this.MapItems = new List<IMapItem>();
             this.DrawOrder = 0;
+            this.Name = "";
         }
+        public string Name { get; set; }
 
         public List<IMapItem> MapItems { get; private set; }
 

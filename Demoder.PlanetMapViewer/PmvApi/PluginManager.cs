@@ -216,6 +216,28 @@ namespace Demoder.PlanetMapViewer.PmvApi
             }
             pi.Visible = enabled;
         }
+
+
+        internal void ChangeLayerStatus<T>(string layerName, bool enabled)
+        {
+            this.ChangeLayerStatus(typeof(T), layerName, enabled);
+        }
+
+        internal void ChangeLayerStatus(Type type, string layerName, bool enabled)
+        {
+            PluginInfo pi;
+            if (!this.registeredPlugins.TryGetValue(type, out pi))
+            {
+                return;
+            }
+
+            pi.HiddenOverlays.Remove(layerName);
+
+            if (!enabled)
+            {
+                pi.HiddenOverlays.Add(layerName);
+            }
+        }
         
         internal MapOverlay[] GetMapOverlays()
         {
@@ -228,13 +250,14 @@ namespace Demoder.PlanetMapViewer.PmvApi
                 {
                     continue;
                 }
+
                 foreach (var overlay in p.GeneratedOverlay)
                 {
                     if (overlay == null || overlay.MapItems.Count == 0)
                     {
                         continue;
                     }
-
+                    if (p.HiddenOverlays.Contains(overlay.Name)) { continue; }
                     overlays.Add(overlay);
                 }
             }

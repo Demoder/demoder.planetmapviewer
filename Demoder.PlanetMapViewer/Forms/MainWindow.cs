@@ -394,47 +394,10 @@ namespace Demoder.PlanetMapViewer.Forms
 
         FormWindowState oldState = FormWindowState.Normal;
 
-
-        #region Misc features
-        private void SaveScreenShot()
-        {
-            var bmpScreenshot = new sysDrawing.Bitmap(this.Width, this.Height, PixelFormat.Format32bppArgb);
-            var gfxScreenshot = sysDrawing.Graphics.FromImage(bmpScreenshot);
-
-            gfxScreenshot.CopyFromScreen(this.Left, this.Top, 0, 0, this.Size, sysDrawing.CopyPixelOperation.SourceCopy);
-
-
-            gfxScreenshot.Save();
-            gfxScreenshot.Dispose();
-
-            int num = 0;
-            
-            var nameFormat = "Screenshot_{0}.png";
-            if (!Directory.Exists(this.screenShotFolder))
-            {
-                Directory.CreateDirectory(this.screenShotFolder);
-            }
-
-            while (File.Exists(Path.Combine(this.screenShotFolder,String.Format(nameFormat, num))))
-            {
-                num++;
-            }
-
-            bmpScreenshot.Save(Path.Combine(this.screenShotFolder, String.Format(nameFormat, num)), ImageFormat.Png);
-        }
-        #endregion
-
         #region Toolstrip
         ////////////
         // TOOLS
         ////////////
-
-        // Screenshot
-        private void MenuToolsScreenshot(object sender, EventArgs e)
-        {
-            this.SaveScreenShot();
-        }
-
 
         //////////////////
         // VIEW
@@ -820,11 +783,6 @@ namespace Demoder.PlanetMapViewer.Forms
         private void followCharacter_Click(object sender, EventArgs e)
         {
             this.tileDisplay1.Focus();
-        }
-
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.SaveScreenShot();
         }
 
         private void CameraFollowCharacer_Click(object sender, EventArgs e)
