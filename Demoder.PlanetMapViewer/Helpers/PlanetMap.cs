@@ -70,7 +70,8 @@ namespace Demoder.PlanetMapViewer.Helpers
         public Vector2 GetPosition(int layer, uint zone, float x, float y)
         {
             // Get zone info.
-            var zoneInfo = this.CoordsFile.Playfields.FirstOrDefault(i => i.ID == zone);
+            var zoneInfo = this.CoordsFile[zone];
+            //var zoneInfo = this.CoordsFile.Playfields.FirstOrDefault(i => i.ID == zone);
             if (zoneInfo == null)
             {
                 return Vector2.Zero;
@@ -113,7 +114,8 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         public Vector2 GetReversePosition(int layer, uint zone, float x, float y)
         {
-            var zoneInfo = this.CoordsFile.Playfields.FirstOrDefault(i => i.ID == zone);
+            //var zoneInfo = this.CoordsFile.Playfields.FirstOrDefault(i => i.ID == zone);
+            var zoneInfo = this.CoordsFile[zone];
             if (zoneInfo == null)
             {
                 return Vector2.Zero;
@@ -379,6 +381,8 @@ namespace Demoder.PlanetMapViewer.Helpers
 
 
 
+                var maxFrameAge = (int)(Properties.GeneralSettings.Default.FramesPerSecond * 120);
+
                 for (int x = 0; x < this.Tiles.X; x++)
                 {
                     for (int y = 0; y < this.Tiles.Y; y++)
@@ -390,7 +394,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                             this.textureMap[y, x].Used++;
 
                             // Unload tiles which haven't been used for 120 seconds.
-                            if (this.textureMap[y, x].Used > (Properties.GeneralSettings.Default.FramesPerSecond * 120))
+                            if (this.textureMap[y, x].Used > maxFrameAge)
                             {
                                 this.textureMap[y, x].Texture.Dispose();
                                 this.textureMap[y, x].Texture = null;
