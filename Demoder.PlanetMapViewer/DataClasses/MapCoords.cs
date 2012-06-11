@@ -26,14 +26,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using System.Collections.Concurrent;
 
 namespace Demoder.PlanetMapViewer.DataClasses
 {
     [XmlRoot("root")]
     public class MapCoords
     {
+        private ConcurrentDictionary<uint, MapCoordsPlayfield> pfDict = new ConcurrentDictionary<uint, MapCoordsPlayfield>();
+
         [XmlElement("Playfield")]
         public List<MapCoordsPlayfield> Playfields = new List<MapCoordsPlayfield>();
+
+        public MapCoordsPlayfield this[uint pfId]{
+            get
+            {
+                lock (this)
+                {
+                    if (this.pfDict.Count == 0)
+                    {
+                        foreach (var pf in this.Playfields)
+                        {
+                            this.pfDict[pf.ID] = pf;
+                        }
+                    }
+                }
+                MapCoordsPlayfield r;
+                if (!this.pfDict.TryGetValue(pfId, out r))
+                {
+                    return null;
+                }
+                return r;
+            }
+        }
 
         internal int MaxXModifier = 0;
         internal int MaxYModifier = 0;     
