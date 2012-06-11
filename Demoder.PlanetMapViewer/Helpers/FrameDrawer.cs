@@ -242,7 +242,7 @@ namespace Demoder.PlanetMapViewer.Helpers
         public static Vector2 GetRealPosition(IMapItem item)
         {
             Vector2 realPos = item.Position.GetPosition();
-            
+
             // Adjust horizontal.
             if (item.PositionAlignment.HasFlag(MapItemAlignment.Right))
             {
@@ -258,14 +258,14 @@ namespace Demoder.PlanetMapViewer.Helpers
             }
 
             // Adjust vertical
-           if (item.PositionAlignment.HasFlag(MapItemAlignment.Bottom))
+            if (item.PositionAlignment.HasFlag(MapItemAlignment.Bottom))
             {
                 // Shift position one texture size upwards,
                 // so that the position is located at the
                 // bottom of the texture.
                 realPos.Y -= item.Size.Y;
             }
-           else if (!item.PositionAlignment.HasFlag(MapItemAlignment.Top))
+            else if (!item.PositionAlignment.HasFlag(MapItemAlignment.Top))
             {
                 // Vertical position should be centered.
                 realPos.Y -= item.Size.Y / 2;

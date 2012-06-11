@@ -150,9 +150,8 @@ namespace Demoder.PlanetMapViewer.Helpers
         {
             if (API.MapManager == null) { return; }
             if (API.MapManager.CurrentMap == null) { return; }
-            //var pfId = this.mapManager.CurrentMap.CoordsFile.Playfields.First(pf=>pf.XScale==1 && pf.YScale==1).ID;
             var pfId = API.MapManager.CurrentMap.CoordsFile.Playfields[0].ID;
-            var centerPos = API.MapManager.GetPosition(pfId, relativePosition.X,relativePosition.Y);
+            var centerPos = API.MapManager.GetPosition(pfId, relativePosition.X, relativePosition.Y);
             this.CenterOnVector(centerPos);
         }
 
@@ -177,23 +176,45 @@ namespace Demoder.PlanetMapViewer.Helpers
             if (API.MapManager.CurrentLayer == null) { return; }
 
             #region Horizontal scrollbar
-            int horModifier = API.UiElements.TileDisplay.Width / 2;
-            API.UiElements.HScrollBar.Maximum = (int)(API.MapManager.CurrentLayer.Size.X * API.State.Magnification) + horModifier;
-            API.UiElements.HScrollBar.Minimum = -horModifier;
+            try
+            {
+                int horModifier = API.UiElements.TileDisplay.Width / 2;
+                API.UiElements.HScrollBar.Maximum = (int)(API.MapManager.CurrentLayer.Size.X * API.State.Magnification) + horModifier;
+                API.UiElements.HScrollBar.Minimum = -horModifier;
 
-            API.UiElements.HScrollBar.LargeChange = API.UiElements.TileDisplay.Width;
-            API.UiElements.HScrollBar.SmallChange = API.UiElements.TileDisplay.Width / 10;
-            API.UiElements.HScrollBar.Invalidate();
+                API.UiElements.HScrollBar.LargeChange = API.UiElements.TileDisplay.Width;
+                API.UiElements.HScrollBar.SmallChange = API.UiElements.TileDisplay.Width / 10;
+                API.UiElements.HScrollBar.Invalidate();
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+
+            }
+            catch(Exception ex)
+            {
+                Program.WriteLog(ex);
+            }
             #endregion
 
             #region Vertical scrollbar
-            var verModifier = API.UiElements.TileDisplay.Height / 2;
-            API.UiElements.VScrollBar.Maximum = (int)(API.MapManager.CurrentLayer.Size.Y * API.State.Magnification)+ verModifier;
-            API.UiElements.VScrollBar.Minimum = -verModifier;
+            try
+            {
+                var verModifier = API.UiElements.TileDisplay.Height / 2;
+                API.UiElements.VScrollBar.Maximum = (int)(API.MapManager.CurrentLayer.Size.Y * API.State.Magnification) + verModifier;
+                API.UiElements.VScrollBar.Minimum = -verModifier;
 
-            API.UiElements.VScrollBar.LargeChange = API.UiElements.TileDisplay.Height;
-            API.UiElements.VScrollBar.SmallChange = API.UiElements.TileDisplay.Height / 10;
-            API.UiElements.VScrollBar.Invalidate();
+                API.UiElements.VScrollBar.LargeChange = API.UiElements.TileDisplay.Height;
+                API.UiElements.VScrollBar.SmallChange = API.UiElements.TileDisplay.Height / 10;
+                API.UiElements.VScrollBar.Invalidate();
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+
+            }
+            catch (Exception ex)
+            {
+                Program.WriteLog(ex);
+            }
             #endregion
         }
     }

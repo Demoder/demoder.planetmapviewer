@@ -70,6 +70,11 @@ namespace Demoder.PlanetMapViewer.Xna
         {
         }
 
+        private void GraphicsDeviceDeviceLost(object sender, EventArgs e)
+        {
+            Program.WriteLog("GraphicsDevice: Lost");
+        }
+
         #region Constructor / Initialization
         protected override void Initialize()
         {
@@ -94,8 +99,11 @@ namespace Demoder.PlanetMapViewer.Xna
             }
             catch (Exception ex)
             {
+                Program.WriteLog(ex);
                 MessageBox.Show(ex.ToString());
             }
+
+            this.GraphicsDevice.DeviceLost += new EventHandler<EventArgs>(GraphicsDeviceDeviceLost);
         }
         #endregion
 
@@ -129,51 +137,58 @@ namespace Demoder.PlanetMapViewer.Xna
 
         protected override void Draw()
         {
-            lock (this.drawLocker)
+            try
             {
-                this.DrawLogic();
-
-                // Clear the screen.
-                API.GraphicsDevice.Clear(Color.Black);
-
-                // Draw current map layer
-                API.MapManager.CurrentLayer.Draw();
-
-                if (!API.Content.Loaded) { return; }
-
-                #region Draw stuff from plugins here
-                var guiOverlays = new List<GuiOverlay>();
-                foreach (var overlay in API.PluginManager.GetMapOverlays())
+                lock (this.drawLocker)
                 {
-                    if (overlay is GuiOverlay)
+                    this.DrawLogic();
+
+                    // Clear the screen.
+                    API.GraphicsDevice.Clear(Color.Black);
+
+                    // Draw current map layer
+                    API.MapManager.CurrentLayer.Draw();
+
+                    if (!API.Content.Loaded) { return; }
+
+                    #region Draw stuff from plugins here
+                    var guiOverlays = new List<GuiOverlay>();
+                    foreach (var overlay in API.PluginManager.GetMapOverlays())
                     {
-                        guiOverlays.Add((GuiOverlay)overlay);
-                        continue;
+                        if (overlay is GuiOverlay)
+                        {
+                            guiOverlays.Add((GuiOverlay)overlay);
+                            continue;
+                        }
+                        // Draw valid overlays.
+                        API.FrameDrawer.Draw(overlay.MapItems);
                     }
-                    // Draw valid overlays.
-                    API.FrameDrawer.Draw(overlay.MapItems);
+
+                    foreach (var overlay in guiOverlays)
+                    {
+                        overlay.GenerateDimmerTexture();
+                        API.FrameDrawer.DrawTexture(new MapTexture[] { overlay.DimmerTexture }, DrawMode.ViewPort);
+                        API.FrameDrawer.Draw(overlay.MapItems);
+                    }
+                    #endregion
                 }
 
-                foreach (var overlay in guiOverlays)
+                this.timeSinceLastDraw.Restart();
+
+
+                // Call the OnDraw event, if necessary.
+                var drawEvent = this.OnDraw;
+                if (drawEvent != null)
                 {
-                    overlay.GenerateDimmerTexture();
-                    API.FrameDrawer.DrawTexture(new MapTexture[] { overlay.DimmerTexture }, DrawMode.ViewPort);
-                    API.FrameDrawer.Draw(overlay.MapItems);
+                    lock (drawEvent)
+                    {
+                        drawEvent(this, new EventArgs());
+                    }
                 }
-                #endregion
             }
-
-            this.timeSinceLastDraw.Restart();
-
-
-            // Call the OnDraw event, if necessary.
-            var drawEvent = this.OnDraw;
-            if (drawEvent != null)
+            catch (Exception ex)
             {
-                lock (drawEvent)
-                {
-                    drawEvent(this, new EventArgs());
-                }
+                Program.WriteLog(ex);
             }
         }
 
