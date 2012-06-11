@@ -305,7 +305,11 @@ namespace Demoder.PlanetMapViewer.Helpers
         {
             if (API.SpriteBatch == null) { return false; }
             this.SpriteBatchEnd();
-
+            if (API.SpriteBatch.IsDisposed) 
+            {
+                Program.WriteLog("Starting sprite batch failed: SpriteBatch is disposed.");
+                return false; 
+            }
             if (mode == DrawMode.ViewPort)
             {
                 API.SpriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend);
@@ -325,7 +329,10 @@ namespace Demoder.PlanetMapViewer.Helpers
         {
             if (this.IsBatchBegun)
             {
-                API.SpriteBatch.End();
+                if (!API.SpriteBatch.IsDisposed)
+                {
+                    API.SpriteBatch.End();
+                }
                 this.IsBatchBegun = false;
             }
         }

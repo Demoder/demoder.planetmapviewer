@@ -143,7 +143,7 @@ namespace Demoder.PlanetMapViewer.Xna
             // If we have no graphics device, we must be running in the designer.
             if (graphicsDeviceService == null)
             {
-                return Text + "\n\n" + GetType();
+                return Text + "\n\n" + GetType().ToString();
             }
 
             // Make sure the graphics device is big enough, and is not lost.

@@ -173,17 +173,24 @@ namespace Demoder.AoHookBridge
             #endregion
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Wether or not to send a ping.</returns>
         private bool ProcessEventQueue()
         {
             BridgeEventArgs[] events;
             lock (this.eventsQueue)
             {
-                if (this.eventsQueue.Count == 0) { return false; }
+                if (this.eventsQueue.Count == 0)
+                {
+                    return true;
+                }
                 events = this.eventsQueue.ToArray();
                 this.eventsQueue.Clear();
             }
             this.hookInterface.OnIncomingEvents(events);
-            return true;
+            return false;
         }
         #endregion
 
