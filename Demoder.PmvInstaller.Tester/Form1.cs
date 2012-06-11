@@ -37,15 +37,13 @@ namespace Demoder.PmvInstaller.Tester
 {
     public partial class Form1 : Form
     {
-        private string installDirectory;
         private Process[] blockingProcesses;
 
-        public Form1(string installDir)
+        public Form1()
         {
-            this.installDirectory = installDir;
             InitializeComponent();
 
-            Task.Factory.StartNew(this.CheckIncompatibleProcesses);
+            Task.Factory.StartNew(this.CheckIncompatibleProcesses, TaskCreationOptions.LongRunning);
         }
 
         private void CheckIncompatibleProcesses()
@@ -75,7 +73,7 @@ namespace Demoder.PmvInstaller.Tester
 
                 if (lst.Count == 0)
                 {
-                    Program.ReturnCode = 0;
+                    Program.ReturnCode = ReturnCode.OK;
                     Application.Exit();
                     return;
                 }

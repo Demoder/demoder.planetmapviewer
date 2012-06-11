@@ -35,6 +35,6 @@ namespace Demoder.PlanetMapViewer.PmvApi
         /// 
         /// </summary>
         /// <returns></returns>
-        CustomMapOverlay GetCustomOverlay();
+        IEnumerable<MapOverlay> GetCustomOverlay();
     }
 }

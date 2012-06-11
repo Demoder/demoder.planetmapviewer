@@ -38,6 +38,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Demoder.PlanetMapViewer.PmvApi;
 
 namespace Demoder.PlanetMapViewer.Xna
 {
@@ -141,14 +142,22 @@ namespace Demoder.PlanetMapViewer.Xna
                 if (!API.Content.Loaded) { return; }
 
                 #region Draw stuff from plugins here
+                var guiOverlays = new List<GuiOverlay>();
                 foreach (var overlay in API.PluginManager.GetMapOverlays())
                 {
-                    if (overlay == null || overlay.MapItems.Count == 0)
+                    if (overlay is GuiOverlay)
                     {
-                        // If the overlay is null or empty, skip it.
+                        guiOverlays.Add((GuiOverlay)overlay);
                         continue;
                     }
                     // Draw valid overlays.
+                    API.FrameDrawer.Draw(overlay.MapItems);
+                }
+
+                foreach (var overlay in guiOverlays)
+                {
+                    overlay.GenerateDimmerTexture();
+                    API.FrameDrawer.DrawTexture(new MapTexture[] { overlay.DimmerTexture }, DrawMode.ViewPort);
                     API.FrameDrawer.Draw(overlay.MapItems);
                 }
                 #endregion

@@ -40,7 +40,7 @@ namespace Demoder.PlanetMapViewer.Plugins
     public class CharacterLocatorPlugin : IPlugin
     {
         #region settings
-        [SettingOption(LoadedFont.Silkscreen7)]
+        [Setting(LoadedFont.Silkscreen7)]
         public LoadedFont CharacterLocatorFont { get; set; }
         #endregion
 
@@ -55,15 +55,15 @@ namespace Demoder.PlanetMapViewer.Plugins
 
         #region Retrieve IMapItems
         
-        public CustomMapOverlay GetCustomOverlay()
+        public IEnumerable<MapOverlay> GetCustomOverlay()
         {
-            var overlay = new CustomMapOverlay
+            var overlay = new MapOverlay
             {
                 DrawOrder = int.MaxValue
             };
 
             overlay.MapItems.AddRange(this.GetCharacterLocators());
-            return overlay;
+            return new MapOverlay[] { overlay };
         }
 
         private IMapItem[] GetCharacterLocators()
@@ -100,15 +100,15 @@ namespace Demoder.PlanetMapViewer.Plugins
                     PositionAlignment = MapItemAlignment.Center,
                     Text = character.Name,
                     TextColor = Color.Yellow,
-                    ShadowColor = Color.Black,
-                    Shadow = true,
+                    OutlineColor = Color.Black,
+                    Outline = true,
                     Font = API.Content.Fonts.GetFont(this.CharacterLocatorFont)
                 };
 
                 if (!character.IsHooked)
                 {
                     txt.TextColor = Color.LightGray;
-                    txt.ShadowColor = Color.Gray;
+                    txt.OutlineColor = Color.Gray;
                 }
 
                 mapTextureTexts.Add(new MapTextureText(texture, txt, 1)

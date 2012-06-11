@@ -80,7 +80,7 @@ namespace Demoder.PlanetMapViewer.PmvApi
         /// <summary>
         /// The generated overlay
         /// </summary>
-        public CustomMapOverlay GeneratedOverlay { get; set; }
+        public IEnumerable<MapOverlay> GeneratedOverlay { get; set; }
 
         public SettingInfo[] Settings { get; set; }
         #endregion

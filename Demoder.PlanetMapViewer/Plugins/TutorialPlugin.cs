@@ -41,7 +41,7 @@ namespace Demoder.PlanetMapViewer.Plugins
         /// </summary>
         private TutorialStage setupStage = TutorialStage.Completed;
 
-        public CustomMapOverlay GetCustomOverlay()
+        public IEnumerable<MapOverlay> GetCustomOverlay()
         {
             if (Properties.GeneralSettings.Default.DisableTutorials) { return null; }
             var stage = this.CurrentStage;
@@ -50,22 +50,36 @@ namespace Demoder.PlanetMapViewer.Plugins
                 this.CleanupStage(this.setupStage);
                 this.SetupStage(stage);
             }
+
+            MapOverlay overlay = null;
+
             switch (this.CurrentStage)
             {
                 case TutorialStage.ZoomIn:
-                    return this.NormalZoomInTutorial();
+                    overlay = this.NormalZoomInTutorial();
+                    break;
                 case TutorialStage.ZoomOut:
-                    return this.NormalZoomOutTutorial();
+                    overlay = this.NormalZoomOutTutorial();
+                    break;
                 case TutorialStage.OverlayMode:
-                    return this.NormalOverlayModeTutorial();
+                    overlay = this.NormalOverlayModeTutorial();
+                    break;
                 case TutorialStage.OverlayTitlebarMenuOpen:
-                    return this.OverlayTitlebarMenuTutorial();
+                    overlay = this.OverlayTitlebarMenuTutorial();
+                    break;
                 case TutorialStage.OverlayTitlebarMenuClose:
-                    return null;
+                   overlay = new MapOverlay();
+                   break;
                 case TutorialStage.OverlayResizeWindow:
-                    return this.OverlayResizeTutorial();
+                    overlay = this.OverlayResizeTutorial();
+                    break;
                 case TutorialStage.OverlayExit:
-                    return this.OverlayExitTutorial();
+                    overlay = this.OverlayExitTutorial();
+                    break;
+            }
+            if (overlay != null)
+            {
+                return overlay.AsArray;
             }
             // We've finished the tutorials. Unload!
             API.PluginManager.UnloadPlugin<TutorialPlugin>();
@@ -159,9 +173,9 @@ namespace Demoder.PlanetMapViewer.Plugins
         }
 
         #region Normal Tutorial steps
-        private CustomMapOverlay NormalOverlayModeTutorial()
+        private MapOverlay NormalOverlayModeTutorial()
         {
-            var items = new CustomMapOverlay();
+            var items = new MapOverlay();
             items.MapItems.Add(this.GetTutorialStamp(500, 200));
             var txts = new MapTextBuilder(FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top | MapItemAlignment.Left);
             txts.Text("Tutorial: Overlay Mode", textColor: Color.Red, font: FontType.GuiXLarge).Break();
@@ -175,9 +189,9 @@ namespace Demoder.PlanetMapViewer.Plugins
             return items;
         }
 
-        private CustomMapOverlay NormalZoomOutTutorial()
+        private MapOverlay NormalZoomOutTutorial()
         {
-            var items = new CustomMapOverlay();
+            var items = new MapOverlay();
             items.MapItems.Add(this.GetTutorialStamp(500, 200));
             var txts = new MapTextBuilder(FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top | MapItemAlignment.Left);
             txts.Text("Tutorial: Zooming Out", textColor: Color.Red, font: FontType.GuiXLarge).Break();
@@ -194,9 +208,9 @@ namespace Demoder.PlanetMapViewer.Plugins
             return items;
         }
 
-        private CustomMapOverlay NormalZoomInTutorial()
+        private MapOverlay NormalZoomInTutorial()
         {
-            var items = new CustomMapOverlay();
+            var items = new MapOverlay();
             items.MapItems.Add(this.GetTutorialStamp(500, 200));
             var txts = new MapTextBuilder(FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top| MapItemAlignment.Left);
             txts.Text("Tutorial: Zooming in", textColor: Color.Red, font: FontType.GuiXLarge).Break();
@@ -215,13 +229,13 @@ namespace Demoder.PlanetMapViewer.Plugins
         #endregion
 
         #region Overlay tutorial steps
-        private CustomMapOverlay OverlayTitlebarMenuTutorial()
+        private MapOverlay OverlayTitlebarMenuTutorial()
         {
             if (API.State.WindowMode != WindowMode.Overlay)
             {
                 return this.NormalOverlayModeTutorial();
             }
-            var items = new CustomMapOverlay();
+            var items = new MapOverlay();
             items.MapItems.Add(this.GetTutorialStamp(500, 200));
             int center = API.UiElements.TileDisplay.Width / 2;
 
@@ -245,13 +259,13 @@ namespace Demoder.PlanetMapViewer.Plugins
             return items;
         }
 
-        private CustomMapOverlay OverlayResizeTutorial()
+        private MapOverlay OverlayResizeTutorial()
         {
             if (API.State.WindowMode != WindowMode.Overlay)
             {
                 return this.NormalOverlayModeTutorial();
             }
-            var items = new CustomMapOverlay();
+            var items = new MapOverlay();
             items.MapItems.Add(this.GetTutorialStamp(500, 200));
             var txts = new MapTextBuilder(FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top | MapItemAlignment.Left);
             txts.Text("Tutorial: Window Size", textColor: Color.Red, font: FontType.GuiXLarge).Break();
@@ -263,13 +277,13 @@ namespace Demoder.PlanetMapViewer.Plugins
             return items;
         }
 
-        private CustomMapOverlay OverlayExitTutorial()
+        private MapOverlay OverlayExitTutorial()
         {
             if (API.State.WindowMode != WindowMode.Overlay)
             {
                 return this.NormalOverlayModeTutorial();
             }
-            var items = new CustomMapOverlay();
+            var items = new MapOverlay();
             items.MapItems.Add(this.GetTutorialStamp(500, 200));
             var txts = new MapTextBuilder(FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top | MapItemAlignment.Left);
             txts.Text("Tutorial: Exiting Overlay Mode", textColor: Color.Red, font: FontType.GuiXLarge).Break();

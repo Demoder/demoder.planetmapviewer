@@ -295,6 +295,9 @@ namespace Demoder.PlanetMapViewer.DataClasses
         public TextureDefinition MissionLocator { get { return new TextureDefinition(TextureType.Content, "MissionMarker"); } }
         public TextureDefinition ArrowUp { get { return new TextureDefinition(TextureType.Content, "ArrowUp"); } }
         public TextureDefinition TutorialFrame { get { return new TextureDefinition(TextureType.Content, "TutorialFrame"); } }
+
+        public TextureDefinition GuiBackgroundDimmer50 { get { return new TextureDefinition(TextureType.Content, "GuiBackgroundDimmer50"); } }
+        
     }
 
     public enum TextureType

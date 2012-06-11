@@ -43,6 +43,22 @@ namespace Demoder.PlanetMapViewer.Forms
             API.PluginManager.PluginStateChangeEvent += PluginManager_PluginStateChangeEvent;
         }
 
+        internal static void CreateShow()
+        {
+            var pm = new PluginManagerForm();
+            pm.StartPosition = FormStartPosition.CenterParent;
+
+            pm.TopMost = API.UiElements.ParentForm.TopMost;
+            if (Properties.WindowSettings.Default.OverlaymodeTopmostWorkaround)
+            {
+                pm.ShowDialog();
+            }
+            else
+            {
+                pm.Show();
+            }
+        }
+
         void PluginManager_PluginStateChangeEvent(object sender, PluginStateChangeEventArgs e)
         {
             this.UpdateList();

@@ -143,7 +143,9 @@
     <Compile Include="Plugins\PluginSetting.cs" />
     <Compile Include="Plugins\TowerStatusPlugin.cs" />
     <Compile Include="Plugins\TutorialPlugin.cs" />
-    <Compile Include="PmvApi\CustomMapOverlay.cs" />
+    <Compile Include="PmvApi\GuiOverlay.cs" />
+    <Compile Include="PmvApi\GuiTableOverlay.cs" />
+    <Compile Include="PmvApi\MapOverlay.cs" />
     <Compile Include="PmvApi\IPlugin.cs" />
     <Compile Include="PmvApi\PluginInfo.cs" />
     <Compile Include="PmvApi\PluginManager.cs" />
