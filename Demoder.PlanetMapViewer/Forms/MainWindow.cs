@@ -90,9 +90,7 @@ namespace Demoder.PlanetMapViewer.Forms
             }
             catch (Exception ex)
             {
-                Program.WriteLog("");
-                Program.WriteLog("MainWindow->MainWindow() Exception: {0}", ex.ToString());
-                Program.WriteLog("");
+                Program.WriteLog(ex);
                 this.ShowExceptionError(ex);
             }
         }
@@ -174,9 +172,7 @@ namespace Demoder.PlanetMapViewer.Forms
             }
             catch (Exception ex)
             {
-                Program.WriteLog("");
-                Program.WriteLog("MainWindow->Form1_Load() Exception caught: {0}", ex.ToString());
-                Program.WriteLog("");
+                Program.WriteLog(ex);
                 this.ShowExceptionError(ex);
                 Application.Exit();
             }
@@ -200,7 +196,7 @@ namespace Demoder.PlanetMapViewer.Forms
             }
             catch (Exception ex)
             {
-
+                Program.WriteLog(ex);
             }
         }
 

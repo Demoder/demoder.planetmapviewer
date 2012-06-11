@@ -261,10 +261,6 @@ namespace Demoder.PlanetMapViewer.Plugins
 
         private MapOverlay OverlayResizeTutorial()
         {
-            if (API.State.WindowMode != WindowMode.Overlay)
-            {
-                return this.NormalOverlayModeTutorial();
-            }
             var items = new MapOverlay();
             items.MapItems.Add(this.GetTutorialStamp(500, 200));
             var txts = new MapTextBuilder(FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top | MapItemAlignment.Left);

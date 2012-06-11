@@ -76,8 +76,9 @@ namespace Demoder.PlanetMapViewer.DataClasses
                     return (LoadedFont)Enum.Parse(typeof(LoadedFont), name);
                 }
             }
-            catch
+            catch(Exception ex)
             {
+                Program.WriteLog(ex);
                 return LoadedFont.Rockwell13;
             }
         }

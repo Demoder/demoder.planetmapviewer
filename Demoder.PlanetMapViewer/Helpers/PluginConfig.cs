@@ -87,9 +87,9 @@ namespace Demoder.PlanetMapViewer.Helpers
                         value, 
                         null);
                 }
-                catch 
+                catch (Exception ex)
                 {
-                
+                    Program.WriteLog(ex);
                 }
             }
 

@@ -167,8 +167,9 @@ namespace Demoder.PlanetMapViewer.DataClasses
                     texCache = tex;
                     this.iconTextures[key] = texCache;
                 }
-                catch
+                catch(Exception ex)
                 {
+                    Program.WriteLog(ex);
                     if (!key.Equals("ErrorTexture", StringComparison.InvariantCultureIgnoreCase))
                     {
                         return this.GetContentTexture("ErrorTexture");
@@ -239,8 +240,9 @@ namespace Demoder.PlanetMapViewer.DataClasses
                     texCache = tex;
                     this.iconTextures[key] = texCache;
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Program.WriteLog(ex);
                     if (!key.Equals("ErrorTexture", StringComparison.InvariantCultureIgnoreCase))
                     {
                         return this.GetContentTexture("ErrorTexture");
@@ -280,8 +282,9 @@ namespace Demoder.PlanetMapViewer.DataClasses
                     tex = tex2;
                     this.contentTextures[key] = tex;
                 }
-                catch
+                catch(Exception ex)
                 {
+                    Program.WriteLog(ex);
                     if (!key.Equals("ErrorTexture", StringComparison.InvariantCultureIgnoreCase))
                     {
                         return this.GetContentTexture("ErrorTexture");

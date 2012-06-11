@@ -129,6 +129,12 @@ namespace Demoder.PlanetMapViewer.Helpers
                         if (sd.Font == null) { continue; }
                         var textSize = sd.Size;
                         var pos = GetRealPosition(item);
+
+                        if (sd.Position.Type == DrawMode.World && !this.IsInsideViewport(pos, sd.Size))
+                        {
+                            continue;
+                        }
+
                         for (int x = -1; x <= 1; x++)
                         {
                             for (int y = -1; y <= 1; y++)
@@ -171,7 +177,12 @@ namespace Demoder.PlanetMapViewer.Helpers
                         if (String.IsNullOrEmpty(sd.Text)) { continue; }
                         if (sd.Font == null) { continue; }
                         var textSize = sd.Size;
-                        var pos = GetRealPosition(item);                       
+                        var pos = GetRealPosition(item);
+
+                        if (sd.Position.Type == DrawMode.World && !this.IsInsideViewport(pos, sd.Size))
+                        {
+                            continue;
+                        }
 
                         API.SpriteBatch.DrawString(
                             sd.Font,
@@ -196,6 +207,31 @@ namespace Demoder.PlanetMapViewer.Helpers
             {
                 Program.WriteLog(ex);
             }
+        }
+
+        private bool IsInsideViewport(Vector2 pos, Vector2 size)
+        {
+            var camTL = API.Camera.Position;
+            var camBR = new Vector2(
+                camTL.X + API.UiElements.TileDisplay.Width,
+                camTL.Y + API.UiElements.TileDisplay.Height);
+
+            var iTL = pos;
+            var iBR = new Vector2(
+                iTL.X + size.X,
+                iTL.Y + size.Y);
+
+            // Test if right side of item is to the left of camera
+            if (iBR.X < camTL.X) { return false; }
+            // Test if left side of item is to the right of camera
+            if (iTL.X > camBR.X) { return false; }
+
+            // Test of top of item is below camera
+            if (iTL.Y > camBR.Y) { return false; }
+            // Test if bottom of item is above camera
+            if (iBR.Y < camTL.Y) { return false; }
+
+            return true;            
         }
 
         /// <summary>
