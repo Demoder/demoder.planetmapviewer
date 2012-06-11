@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Demoder.PlanetMapViewer.Helpers;
+using Demoder.Common.AO;
 
 namespace Demoder.PlanetMapViewer.DataClasses
 {
@@ -51,5 +52,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
         public float Magnification = 1;
 
         public Dictionary<uint, PlayerInfo> PlayerInfo = new Dictionary<uint, PlayerInfo>();
+
+        public Dimension CurrentDimension {get;internal set;}
     }
 }

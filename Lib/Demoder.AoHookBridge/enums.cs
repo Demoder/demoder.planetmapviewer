@@ -34,7 +34,8 @@ namespace Demoder.AoHookBridge
         CharacterPosition = 4,
         HookStateChange = 16,
         DynelName = 32,
-        QuestLocation = 64
+        QuestLocation = 64,
+        ServerID = 128,
     }
 
     public enum CharacterSkill : int

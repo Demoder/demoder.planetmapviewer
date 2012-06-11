@@ -60,8 +60,10 @@ namespace Demoder.AoHook
         public event HookStateChangeEventDelegate HookStateChangeEvent;
         public event DynelNameEventDelegate DynelNameEvent;
         public event QuestLocationEventDelegate QuestLocationEvent;
-
+        public event ServerIdEventDelegate ServerIdEvent;
         #endregion
+
+
         /// <summary>
         /// Creates a default instance.
         /// </summary>
@@ -154,6 +156,9 @@ namespace Demoder.AoHook
                 case BridgeEventType.QuestLocation:
                     this.outgoingEvents.Enqueue(new hEvents.QuestLocationEventArgs(e as bEvents.QuestLocationEventArgs));
                     break;
+                case BridgeEventType.ServerID:
+                    this.outgoingEvents.Enqueue(new hEvents.ServerIdEventArgs(e as bEvents.ServerIdEventArgs));
+                    break;
             }
         }
 
@@ -163,25 +168,36 @@ namespace Demoder.AoHook
         private Dictionary<int, long[]> currentCharacterPositions = new Dictionary<int, long[]>();
 
         private bEvents.DynelPositionEventArgs curCharacterPos = null;
+        private Stopwatch lastCharPos = null;
         private void ProcessCharacterPositionEvent(bEvents.DynelPositionEventArgs e)
         {
             if (this.curCharacterPos != null)
             {
-                if (this.curCharacterPos.Equals(e)) { return; }
+                if (this.curCharacterPos.Equals(e) 
+                    && this.lastCharPos!=null 
+                    && this.lastCharPos.ElapsedMilliseconds < 250) 
+                { 
+                    return; 
+                }
             }
+
+            if (this.lastCharPos == null) { this.lastCharPos = new Stopwatch(); }
+            this.lastCharPos.Restart();
+
             //Console.WriteLine("N3: X: {0} Y: {1} Z: {2}", e.X, e.Y, e.Z);
             this.curCharacterPos = e;
             this.outgoingEvents.Enqueue(new hEvents.CharacterPositionEventArgs(
-                 e.ProcessId,
-                 e.DynelType,
-                 e.DynelID,
-                 e.ZoneID,
-                 e.ZoneName,
-                 e.InShadowlands,
-                 e.X,
-                 e.Y,
-                 e.Z,
-                 e.Time));
+                e.ProcessId,
+                e.ServerID,
+                e.DynelType,
+                e.DynelID,
+                e.ZoneID,
+                e.ZoneName,
+                e.InShadowlands,
+                e.X,
+                e.Y,
+                e.Z,
+                e.Time));
         }
 
         private PersistentInfo GetPersistentInfo(int pid)
@@ -216,6 +232,9 @@ namespace Demoder.AoHook
                 case HookEventType.QuestLocation:
                     this.SendEvent(this.QuestLocationEvent, e);
                     break;
+                case HookEventType.ServerID:
+                    this.SendEvent(this.ServerIdEvent, e);
+                    break;
             }
         }
 
@@ -228,9 +247,9 @@ namespace Demoder.AoHook
                 {
                     delegates(this, e);
                 }
-                catch 
+                catch (Exception ex)
                 {
- 
+                    
                 }
             }
         }

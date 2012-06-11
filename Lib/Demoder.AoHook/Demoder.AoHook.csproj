@@ -69,6 +69,7 @@
     <Compile Include="Events\HookEventArgs.cs" />
     <Compile Include="Events\HookStateChangeEventArgs.cs" />
     <Compile Include="Events\QuestLocationEventArgs.cs" />
+    <Compile Include="Events\ServerIdEventArgs.cs" />
     <Compile Include="PersistentInfo.cs" />
     <Compile Include="Provider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -37,5 +37,7 @@ namespace Demoder.AoHookBridge
         public Stopwatch TimeSinceLastPositionQuery = Stopwatch.StartNew();
 
         public DynelNameEventArgs CurrentCharacter = null;
+
+        public uint ServerID = 0;
     }
 }

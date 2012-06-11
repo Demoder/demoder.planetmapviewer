@@ -34,6 +34,7 @@ namespace Demoder.AoHook
         CharacterPosition,
         HookStateChange,
         DynelName,
-        QuestLocation
+        QuestLocation,
+        ServerID,
     }
 }

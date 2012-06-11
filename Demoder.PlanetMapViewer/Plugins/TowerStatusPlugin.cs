@@ -45,8 +45,8 @@ namespace Demoder.PlanetMapViewer.Plugins
     public class TowerStatusPlugin : IPlugin
     {
         #region Settings
-        [Setting(Dimension.Rimor)]
-        public Dimension Dimension { get; set; }
+        [Setting(DimensionSelection.AutoDetect)]
+        public DimensionSelection Dimension { get; set; }
 
         [Setting(true)]
         public bool ShowNames { get; set; }
@@ -72,10 +72,16 @@ namespace Demoder.PlanetMapViewer.Plugins
 
         public TowerStatusPlugin()
         {
-            this.Dimension = Dimension.Rimor;
             API.MapManager.MapChangedEvent += new Action(this.HandleMapChangedEvent);
             API.XmlCache.Create<TowerSites>(5, 20000);
             API.XmlCache.Create<TowerAttacks>(1, 10000);
+
+            API.AoHook.TrackedDimensionChanged += AoHook_TrackedDimensionChanged;
+        }
+
+        void AoHook_TrackedDimensionChanged()
+        {
+            API.PluginManager.SignalGenerationMre(this.GetType());
         }
 
         public void Dispose()
@@ -90,11 +96,29 @@ namespace Demoder.PlanetMapViewer.Plugins
 
         public IEnumerable<MapOverlay> GetCustomOverlay()
         {
-            yield return this.GenerateTowerFieldInfo();
-            yield return this.GenerateRecentAttackInfo();
+            Dimension dim;
+            switch (this.Dimension)
+            {
+                case DimensionSelection.Atlantean:
+                    dim = Demoder.Common.AO.Dimension.Atlantean;
+                    break;
+                case DimensionSelection.Rimor:
+                    dim = Demoder.Common.AO.Dimension.Rimor;
+                    break;
+                case DimensionSelection.Testlive:
+                    dim = Demoder.Common.AO.Dimension.Testlive;
+                    break;
+                default:
+                case DimensionSelection.AutoDetect:
+                    dim = API.State.CurrentDimension;
+                    break;
+            }
+
+            yield return this.GenerateTowerFieldInfo(dim);
+            yield return this.GenerateRecentAttackInfo(dim);
         }
 
-        private MapOverlay GenerateRecentAttackInfo()
+        private MapOverlay GenerateRecentAttackInfo(Dimension dimension)
         {
             if (!this.ShowRecentAttacks) { return null; }
             var overlay = new GuiTableOverlay
@@ -109,7 +133,7 @@ namespace Demoder.PlanetMapViewer.Plugins
             var qb = new UriQueryBuilder();
             {
                 dynamic q = qb;
-                q.d = (int)this.Dimension;
+                q.d = (int)dimension;
                 q.output = "xml";
                 q.limit = 5;
                 q.sortorder = "desc";
@@ -120,7 +144,7 @@ namespace Demoder.PlanetMapViewer.Plugins
             var towerData = API.XmlCache.Get<TowerAttacks>().Request(
                 XMLCacheFlags.Default,
                 qb.ToUri(new Uri(twHistorySearch)),
-                "all");
+                dimension.ToString());
 
             if (towerData == null)
             {
@@ -132,8 +156,12 @@ namespace Demoder.PlanetMapViewer.Plugins
                     OutlineColor = Color.Black,
                     Outline = true,
                     Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
-                    Text = "Error fetching recent attacks for " + this.Dimension.ToString()
+                    Text = "Error fetching recent attacks for " + dimension.ToString()
                 });
+                if (dimension == Common.AO.Dimension.Unknown)
+                {
+                    (overlay.MapItems.Last() as MapText).Text = "Please track a character, or select dimension in plugin configuration.";
+                }
                 return overlay;
             }
             if (towerData.Attacks.Count == 0)
@@ -146,7 +174,7 @@ namespace Demoder.PlanetMapViewer.Plugins
                     OutlineColor = Color.Black,
                     Outline = true,
                     Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
-                    Text = "No recent attacks on " + this.Dimension.ToString()
+                    Text = "No recent attacks on " + dimension.ToString()
                 });
                 return overlay;
             }
@@ -185,7 +213,7 @@ namespace Demoder.PlanetMapViewer.Plugins
                 OutlineColor = Color.Black,
                 Outline = true,
                 Font = API.Content.Fonts.GetFont(this.RecentAttacksFont),
-                Text = "Recent tower attacks on " + this.Dimension.ToString()
+                Text = "Recent tower attacks on " + dimension.ToString()
             };
 
             int row = 0;
@@ -256,24 +284,8 @@ namespace Demoder.PlanetMapViewer.Plugins
             }
             return overlay.ToGuiOverlay();
         }
-
-        private Color GetFactionColor(Faction faction)
-        {
-            switch (faction)
-            {
-                case Faction.Neutral:
-                    return Color.White;
-                case Faction.Clan:
-                    return Color.Orange;
-                case Faction.Omni:
-                    return Color.DeepSkyBlue;
-                default:
-                case Faction.Unknown:
-                    return Color.Pink;
-            }
-        }
-
-        private MapOverlay GenerateTowerFieldInfo()
+        
+        private MapOverlay GenerateTowerFieldInfo(Dimension dimension)
         {
             var overlay = new MapOverlay();
 
@@ -281,7 +293,7 @@ namespace Demoder.PlanetMapViewer.Plugins
             var qb = new UriQueryBuilder();
             {
                 dynamic q = qb;
-                q.d = (int)this.Dimension;
+                q.d = (int)dimension;
                 q.output = "xml";
                 q.limit = 300;
                 q.minlevel = this.LcaMinLevel;
@@ -291,7 +303,7 @@ namespace Demoder.PlanetMapViewer.Plugins
             var towerData = API.XmlCache.Get<TowerSites>().Request(
                 XMLCacheFlags.Default,
                 qb.ToUri(new Uri(twTowerDistribution)),
-                this.Dimension.ToString(), 
+                dimension.ToString(), 
                 this.LcaMinLevel.ToString(), 
                 this.LcaMaxLevel.ToString());
 
@@ -360,6 +372,22 @@ namespace Demoder.PlanetMapViewer.Plugins
                 overlay.MapItems.Add(new MapTextureText(tex, text) { PositionAlignment = MapItemAlignment.Bottom });
             }
             return overlay;
-        }       
+        }
+
+        private Color GetFactionColor(Faction faction)
+        {
+            switch (faction)
+            {
+                case Faction.Neutral:
+                    return Color.White;
+                case Faction.Clan:
+                    return Color.Orange;
+                case Faction.Omni:
+                    return Color.DeepSkyBlue;
+                default:
+                case Faction.Unknown:
+                    return Color.Pink;
+            }
+        }
     }
 }

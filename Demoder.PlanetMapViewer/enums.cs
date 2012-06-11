@@ -123,4 +123,12 @@ namespace Demoder.PlanetMapViewer
         Rubika,
         Shadowlands
     }
+
+    public enum DimensionSelection
+    {
+        AutoDetect=0,
+        Atlantean=1,
+        Rimor=2,
+        Testlive=9
+    }
 }

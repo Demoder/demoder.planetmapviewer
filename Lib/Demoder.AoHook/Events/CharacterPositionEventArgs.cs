@@ -30,6 +30,7 @@ namespace Demoder.AoHook.Events
 {
     public class CharacterPositionEventArgs : HookEventArgs
     {
+        public uint ServerID { get; private set; }
         public uint DynelType { get; private set; }
         public uint DynelID { get; private set; }
         public uint ZoneID { get; private set; }
@@ -39,8 +40,9 @@ namespace Demoder.AoHook.Events
         public float Y { get; private set; }
         public float Z { get; private set; }
 
-        internal CharacterPositionEventArgs(int processID, uint dynelType, uint dynelId, uint zoneId, string zoneName, bool inShadowlands, float x, float y, float z, DateTime time = default(DateTime)) : base(processID, HookEventType.CharacterPosition, time)
+        internal CharacterPositionEventArgs(int processID, uint serverId, uint dynelType, uint dynelId, uint zoneId, string zoneName, bool inShadowlands, float x, float y, float z, DateTime time = default(DateTime)) : base(processID, HookEventType.CharacterPosition, time)
         {
+            this.ServerID = serverId;
             this.DynelType = dynelType;
             this.DynelID = dynelId;
             this.ZoneID = zoneId;

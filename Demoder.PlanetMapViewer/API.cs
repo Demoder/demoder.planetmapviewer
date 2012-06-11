@@ -68,7 +68,7 @@ namespace Demoder.PlanetMapViewer
         public static MapManager MapManager;
         public static Camera Camera;
         public static SpriteBatch SpriteBatch;
-        public static Provider AoHookProvider;
+        public static HookInfoTracker AoHook { get; internal set; }
         public static ContentManager ContentManager;
         public static XnaContent Content { get; private set; }
 

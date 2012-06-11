@@ -42,17 +42,16 @@ namespace Demoder.PlanetMapViewer.Plugins
         #region settings
         [Setting(LoadedFont.Silkscreen7)]
         public LoadedFont CharacterLocatorFont { get; set; }
-        #endregion
 
-        private Dictionary<int, uint> ProcessCharacterMap = new Dictionary<int, uint>();
+        [Setting(true)]
+        public bool DrawOfflineCharacters { get; set; }
+        #endregion
 
         public CharacterLocatorPlugin()
         {
-            API.AoHookProvider.CharacterPositionEvent += HandleCharacterPositionEvent;
-            API.AoHookProvider.HookStateChangeEvent += HandleHookStateChangeEvent;
-            API.AoHookProvider.DynelNameEvent += HandleDynelNameEvent;
         }
 
+        
         #region Retrieve IMapItems
         
         public IEnumerable<MapOverlay> GetCustomOverlay()
@@ -79,6 +78,12 @@ namespace Demoder.PlanetMapViewer.Plugins
             foreach (var character in characters)
             {
                 if (character == null || character.Zone == null || character.Position == null || character.Name == null) { continue; }
+                if (!character.IsHooked && !this.DrawOfflineCharacters)
+                {
+                    // We ain't tracking offline characters.
+                    continue;
+                }
+
                 var texture = new MapTexture()
                 {
                     Texture = API.Content.Textures.CharacterLocator,
@@ -122,97 +127,9 @@ namespace Demoder.PlanetMapViewer.Plugins
 
         #endregion
 
-        #region AO Hook Provider
-        // Todo: Move this to the general 
-        private void HandleDynelNameEvent(Provider sender, Demoder.AoHook.Events.DynelNameEventArgs e)
-        {
-            if (!e.IsSelf) { return; }
-            bool changed = false;
-
-            lock (this.ProcessCharacterMap)
-            {
-                if (!this.ProcessCharacterMap.ContainsKey(e.ProcessID))
-                {
-                    this.ProcessCharacterMap[e.ProcessID] = e.DynelID;
-                }
-            }
-
-            lock (API.State.PlayerInfo)
-            {
-                if (!API.State.PlayerInfo.ContainsKey(e.DynelID))
-                {
-                    API.State.PlayerInfo[e.DynelID] = new PlayerInfo();
-                }
-
-                var info = API.State.PlayerInfo[e.DynelID];
-
-                if (e.DynelID != uint.MinValue && e.DynelID != uint.MaxValue)
-                {
-                    if (info.ID != e.DynelID) { changed = true; }
-                    info.ID = e.DynelID;
-                }
-                if (e.DynelName != "NoName")
-                {
-                    if (e.DynelName != info.Name) { changed = true; }
-                    info.Name = e.DynelName;
-                }
-            }
-            if (changed)
-            {
-                API.UiElements.CharacterTrackerControl.UpdateCharacterList();
-            }
-        }
-
-
-        private void HandleHookStateChangeEvent(Provider sender, Demoder.AoHook.Events.HookStateChangeEventArgs e)
-        {
-            lock (this.ProcessCharacterMap)
-            {
-                // We don't have anything to do if we're hooking.
-                if (e.IsHooked) { return; }
-                // We can't do anything if we don't know about the process
-                if (!this.ProcessCharacterMap.ContainsKey(e.ProcessID)) { return; }
-
-                // Update status of whether or not a player character is hooked.
-                API.State.PlayerInfo[this.ProcessCharacterMap[e.ProcessID]].IsHooked = false;
-                this.ProcessCharacterMap.Remove(e.ProcessID);
-
-                API.UiElements.CharacterTrackerControl.UpdateCharacterList();
-            }
-        }
-
-        private void HandleCharacterPositionEvent(Provider sender, Demoder.AoHook.Events.CharacterPositionEventArgs e)
-        {
-            // Ignore anything which isn't player characters.
-            if (e.DynelType != 50000) { return; }
-
-            // Don't update if we have invalid data (such as while zoning)
-            if (e.ZoneID == 0) { return; }
-
-            var update = false;
-            lock (API.State.PlayerInfo)
-            {
-                var info = API.State.PlayerInfo[e.DynelID];
-                info.Position = new Vector3(e.X, e.Y, e.Z);
-                info.Zone.ID = e.ZoneID;
-                info.Zone.Name = e.ZoneName;
-                if (info.InShadowlands != e.InShadowlands) { update = true; }
-                info.InShadowlands = e.InShadowlands;
-            }
-            if (update)
-            {
-                API.UiElements.CharacterTrackerControl.UpdateCharacterList();
-            }
-        }
-        #endregion
-
-
-
         public void Dispose()
         {
-            API.AoHookProvider.CharacterPositionEvent -= HandleCharacterPositionEvent;
-            API.AoHookProvider.HookStateChangeEvent -= HandleHookStateChangeEvent;
-            API.AoHookProvider.DynelNameEvent -= HandleDynelNameEvent;
+
         }
     }
 }

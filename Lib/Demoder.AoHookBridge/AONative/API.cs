@@ -105,10 +105,13 @@ namespace Demoder.AoHookBridge.AONative
                 [DllImport("Interfaces.dll", EntryPoint = "?FrameProcess@Client_t@@QAEXXZ", CallingConvention = CallingConvention.ThisCall)]
                 public static extern void FrameProcess(IntPtr clientPtr);
 
-                //public: static unsigned int __cdecl Client_t::GetCharID(void)
+                // public: static unsigned int __cdecl Client_t::GetCharID(void)
                 [DllImport("Interfaces.dll", EntryPoint = "?GetCharID@Client_t@@SAIXZ", CallingConvention=CallingConvention.Cdecl)]
                 public static extern uint GetCharID();
-                
+
+                // public: unsigned int __thiscall Client_t::GetServerID(void)const 
+                [DllImport("Interfaces.dll", EntryPoint="?GetServerID@Client_t@@QBEIXZ", CallingConvention=CallingConvention.ThisCall)]
+                public static extern uint GetServerID(IntPtr clientPtr);
 
                 #region Delegates
                 [UnmanagedFunctionPointer(CallingConvention.ThisCall, CharSet = CharSet.Unicode, SetLastError = true)]

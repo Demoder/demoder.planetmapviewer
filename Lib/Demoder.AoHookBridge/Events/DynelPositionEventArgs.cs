@@ -30,6 +30,7 @@ namespace Demoder.AoHookBridge.Events
     [Serializable]
     public class DynelPositionEventArgs : BridgeEventArgs
     {
+        public uint ServerID { get; private set; }
         public uint DynelType { get; private set; }
         public uint DynelID { get; private set; }
         public bool InShadowlands { get; private set; }
@@ -39,9 +40,10 @@ namespace Demoder.AoHookBridge.Events
         public float Y { get; private set; }
         public float Z { get; private set; }
 
-        public DynelPositionEventArgs(uint dynelType, uint dynelId, uint zoneId, string zoneName, bool inShadowlands, float x, float y, float z)
+        public DynelPositionEventArgs(uint serverID, uint dynelType, uint dynelId, uint zoneId, string zoneName, bool inShadowlands, float x, float y, float z)
             : base(BridgeEventType.CharacterPosition)
         {
+            this.ServerID = serverID;
             this.DynelType = dynelType;
             this.DynelID = dynelId;
             this.ZoneID = zoneId;
