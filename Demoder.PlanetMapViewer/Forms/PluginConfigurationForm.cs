@@ -38,7 +38,7 @@ namespace Demoder.PlanetMapViewer.Forms
     {
         private IPlugin plugin;
         private SettingInfo[] settings;
-        internal PluginConfigurationForm(PluginInfo pluginInfo)
+        private PluginConfigurationForm(PluginInfo pluginInfo)
         {
             InitializeComponent();
             this.DialogResult = System.Windows.Forms.DialogResult.Cancel; // Default to cancel.
@@ -47,6 +47,13 @@ namespace Demoder.PlanetMapViewer.Forms
 
             this.Text = String.Format("Plugin Configuration: {0}", pluginInfo.Name);
             //this.dataGridView1.DataError
+        }
+
+        internal static void CreateShow(PluginInfo plugin)
+        {
+            var form = new PluginConfigurationForm(plugin);
+            form.TopMost = API.UiElements.ParentForm.TopMost;
+            form.ShowDialog();
         }
 
         private void PluginConfigurationForm_Load(object sender, EventArgs e)

@@ -188,8 +188,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 {
                     return;
                 }
-                var config = new PluginConfigurationForm(pi);
-                config.ShowDialog();
+                PluginConfigurationForm.CreateShow(pi);
             }
         }
 

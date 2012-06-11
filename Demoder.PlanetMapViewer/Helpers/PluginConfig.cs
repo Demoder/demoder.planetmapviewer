@@ -48,7 +48,7 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         private FileInfo GetConfigFile(Type plugin)
         {
-            var fileName = String.Format("{0}-{1}",
+            var fileName = String.Format("{0}-{1}.xml",
                 plugin.Name, 
                 SHA1Checksum.Generate(plugin.GetType().FullName));
 
