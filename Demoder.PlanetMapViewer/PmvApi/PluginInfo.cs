@@ -36,7 +36,10 @@ namespace Demoder.PlanetMapViewer.PmvApi
         internal PluginInfo()
         {
             this.GenerationMre = new ManualResetEvent(false);
+            this.HiddenOverlays = new List<string>();
         }
+
+        public List<string> HiddenOverlays { get; private set; }
 
         #region Plugin information
         /// <summary>

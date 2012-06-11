@@ -91,7 +91,7 @@ namespace Demoder.PlanetMapViewer.Plugins
 
         private void HandleMapChangedEvent()
         {
-            API.PluginManager.ChangePluginStatus<TowerStatusPlugin>(API.MapManager.CurrentMap.Type == MapType.Rubika);
+            API.PluginManager.ChangeLayerStatus<TowerStatusPlugin>("LcaInfo", API.MapManager.CurrentMap.Type == MapType.Rubika);
         }   
 
         public IEnumerable<MapOverlay> GetCustomOverlay()
@@ -287,7 +287,10 @@ namespace Demoder.PlanetMapViewer.Plugins
         
         private MapOverlay GenerateTowerFieldInfo(Dimension dimension)
         {
-            var overlay = new MapOverlay();
+            var overlay = new MapOverlay
+            {
+                Name = "LcaInfo",
+            };
 
             // Get tower data.
             var qb = new UriQueryBuilder();
