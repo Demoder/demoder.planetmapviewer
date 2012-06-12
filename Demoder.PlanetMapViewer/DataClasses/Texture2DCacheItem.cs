@@ -68,9 +68,9 @@ namespace Demoder.PlanetMapViewer.DataClasses
             {
                 throw new ObjectDisposedException("Object already disposed!", new Exception());
             }
-            this.lastAccess.Reset();
-            this.texture.Dispose();
             this.IsDisposed = true;
+            this.lastAccess.Reset();
+            this.texture = null;            
         }
     }
 }

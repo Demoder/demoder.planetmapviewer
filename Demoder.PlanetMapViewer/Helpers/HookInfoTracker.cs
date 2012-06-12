@@ -62,7 +62,7 @@ namespace Demoder.PlanetMapViewer.Helpers
         public uint GetActiveCharacter()
         {
             var foregroundWindow = GetForegroundWindow();
-            foreach (var kvp in this.ProcessCharacterMap)
+            foreach (var kvp in this.ProcessCharacterMap.ToArray())
             {
                 var proc = Process.GetProcessById(kvp.Key);
                 if (proc.MainWindowHandle.ToInt64() == foregroundWindow.ToInt64())

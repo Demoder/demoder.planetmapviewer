@@ -104,7 +104,6 @@ namespace Demoder.PlanetMapViewer.DataClasses
             {
                 foreach (var element in contentTextures.Where(kvp => kvp.Value.LastAccess > MemoryCacheTime).Select(kvp => kvp.Key).ToArray())
                 {
-                    cache[element].Dispose();
                     cache.Remove(element);
                 }
             }

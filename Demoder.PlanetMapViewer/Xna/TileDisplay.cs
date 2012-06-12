@@ -236,10 +236,11 @@ namespace Demoder.PlanetMapViewer.Xna
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             var button = e.Button;
-            API.State.CameraControl = CameraControl.Manual;
+            
 
             if (ModifierKeys == System.Windows.Forms.Keys.Shift)
             {
+                API.State.CameraControl = CameraControl.Manual;
                 var newPos = (API.Camera.Center.X - (e.Delta * this.mouseScrollSensitivity / 120 * API.UiElements.HScrollBar.SmallChange));
                 API.Camera.CenterOnPixel(newPos, API.Camera.Center.Y);
             }
@@ -272,6 +273,7 @@ namespace Demoder.PlanetMapViewer.Xna
             }
             else
             {
+                API.State.CameraControl = CameraControl.Manual;
                 var newPos = (API.Camera.Center.Y - (e.Delta * this.mouseScrollSensitivity / 120 * API.UiElements.VScrollBar.SmallChange));
                 API.Camera.CenterOnPixel(API.Camera.Center.X, newPos);
             }

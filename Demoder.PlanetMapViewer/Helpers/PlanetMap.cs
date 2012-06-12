@@ -330,9 +330,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 for (int y = 0; y < this.Tiles.Y; y++)
                 {
                     if (this.textureMap[y, x].Texture == null) { continue; }
-                    this.textureMap[y, x].Texture.Dispose();
                     this.textureMap[y, x].Texture = null;
-
                 }
             }
         }
@@ -396,7 +394,6 @@ namespace Demoder.PlanetMapViewer.Helpers
                             // Unload tiles which haven't been used for 120 seconds.
                             if (this.textureMap[y, x].Used > maxFrameAge)
                             {
-                                this.textureMap[y, x].Texture.Dispose();
                                 this.textureMap[y, x].Texture = null;
                             }
                             continue;
