@@ -1,4 +1,4 @@
-﻿Demoders PlanetMap Viewer (v1.0.1, 2012-03-27)
+﻿Demoders PlanetMap Viewer (v1.2.1, 2012-06-12)
 	This program lets you explore PlanetMaps made for Anarchy Online. 
 
 Installation
@@ -20,8 +20,9 @@ Requirements
 
 Map interactions
 	You may pan the map by clicking and holding the left mouse button on the map, and moving your mouse around.
-	Alternatively, you may pan the map by using the scroll wheel. Horizontal scrollwheels are also supported. 
-	If you only have vertical scroll, you may press shift while scrolling to pan horizontally.
+		Alternatively, you may pan the map by using the scroll wheel. Horizontal scrollwheels are also supported. 
+		If you only have vertical scroll, you may press shift while scrolling to pan horizontally.
+	You may also shrink or enlarge the planet map using the Magnification control in the main UI, or holding ctrl while using the mouse scroll wheel.
 	In addition, you may:
 		Double left-click: Center camera to location and zoom in one layer. (Or press + (plus))
 		Double right-click: Center camera to location and zoom out one layer. (Or press - (minus))
@@ -40,6 +41,7 @@ Modes of operation
 		This mode allows for a much smaller window size than the other modes. You may still maximize the window to cover a full screen, if you wish.
 
 Changelog
+	2012-06-12: v1.2, several new features and compatibility with Anarchy Online 18.5.0. See http://redmine.demoder.me/projects/pmv/wiki/Release_12 for more information.
 	2012-03-27: v1.0, initial release.
 
 Credits

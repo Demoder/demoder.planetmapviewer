@@ -265,7 +265,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
             this.splitContainer1.Panel2MinSize = 0;
             this.splitContainer1.Size = new System.Drawing.Size(725, 567);
-            this.splitContainer1.SplitterDistance = 544;
+            this.splitContainer1.SplitterDistance = 535;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 5;
             // 
@@ -273,7 +273,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // 
             this.tileDisplay1_vScrollBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tileDisplay1_vScrollBar.Location = new System.Drawing.Point(530, 0);
+            this.tileDisplay1_vScrollBar.Location = new System.Drawing.Point(521, 0);
             this.tileDisplay1_vScrollBar.Name = "tileDisplay1_vScrollBar";
             this.tileDisplay1_vScrollBar.Size = new System.Drawing.Size(15, 552);
             this.tileDisplay1_vScrollBar.TabIndex = 3;
@@ -285,7 +285,7 @@ namespace Demoder.PlanetMapViewer.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tileDisplay1_hScrollBar.Location = new System.Drawing.Point(0, 552);
             this.tileDisplay1_hScrollBar.Name = "tileDisplay1_hScrollBar";
-            this.tileDisplay1_hScrollBar.Size = new System.Drawing.Size(543, 15);
+            this.tileDisplay1_hScrollBar.Size = new System.Drawing.Size(534, 15);
             this.tileDisplay1_hScrollBar.TabIndex = 2;
             this.tileDisplay1_hScrollBar.Value = 1;
             this.tileDisplay1_hScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.tileDisplay1_ScrollBar_Scroll);
@@ -295,7 +295,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.tileDisplay1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tileDisplay1.Location = new System.Drawing.Point(0, 0);
             this.tileDisplay1.Name = "tileDisplay1";
-            this.tileDisplay1.Size = new System.Drawing.Size(544, 567);
+            this.tileDisplay1.Size = new System.Drawing.Size(535, 567);
             this.tileDisplay1.TabIndex = 1;
             this.tileDisplay1.Text = "PlanetMap";
             // 
