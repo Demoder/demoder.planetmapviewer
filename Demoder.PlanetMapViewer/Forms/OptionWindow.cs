@@ -58,8 +58,13 @@ namespace Demoder.PlanetMapViewer.Forms
             this.overlayModeWorkaroundTopmost.Checked = this.windowSettings.OverlaymodeTopmostWorkaround;
             this.disableTutorials.Checked = this.generalSettings.DisableTutorials;
 
+            // TODO: remove this block of code when GUI fonts are used.
+#if DEBUG
             // Setup fonts
             this.LoadFonts();
+#else
+            this.tabControl1.TabPages.RemoveAt(1);
+#endif
         }
 
         private void LoadFonts()

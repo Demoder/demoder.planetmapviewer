@@ -513,8 +513,11 @@ namespace Demoder.PlanetMapViewer.Xna
             if (API.Camera == null) { return; }
             switch (API.State.CameraControl)
             {
-                case CameraControl.Character:
-                    MoveCameraToCharacter();
+                case CameraControl.SelectedCharacters:
+                    MoveCameraToSelectedCharacters();
+                    break;
+                case CameraControl.ActiveCharacter:
+                    this.MoveCameraToActiveCharacter();
                     break;
                 case CameraControl.Manual:
                     API.Camera.CenterOnScrollbars();
@@ -523,20 +526,49 @@ namespace Demoder.PlanetMapViewer.Xna
         }
 
         /// <summary>
-        /// Centers camera on character locator(s)
+        /// Centers camera on whichever character locator is currently being controlled by the player.
         /// </summary>
-        private void MoveCameraToCharacter()
+        private void MoveCameraToActiveCharacter()
+        {
+            API.AoHook.UpdateTrackedDimension();
+            try
+            {
+                var id = API.AoHook.GetActiveCharacter();
+                if (id == 0) { return; }
+                var playerInfo = new PlayerInfo[] { API.State.PlayerInfo[id] };
+                this.MoveCameraToCharacterLocators(playerInfo);
+            }
+            catch (Exception ex)
+            {
+                Program.WriteLog(ex);
+            }
+        }
+
+        /// <summary>
+        /// Centers camera on user-selected character locator(s)
+        /// </summary>
+        private void MoveCameraToSelectedCharacters()
         {
             try
             {
-                int textureSize = API.MapManager.CurrentLayer.TextureSize;
+                var playerInfo = API.State.PlayerInfo.Values.ToArray().Where(i => i.IsTrackedByCamera).ToArray();
+                if (playerInfo.Length == 0) { return; }
+                this.MoveCameraToCharacterLocators(playerInfo);
+            }
+            catch (Exception ex)
+            {
+                Program.WriteLog(ex);
+            }
+        }
+
+        private void MoveCameraToCharacterLocators(PlayerInfo[] characters)
+        {
+            try 
+            {
                 var vectors = new List<Vector2>();
                 int shadowlandsCharacters = 0;
                 int rubikaCharacters = 0;
-
-
-                var playerInfo = API.State.PlayerInfo.Values.ToArray().Where(i => i.IsTrackedByCamera);
-                foreach (var item in playerInfo)
+                foreach (var item in characters)
                 {
                     var info = item as PlayerInfo;
 

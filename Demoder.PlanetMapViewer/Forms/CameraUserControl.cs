@@ -39,11 +39,6 @@ namespace Demoder.PlanetMapViewer.Forms
             InitializeComponent();
         }
 
-        private void characterButton_Click(object sender, EventArgs e)
-        {
-            API.State.CameraControl = CameraControl.Character;
-        }
-
         private void zoomInButton_Click(object sender, EventArgs e)
         {
             API.UiElements.TileDisplay.ZoomIn();
@@ -53,6 +48,18 @@ namespace Demoder.PlanetMapViewer.Forms
         private void zoomOutButton_Click(object sender, EventArgs e)
         {
             API.UiElements.TileDisplay.ZoomOut();
+            API.UiElements.TileDisplay.Focus();
+        }
+
+        private void characterButton_Click(object sender, EventArgs e)
+        {
+            API.State.CameraControl = CameraControl.SelectedCharacters;
+            API.UiElements.TileDisplay.Focus();
+        }
+
+        private void activeCharacterButton_Click(object sender, EventArgs e)
+        {
+            API.State.CameraControl = CameraControl.ActiveCharacter;
             API.UiElements.TileDisplay.Focus();
         }
     }

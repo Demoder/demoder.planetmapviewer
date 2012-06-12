@@ -98,7 +98,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.MapComboBox.FormattingEnabled = true;
             this.MapComboBox.Location = new System.Drawing.Point(3, 72);
             this.MapComboBox.Name = "MapComboBox";
-            this.MapComboBox.Size = new System.Drawing.Size(143, 21);
+            this.MapComboBox.Size = new System.Drawing.Size(170, 21);
             this.MapComboBox.TabIndex = 3;
             this.MapComboBox.SelectedIndexChanged += new System.EventHandler(this.MapComboBoxSelectedIndexChanged);
             // 
@@ -111,7 +111,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.Controls.Add(this.RadioSL);
             this.Controls.Add(this.RadioRK);
             this.Name = "MapSelectionControl";
-            this.Size = new System.Drawing.Size(153, 100);
+            this.Size = new System.Drawing.Size(180, 100);
             this.Load += new System.EventHandler(this.MapSelectionControl_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

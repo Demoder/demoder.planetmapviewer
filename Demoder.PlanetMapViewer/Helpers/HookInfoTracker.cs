@@ -31,6 +31,8 @@ using Demoder.PlanetMapViewer.DataClasses;
 using Microsoft.Xna.Framework;
 using System.Threading;
 using Demoder.Common.AO;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Demoder.PlanetMapViewer.Helpers
 {
@@ -48,6 +50,27 @@ namespace Demoder.PlanetMapViewer.Helpers
             this.Provider.CharacterPositionEvent += HandleCharacterPositionEvent;
             this.Provider.HookStateChangeEvent += HandleHookStateChangeEvent;
             this.Provider.DynelNameEvent += HandleDynelNameEvent;
+        }
+
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public uint GetActiveCharacter()
+        {
+            var foregroundWindow = GetForegroundWindow();
+            foreach (var kvp in this.ProcessCharacterMap)
+            {
+                var proc = Process.GetProcessById(kvp.Key);
+                if (proc.MainWindowHandle.ToInt64() == foregroundWindow.ToInt64())
+                {
+                    return kvp.Value;
+                }
+            }
+            return 0;
         }
 
         #region AO Hook Provider
@@ -141,6 +164,24 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         internal void UpdateTrackedDimension()
         {
+            if (API.State.CameraControl == CameraControl.ActiveCharacter)
+            {
+                var id = API.AoHook.GetActiveCharacter();
+                if (id != 0)
+                {
+                    var dim = API.State.PlayerInfo[id].Dimension;
+                    if (dim != API.State.CurrentDimension)
+                    {
+                        bool sendEvent = dim != API.State.CurrentDimension;
+                        API.State.CurrentDimension = dim;
+                        if (sendEvent)
+                        {
+                            this.SendDimChanged();
+                        }
+                    }
+                    return;
+                }
+            }
             lock (API.State.PlayerInfo)
             {
                 var dict = new Dictionary<Dimension, int>();
@@ -164,14 +205,21 @@ namespace Demoder.PlanetMapViewer.Helpers
                     dict[dim]++;
                 }
                 var newDim = dict.OrderByDescending(k => k.Value).First().Key;
-                if (newDim != API.State.CurrentDimension)
-                {
-                    if (this.TrackedDimensionChanged != null)
-                    {
-                        this.TrackedDimensionChanged();
-                    }
-                }
+
+                bool sendEvent = newDim != API.State.CurrentDimension;
                 API.State.CurrentDimension = newDim;
+                if (sendEvent)
+                {
+                    this.SendDimChanged();
+                }
+            }
+        }
+
+        private void SendDimChanged()
+        {
+            if (this.TrackedDimensionChanged != null)
+            {
+                this.TrackedDimensionChanged();
             }
         }
         #endregion

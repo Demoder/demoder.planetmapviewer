@@ -68,13 +68,16 @@ namespace Demoder.PlanetMapViewer.Plugins
                     overlay = this.OverlayTitlebarMenuTutorial();
                     break;
                 case TutorialStage.OverlayTitlebarMenuClose:
-                   overlay = new MapOverlay();
+                   overlay = new GuiOverlay();
                    break;
                 case TutorialStage.OverlayResizeWindow:
-                    overlay = this.OverlayResizeTutorial();
+                    overlay = this.NormalResizeTutorial();
                     break;
                 case TutorialStage.OverlayExit:
                     overlay = this.OverlayExitTutorial();
+                    break;
+                case TutorialStage.Magnification:
+                    overlay = this.NormalMagnificationTutorial();
                     break;
             }
             if (overlay != null)
@@ -111,10 +114,13 @@ namespace Demoder.PlanetMapViewer.Plugins
                     API.UiElements.ParentForm.OverlayTitleContextMenuStrip.Closed += this.OverlayMenuClosedFinalizer;
                     break;
                 case TutorialStage.OverlayResizeWindow:
-                    API.UiElements.ParentForm.Resize += new EventHandler(OverlayResizeFinalizer);
+                    API.UiElements.ParentForm.Resize += OverlayResizeFinalizer;
                     break;
                 case TutorialStage.OverlayExit:
                     API.UiElements.ParentForm.ModeChanged += this.ParentModeChanged;
+                    break;
+                case TutorialStage.Magnification:
+                    API.UiElements.ParentForm.MagnificationChange += MagnificationFinalizer;
                     break;
             }
         }
@@ -143,10 +149,13 @@ namespace Demoder.PlanetMapViewer.Plugins
                     API.UiElements.ParentForm.OverlayTitleContextMenuStrip.Closed -= this.OverlayMenuClosedFinalizer;
                     break;
                 case TutorialStage.OverlayResizeWindow:
-                    API.UiElements.ParentForm.Resize -= new EventHandler(OverlayResizeFinalizer);
+                    API.UiElements.ParentForm.Resize -= OverlayResizeFinalizer;
                     break;
                 case TutorialStage.OverlayExit:
                     API.UiElements.ParentForm.ModeChanged -= this.ParentModeChanged;
+                    break;
+                case TutorialStage.Magnification:
+                    API.UiElements.ParentForm.MagnificationChange -= MagnificationFinalizer;
                     break;
             }
         }
@@ -166,7 +175,7 @@ namespace Demoder.PlanetMapViewer.Plugins
                 if (!over.TitlebarMenuClosed) { return TutorialStage.OverlayTitlebarMenuClose; }
                 if (!over.ExitOverlayMode) { return TutorialStage.OverlayExit; }
                 if (!over.ResizeWindow) { return TutorialStage.OverlayResizeWindow; }
-                
+                if (!norm.Magnification) { return TutorialStage.Magnification; }
                 isComplete = true;
                 return TutorialStage.Completed;
             }
@@ -175,7 +184,7 @@ namespace Demoder.PlanetMapViewer.Plugins
         #region Normal Tutorial steps
         private MapOverlay NormalOverlayModeTutorial()
         {
-            var items = new MapOverlay();
+            var items = new GuiOverlay();
             items.MapItems.Add(this.GetTutorialStamp(500, 200));
             var txts = new MapTextBuilder(FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top | MapItemAlignment.Left);
             txts.Text("Tutorial: Overlay Mode", textColor: Color.Red, font: FontType.GuiXLarge).Break();
@@ -191,7 +200,7 @@ namespace Demoder.PlanetMapViewer.Plugins
 
         private MapOverlay NormalZoomOutTutorial()
         {
-            var items = new MapOverlay();
+            var items = new GuiOverlay();
             items.MapItems.Add(this.GetTutorialStamp(500, 200));
             var txts = new MapTextBuilder(FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top | MapItemAlignment.Left);
             txts.Text("Tutorial: Zooming Out", textColor: Color.Red, font: FontType.GuiXLarge).Break();
@@ -210,7 +219,7 @@ namespace Demoder.PlanetMapViewer.Plugins
 
         private MapOverlay NormalZoomInTutorial()
         {
-            var items = new MapOverlay();
+            var items = new GuiOverlay();
             items.MapItems.Add(this.GetTutorialStamp(500, 200));
             var txts = new MapTextBuilder(FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top| MapItemAlignment.Left);
             txts.Text("Tutorial: Zooming in", textColor: Color.Red, font: FontType.GuiXLarge).Break();
@@ -235,7 +244,7 @@ namespace Demoder.PlanetMapViewer.Plugins
             {
                 return this.NormalOverlayModeTutorial();
             }
-            var items = new MapOverlay();
+            var items = new GuiOverlay();
             items.MapItems.Add(this.GetTutorialStamp(500, 200));
             int center = API.UiElements.TileDisplay.Width / 2;
 
@@ -251,7 +260,7 @@ namespace Demoder.PlanetMapViewer.Plugins
 
             var txts = new MapTextBuilder(FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top | MapItemAlignment.Left);
             txts.Text("Tutorial: Overlay Menu", textColor: Color.Red, font: FontType.GuiXLarge).Break();
-            txts.Text("The Overlay Menu provides quick access to many useful controls. You may access it by right-clicking the title bar.", 470).Break();
+            txts.Text("The Overlay Menu provides quick access to many useful controls. You may access it by right-clicking the title bar.", 400).Break();
             txts.Break();
             txts.Text("Please open the Overlay Menu now.", textColor: Color.Green).Break();
             items.MapItems.AddRange(txts.ToMapItem(DrawMode.ViewPort, (int)(this.TutorialFramePosition.X - items.MapItems.First().Size.X / 2.5), this.TutorialFramePosition.Y));
@@ -259,19 +268,7 @@ namespace Demoder.PlanetMapViewer.Plugins
             return items;
         }
 
-        private MapOverlay OverlayResizeTutorial()
-        {
-            var items = new MapOverlay();
-            items.MapItems.Add(this.GetTutorialStamp(500, 200));
-            var txts = new MapTextBuilder(FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top | MapItemAlignment.Left);
-            txts.Text("Tutorial: Window Size", textColor: Color.Red, font: FontType.GuiXLarge).Break();
-            txts.Text("You may resize the window by dragging the window border using the mouse.", 450).Break();
-            txts.Break();
-            txts.Text("Please resize the window now.", textColor: Color.Green).Break();
-            items.MapItems.AddRange(txts.ToMapItem(DrawMode.ViewPort, (int)(this.TutorialFramePosition.X - items.MapItems.First().Size.X / 2.5), this.TutorialFramePosition.Y));
-
-            return items;
-        }
+      
 
         private MapOverlay OverlayExitTutorial()
         {
@@ -279,11 +276,11 @@ namespace Demoder.PlanetMapViewer.Plugins
             {
                 return this.NormalOverlayModeTutorial();
             }
-            var items = new MapOverlay();
+            var items = new GuiOverlay();
             items.MapItems.Add(this.GetTutorialStamp(500, 200));
             var txts = new MapTextBuilder(FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top | MapItemAlignment.Left);
             txts.Text("Tutorial: Exiting Overlay Mode", textColor: Color.Red, font: FontType.GuiXLarge).Break();
-            txts.Text("You may exit overlay mode by pressing the close window button at top right, by opening the Overlay Menu and selecting 'Exit Overlay Mode', or pressing [F12]", 470).Break();
+            txts.Text("You may exit overlay mode by pressing the close window button at top right, by opening the Overlay Menu and selecting 'Exit Overlay Mode', or pressing [F12]", 400).Break();
             txts.Break();
             txts.Text("Please exit overlay mode now.", textColor: Color.Green).Break();
             items.MapItems.AddRange(txts.ToMapItem(DrawMode.ViewPort, (int)(this.TutorialFramePosition.X - items.MapItems.First().Size.X / 2.5), this.TutorialFramePosition.Y));
@@ -291,6 +288,37 @@ namespace Demoder.PlanetMapViewer.Plugins
             return items;
         }
 
+        private MapOverlay NormalResizeTutorial()
+        {
+            var items = new GuiOverlay();
+            items.MapItems.Add(this.GetTutorialStamp(500, 200));
+            var txts = new MapTextBuilder(FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top | MapItemAlignment.Left);
+            txts.Text("Tutorial: Window Size", textColor: Color.Red, font: FontType.GuiXLarge).Break();
+            txts.Text("You may resize the window by dragging the window border using the mouse.", 400).Break();
+            txts.Break();
+            txts.Text("Please resize the window now.", textColor: Color.Green).Break();
+            items.MapItems.AddRange(txts.ToMapItem(DrawMode.ViewPort, (int)(this.TutorialFramePosition.X - items.MapItems.First().Size.X / 2.5), this.TutorialFramePosition.Y));
+
+            return items;
+        }
+
+        private MapOverlay NormalMagnificationTutorial()
+        {
+            var items = new GuiOverlay();
+            items.MapItems.Add(this.GetTutorialStamp(500, 230));
+            var txts = new MapTextBuilder(FontType.GuiNormal, Color.White, Color.Black, true, MapItemAlignment.Top | MapItemAlignment.Left);
+            txts.Text("Tutorial: Magnification", textColor: Color.Red, font: FontType.GuiXLarge).Break();
+            txts.Text("Magnification lets you shrink or enlarge the size of the underlying planet map. ", 400).Break();
+            txts.Break();
+            txts.Text("You may alter magnification by the following means:", 400).Break();
+            txts.Text("- Manipulating the magnification slider in the main UI, right pane", 400).Break();
+            txts.Text("- Pressing [Ctrl] while scrolling the mouse wheel", 400).Break();
+            txts.Break();
+            txts.Text("Please use the magnifying feature now.", textColor: Color.Green).Break();
+            items.MapItems.AddRange(txts.ToMapItem(DrawMode.ViewPort, (int)(this.TutorialFramePosition.X - items.MapItems.First().Size.X / 2.5), this.TutorialFramePosition.Y));
+
+            return items;
+        }
        
         #endregion
 
@@ -349,6 +377,12 @@ namespace Demoder.PlanetMapViewer.Plugins
         {
             Properties.OverlayTutorial.Default.ResizeWindow = true;
             Properties.OverlayTutorial.Default.Save();
+        }
+
+        void MagnificationFinalizer()
+        {
+            Properties.NormalTutorial.Default.Magnification = true;
+            Properties.NormalTutorial.Default.Save();
         }
         #endregion
 

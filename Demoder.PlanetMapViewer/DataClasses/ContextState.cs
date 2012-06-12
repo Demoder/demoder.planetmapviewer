@@ -40,7 +40,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
         /// Is autoswitching between map types enabled?
         /// </summary>
         public bool MapTypeAutoSwitching = true;
-        public CameraControl CameraControl = CameraControl.Character;
+        public CameraControl CameraControl = CameraControl.ActiveCharacter;
         /// <summary>
         /// Current window mode
         /// </summary>

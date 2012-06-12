@@ -92,6 +92,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.cameraControlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.followCharactersToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.OverlayTitleContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.followActiveWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.selectCharactersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -204,26 +205,26 @@ namespace Demoder.PlanetMapViewer.Forms
             // checkVersionToolStripMenuItem
             // 
             this.checkVersionToolStripMenuItem.Name = "checkVersionToolStripMenuItem";
-            this.checkVersionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.checkVersionToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.checkVersionToolStripMenuItem.Text = "Update...";
             this.checkVersionToolStripMenuItem.Click += new System.EventHandler(this.checkVersionToolStripMenuItem_Click);
             // 
             // readmeToolStripMenuItem
             // 
             this.readmeToolStripMenuItem.Name = "readmeToolStripMenuItem";
-            this.readmeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.readmeToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.readmeToolStripMenuItem.Text = "Readme";
             this.readmeToolStripMenuItem.Click += new System.EventHandler(this.readmeToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(118, 6);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.aboutToolStripMenuItem.Text = "&About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -264,7 +265,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
             this.splitContainer1.Panel2MinSize = 0;
             this.splitContainer1.Size = new System.Drawing.Size(725, 567);
-            this.splitContainer1.SplitterDistance = 541;
+            this.splitContainer1.SplitterDistance = 544;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 5;
             // 
@@ -272,7 +273,7 @@ namespace Demoder.PlanetMapViewer.Forms
             // 
             this.tileDisplay1_vScrollBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tileDisplay1_vScrollBar.Location = new System.Drawing.Point(527, 0);
+            this.tileDisplay1_vScrollBar.Location = new System.Drawing.Point(530, 0);
             this.tileDisplay1_vScrollBar.Name = "tileDisplay1_vScrollBar";
             this.tileDisplay1_vScrollBar.Size = new System.Drawing.Size(15, 552);
             this.tileDisplay1_vScrollBar.TabIndex = 3;
@@ -284,7 +285,7 @@ namespace Demoder.PlanetMapViewer.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tileDisplay1_hScrollBar.Location = new System.Drawing.Point(0, 552);
             this.tileDisplay1_hScrollBar.Name = "tileDisplay1_hScrollBar";
-            this.tileDisplay1_hScrollBar.Size = new System.Drawing.Size(540, 15);
+            this.tileDisplay1_hScrollBar.Size = new System.Drawing.Size(543, 15);
             this.tileDisplay1_hScrollBar.TabIndex = 2;
             this.tileDisplay1_hScrollBar.Value = 1;
             this.tileDisplay1_hScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.tileDisplay1_ScrollBar_Scroll);
@@ -294,7 +295,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.tileDisplay1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tileDisplay1.Location = new System.Drawing.Point(0, 0);
             this.tileDisplay1.Name = "tileDisplay1";
-            this.tileDisplay1.Size = new System.Drawing.Size(541, 567);
+            this.tileDisplay1.Size = new System.Drawing.Size(544, 567);
             this.tileDisplay1.TabIndex = 1;
             this.tileDisplay1.Text = "PlanetMap";
             // 
@@ -431,14 +432,14 @@ namespace Demoder.PlanetMapViewer.Forms
             this.regionToolStripMenuItem.Enabled = false;
             this.regionToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
             this.regionToolStripMenuItem.Name = "regionToolStripMenuItem";
-            this.regionToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.regionToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.regionToolStripMenuItem.Text = "-Region-";
             // 
             // rubikaToolStripMenuItem1
             // 
             this.rubikaToolStripMenuItem1.Name = "rubikaToolStripMenuItem1";
             this.rubikaToolStripMenuItem1.ShortcutKeyDisplayString = "R";
-            this.rubikaToolStripMenuItem1.Size = new System.Drawing.Size(191, 22);
+            this.rubikaToolStripMenuItem1.Size = new System.Drawing.Size(210, 22);
             this.rubikaToolStripMenuItem1.Text = "&Rubi-ka";
             this.rubikaToolStripMenuItem1.Click += new System.EventHandler(this.rubikaToolStripMenuItem1_Click);
             // 
@@ -446,28 +447,28 @@ namespace Demoder.PlanetMapViewer.Forms
             // 
             this.shadowlandsToolStripMenuItem1.Name = "shadowlandsToolStripMenuItem1";
             this.shadowlandsToolStripMenuItem1.ShortcutKeyDisplayString = "S";
-            this.shadowlandsToolStripMenuItem1.Size = new System.Drawing.Size(191, 22);
+            this.shadowlandsToolStripMenuItem1.Size = new System.Drawing.Size(210, 22);
             this.shadowlandsToolStripMenuItem1.Text = "&Shadowlands";
             this.shadowlandsToolStripMenuItem1.Click += new System.EventHandler(this.shadowlandsToolStripMenuItem1_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(188, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(207, 6);
             // 
             // cameraControlsToolStripMenuItem
             // 
             this.cameraControlsToolStripMenuItem.Enabled = false;
             this.cameraControlsToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cameraControlsToolStripMenuItem.Name = "cameraControlsToolStripMenuItem";
-            this.cameraControlsToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.cameraControlsToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.cameraControlsToolStripMenuItem.Text = "-Camera Controls-";
             // 
             // followCharactersToolStripMenuItem1
             // 
             this.followCharactersToolStripMenuItem1.Name = "followCharactersToolStripMenuItem1";
             this.followCharactersToolStripMenuItem1.ShortcutKeyDisplayString = "C";
-            this.followCharactersToolStripMenuItem1.Size = new System.Drawing.Size(191, 22);
+            this.followCharactersToolStripMenuItem1.Size = new System.Drawing.Size(210, 22);
             this.followCharactersToolStripMenuItem1.Text = "Follow &Character(s)";
             this.followCharactersToolStripMenuItem1.Click += new System.EventHandler(this.followCharactersToolStripMenuItem1_Click);
             // 
@@ -476,6 +477,7 @@ namespace Demoder.PlanetMapViewer.Forms
             this.OverlayTitleContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cameraControlsToolStripMenuItem,
             this.followCharactersToolStripMenuItem1,
+            this.followActiveWindowToolStripMenuItem,
             this.toolStripSeparator2,
             this.regionToolStripMenuItem,
             this.rubikaToolStripMenuItem1,
@@ -492,63 +494,72 @@ namespace Demoder.PlanetMapViewer.Forms
             this.OverlayTitleContextMenuStrip.Name = "contextMenuStrip1";
             this.OverlayTitleContextMenuStrip.ShowCheckMargin = true;
             this.OverlayTitleContextMenuStrip.ShowImageMargin = false;
-            this.OverlayTitleContextMenuStrip.Size = new System.Drawing.Size(192, 286);
+            this.OverlayTitleContextMenuStrip.Size = new System.Drawing.Size(211, 308);
             this.OverlayTitleContextMenuStrip.Text = "Overlay Mode";
             this.OverlayTitleContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.OverlayTitleContextMenuStrip_Opening);
+            // 
+            // followActiveWindowToolStripMenuItem
+            // 
+            this.followActiveWindowToolStripMenuItem.Name = "followActiveWindowToolStripMenuItem";
+            this.followActiveWindowToolStripMenuItem.ShortcutKeyDisplayString = "W";
+            this.followActiveWindowToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.followActiveWindowToolStripMenuItem.Text = "Follow Active &Window";
+            this.followActiveWindowToolStripMenuItem.Click += new System.EventHandler(this.followActiveWindowToolStripMenuItem_Click);
             // 
             // autoToolStripMenuItem
             // 
             this.autoToolStripMenuItem.Name = "autoToolStripMenuItem";
-            this.autoToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.autoToolStripMenuItem.ShortcutKeyDisplayString = "A";
+            this.autoToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.autoToolStripMenuItem.Text = "&Auto";
             this.autoToolStripMenuItem.Click += new System.EventHandler(this.autoToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(188, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(207, 6);
             // 
             // selectCharactersToolStripMenuItem
             // 
             this.selectCharactersToolStripMenuItem.Name = "selectCharactersToolStripMenuItem";
-            this.selectCharactersToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.selectCharactersToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.selectCharactersToolStripMenuItem.Text = "Select Characters";
             // 
             // selectMapToolStripMenuItem
             // 
             this.selectMapToolStripMenuItem.Name = "selectMapToolStripMenuItem";
-            this.selectMapToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.selectMapToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.selectMapToolStripMenuItem.Text = "Select Map";
             // 
             // pluginsToolStripMenuItem
             // 
             this.pluginsToolStripMenuItem.Name = "pluginsToolStripMenuItem";
-            this.pluginsToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.pluginsToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.pluginsToolStripMenuItem.Text = "Plugins";
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(188, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(207, 6);
             // 
             // optionsToolStripMenuItem1
             // 
             this.optionsToolStripMenuItem1.Name = "optionsToolStripMenuItem1";
-            this.optionsToolStripMenuItem1.Size = new System.Drawing.Size(191, 22);
+            this.optionsToolStripMenuItem1.Size = new System.Drawing.Size(210, 22);
             this.optionsToolStripMenuItem1.Text = "Options...";
             this.optionsToolStripMenuItem1.Click += new System.EventHandler(this.optionsToolStripMenuItem1_Click);
             // 
             // pluginManagerToolStripMenuItem1
             // 
             this.pluginManagerToolStripMenuItem1.Name = "pluginManagerToolStripMenuItem1";
-            this.pluginManagerToolStripMenuItem1.Size = new System.Drawing.Size(191, 22);
+            this.pluginManagerToolStripMenuItem1.Size = new System.Drawing.Size(210, 22);
             this.pluginManagerToolStripMenuItem1.Text = "Plugin Manager...";
             this.pluginManagerToolStripMenuItem1.Click += new System.EventHandler(this.pluginManagerToolStripMenuItem1_Click);
             // 
             // exitOverlayModeToolStripMenuItem
             // 
             this.exitOverlayModeToolStripMenuItem.Name = "exitOverlayModeToolStripMenuItem";
-            this.exitOverlayModeToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.exitOverlayModeToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.exitOverlayModeToolStripMenuItem.Text = "Exit Overlay Mode";
             this.exitOverlayModeToolStripMenuItem.Click += new System.EventHandler(this.exitOverlayModeToolStripMenuItem_Click);
             // 
@@ -642,6 +653,7 @@ namespace Demoder.PlanetMapViewer.Forms
         private CameraUserControl cameraUserControl1;
         private CharacterTrackerControl characterTrackerControl1;
         private System.Windows.Forms.ToolStripMenuItem pluginManagerToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem followActiveWindowToolStripMenuItem;
     }
 }
 

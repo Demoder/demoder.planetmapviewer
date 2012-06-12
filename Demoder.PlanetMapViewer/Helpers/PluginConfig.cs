@@ -93,7 +93,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 }
             }
 
-            API.PluginManager.SignalGenerationMre(plugin.GetType());
+            API.PluginManager.RedrawLayers(plugin.GetType());
         }
 
         public void SaveConfig(IPlugin plugin)
@@ -110,7 +110,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 });
             }
             Xml.Serialize(conf, storedSettings, false);
-            API.PluginManager.SignalGenerationMre(plugin.GetType());
+            API.PluginManager.RedrawLayers(plugin.GetType());
         }
 
 

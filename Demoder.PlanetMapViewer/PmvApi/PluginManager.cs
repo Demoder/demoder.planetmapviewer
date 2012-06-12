@@ -264,7 +264,7 @@ namespace Demoder.PlanetMapViewer.PmvApi
             return overlays.OrderBy(o=>o.DrawOrder).ToArray();
         }
 
-        internal void SignalGenerationMre(Type plugin)
+        internal void RedrawLayers(Type plugin)
         {
             Program.WriteLog("Signaling generation MRE for plugin {0}", plugin);
             var pi = this.AllPlugins.FirstOrDefault(p => p.Type == plugin);

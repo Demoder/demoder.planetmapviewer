@@ -82,6 +82,7 @@ Section "Demoder.PlanetMapViewer (required)"
   File "bin\Release\Demoders PlanetMap Viewer.exe"
   File "bin\Release\*.dll"
   File "bin\Release\*.txt"
+  ;File "bin\Release\Debug.bat"
   File "..\lib\Demoder.AoHookBridge\bin\Release\*.dll"
   ; EasyHook
   File "..\Msc\dlls\*.dll"
