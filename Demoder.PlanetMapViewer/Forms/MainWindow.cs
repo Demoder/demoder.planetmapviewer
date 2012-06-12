@@ -600,9 +600,10 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.rubikaToolStripMenuItem1.Checked = this.mapSelectionControl1.RadioRK.Checked;
                 this.shadowlandsToolStripMenuItem1.Checked = this.mapSelectionControl1.RadioSL.Checked;
                 this.autoToolStripMenuItem.Checked = this.mapSelectionControl1.RadioAuto.Checked;
-
+                
                 // Camera controls
                 this.followCharactersToolStripMenuItem1.Checked = API.State.CameraControl == CameraControl.SelectedCharacters;
+                this.followActiveWindowToolStripMenuItem.Checked = API.State.CameraControl == CameraControl.ActiveCharacter;
 
                 #region Map selection
                 {
