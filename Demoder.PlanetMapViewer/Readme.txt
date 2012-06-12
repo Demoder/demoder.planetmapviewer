@@ -14,7 +14,7 @@ Requirements
 	
 	Software components
 		.NET Framework 2.0, 3.0, or 3.5
-		.NET Framework v4.0 (full)
+		.NET Framework v4.0 (Client Profile)
 		XNA Studio 4.0 (Redist)
 		Valid installation of Anarchy Online (www.anarchy-online.com)
 

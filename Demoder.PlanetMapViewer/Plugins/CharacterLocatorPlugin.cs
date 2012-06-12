@@ -48,6 +48,9 @@ namespace Demoder.PlanetMapViewer.Plugins
 
         [Setting(false)]
         public bool DrawCharacterDimension { get; set; }
+
+        [Setting(false)]
+        public bool HighlightActiveCharacter { get; set; }
         #endregion
 
         public CharacterLocatorPlugin()
@@ -80,6 +83,7 @@ namespace Demoder.PlanetMapViewer.Plugins
 
             foreach (var character in characters)
             {
+                
                 if (character == null || character.Zone == null || character.Position == null || character.Name == null) { continue; }
                 if (!character.IsHooked && !this.DrawOfflineCharacters)
                 {
@@ -87,10 +91,16 @@ namespace Demoder.PlanetMapViewer.Plugins
                     continue;
                 }
 
+                var charColor = Color.Yellow;
+                if (this.HighlightActiveCharacter && character.ID == API.AoHook.GetActiveCharacter())
+                {
+                    charColor = Color.LightGreen;
+                }
+
                 var texture = new MapTexture()
                 {
                     Texture = API.Content.Textures.CharacterLocator,
-                    KeyColor = Color.Yellow,
+                    KeyColor = charColor,
                     Position = new PositionDefinition(character.Zone.ID, character.Position.X, character.Position.Z),
                     PositionAlignment = MapItemAlignment.Center,
                 };
@@ -107,7 +117,7 @@ namespace Demoder.PlanetMapViewer.Plugins
                     Position = new PositionDefinition(),
                     PositionAlignment = MapItemAlignment.Center,
                     Text = character.Name,
-                    TextColor = Color.Yellow,
+                    TextColor = charColor,
                     OutlineColor = Color.Black,
                     Outline = true,
                     Font = API.Content.Fonts.GetFont(this.CharacterLocatorFont)

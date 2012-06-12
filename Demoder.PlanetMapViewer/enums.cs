@@ -37,8 +37,8 @@ namespace Demoder.PlanetMapViewer
         OverlayTitlebarMenuOpen,
         OverlayTitlebarMenuClose,
         OverlayResizeWindow,
-        OverlayExit
-
+        OverlayExit,
+        Magnification,
     }
 
     /// <summary>
@@ -105,7 +105,8 @@ namespace Demoder.PlanetMapViewer
     public enum CameraControl
     {
         Manual,
-        Character,
+        SelectedCharacters,
+        ActiveCharacter,
     }
 
     /// <summary>

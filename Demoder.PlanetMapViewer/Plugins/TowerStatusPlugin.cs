@@ -81,7 +81,7 @@ namespace Demoder.PlanetMapViewer.Plugins
 
         void AoHook_TrackedDimensionChanged()
         {
-            API.PluginManager.SignalGenerationMre(this.GetType());
+            API.PluginManager.RedrawLayers(this.GetType());
         }
 
         public void Dispose()
@@ -110,7 +110,7 @@ namespace Demoder.PlanetMapViewer.Plugins
                     break;
                 default:
                 case DimensionSelection.AutoDetect:
-                    dim = API.State.CurrentDimension;
+                       dim = API.State.CurrentDimension;
                     break;
             }
 

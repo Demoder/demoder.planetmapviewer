@@ -84,6 +84,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void ItemCheckedChanged(object sender, ItemCheckedEventArgs e)
         {
+            API.State.CameraControl = CameraControl.SelectedCharacters;
             lock (API.State.PlayerInfo)
             {
                 API.State.PlayerInfo[(uint)e.Item.Tag].IsTrackedByCamera = e.Item.Checked;
@@ -103,9 +104,8 @@ namespace Demoder.PlanetMapViewer.Forms
             lock (this.lockObject)
             {
                 this.listView1.BeginUpdate();
-                var oldItems = new ListViewItem[this.listView1.Items.Count];
-                this.listView1.Items.CopyTo(oldItems, 0);
-                this.listView1.Items.Clear();
+                this.listView1.ItemChecked -= this.ItemCheckedChanged;
+                 this.listView1.Items.Clear();
 
                 var playerInfo = API.State.PlayerInfo.ToArray();
                 foreach (var kvp in playerInfo)
@@ -134,24 +134,17 @@ namespace Demoder.PlanetMapViewer.Forms
                         li.ForeColor = SystemColors.GrayText;
                     }
 
-                    var oldItem = oldItems.FirstOrDefault(i => ((uint)i.Tag) == ((uint)li.Tag));
-                    if (oldItem != null)
-                    {
-                        li.Checked = oldItem.Checked;
-                    }
+
+                    li.Checked = kvp.Value.IsTrackedByCamera;                   
 
                     li.SubItems.Add(new ListViewItem.ListViewSubItem(li, item.Dimension.ToString()));
 
                     this.listView1.Items.Add(li);
                 }
 
-                if (this.listView1.Items.Count != 0 && oldItems.Length == 0)
-                {
-                    this.listView1.Items[0].Checked = true;
-                }
-
                 this.listView1.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
                 this.listView1.AutoResizeColumn(1, ColumnHeaderAutoResizeStyle.HeaderSize);
+                this.listView1.ItemChecked += this.ItemCheckedChanged;
                 this.listView1.EndUpdate();
             }
         }

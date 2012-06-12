@@ -32,7 +32,6 @@ namespace Demoder.PlanetMapViewer
 {
     static class Program
     {
-        static bool debug = false;
         static StreamWriter writer;
         /// <summary>
         /// The main entry point for the application.
@@ -42,14 +41,12 @@ namespace Demoder.PlanetMapViewer
         {
             if (args != null && args.Length == 1 && args[0]=="--debug")
             {
-                debug=true;
-            }
-            if (debug)
-            {
-                var stream = File.Open("stdout.txt", FileMode.Create, FileAccess.ReadWrite, FileShare.Read);
-                writer = new StreamWriter(stream);
-                writer.AutoFlush = true;
-                Console.SetOut(writer);
+               var stream = File.Open("stdout.txt", FileMode.Create, FileAccess.ReadWrite, FileShare.Read);
+               writer = new StreamWriter(stream)
+               {
+                   AutoFlush = true,
+               };                
+               Console.SetOut(writer);
             }
 
             WriteLog("");
@@ -88,13 +85,11 @@ namespace Demoder.PlanetMapViewer
 
         internal static void WriteLog(string format, params object[] parameters)
         {
-            if (!debug) { return; }
-
             if (writer == null) { return; }
             var log = String.Format(format, parameters);
             lock (writer)
             {
-                writer.WriteLine(String.Format("[{0}] {1}", DateTime.Now.ToShortTimeString(), log));
+                writer.WriteLine(String.Format("L: [{0}] {1}", DateTime.Now.ToShortTimeString(), log));
             }
         }
 

@@ -76,6 +76,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
         #region Events
         public event MainFormModeChangeDelegate ModeChanged;
+        public event Action MagnificationChange;
         #endregion
 
         #region Form setup
@@ -196,7 +197,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 // Ask about tutorials
                 if (!Properties.GeneralSettings.Default.HaveAskedForTutorials && TutorialPlugin.CurrentStage != TutorialStage.Completed)
                 {
-                    var ret = MessageBox.Show("Do you want to see the tutorial?", "Tutorial", MessageBoxButtons.YesNoCancel);
+                    var ret = MessageBox.Show("Do you want to see the tutorial?", "Tutorial", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                     switch (ret)
                     {
                         case System.Windows.Forms.DialogResult.Yes:
@@ -601,7 +602,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 this.autoToolStripMenuItem.Checked = this.mapSelectionControl1.RadioAuto.Checked;
 
                 // Camera controls
-                this.followCharactersToolStripMenuItem1.Checked = API.State.CameraControl == CameraControl.Character;
+                this.followCharactersToolStripMenuItem1.Checked = API.State.CameraControl == CameraControl.SelectedCharacters;
 
                 #region Map selection
                 {
@@ -740,10 +741,11 @@ namespace Demoder.PlanetMapViewer.Forms
                     var charId = (uint)item.Tag;
                     if (!item.Checked)
                     {
-                        API.State.CameraControl = CameraControl.Character;
+                        API.State.CameraControl = CameraControl.SelectedCharacters;
                     }
 
                     API.State.PlayerInfo[charId].IsTrackedByCamera = !item.Checked;
+                    this.characterTrackerControl1.UpdateCharacterList();
 
                     this.OverlayTitleContextMenuStrip.Show();
                     this.selectCharactersToolStripMenuItem.ShowDropDown();
@@ -787,7 +789,7 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void CameraFollowCharacer_Click(object sender, EventArgs e)
         {
-            API.State.CameraControl = CameraControl.Character;
+            API.State.CameraControl = CameraControl.SelectedCharacters;
         }
 
         private void MagnificationSlider_ValueChanged(object sender, EventArgs e)
@@ -807,6 +809,11 @@ namespace Demoder.PlanetMapViewer.Forms
             
             API.Camera.AdjustScrollbarsToLayer();
             API.Camera.CenterOnRelativePosition(pos);
+
+            if (this.MagnificationChange != null)
+            {
+                this.MagnificationChange();
+            }
             this.tileDisplay1.Focus();
         }
 
@@ -834,13 +841,20 @@ namespace Demoder.PlanetMapViewer.Forms
 
         private void followCharactersToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            API.State.CameraControl = CameraControl.Character;
+            API.State.CameraControl = CameraControl.SelectedCharacters;
+        }
+
+        private void followActiveWindowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            API.State.CameraControl = CameraControl.ActiveCharacter;
         }
 
         private void pluginManagerToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             PluginManagerForm.CreateShow();
         }
+
+        
     }
 
     public class MapSelectionItem
