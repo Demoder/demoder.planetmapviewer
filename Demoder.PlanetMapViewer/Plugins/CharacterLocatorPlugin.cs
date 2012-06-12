@@ -49,7 +49,7 @@ namespace Demoder.PlanetMapViewer.Plugins
         [Setting(false)]
         public bool DrawCharacterDimension { get; set; }
 
-        [Setting(false)]
+        [Setting(true)]
         public bool HighlightActiveCharacter { get; set; }
         #endregion
 
@@ -81,9 +81,11 @@ namespace Demoder.PlanetMapViewer.Plugins
 
             var characters = API.State.PlayerInfo.Values.ToArray();
 
+            IMapItem activeTex = null;
+
             foreach (var character in characters)
             {
-                
+                bool isActive = character.ID == API.AoHook.GetActiveCharacter();
                 if (character == null || character.Zone == null || character.Position == null || character.Name == null) { continue; }
                 if (!character.IsHooked && !this.DrawOfflineCharacters)
                 {
@@ -92,9 +94,9 @@ namespace Demoder.PlanetMapViewer.Plugins
                 }
 
                 var charColor = Color.Yellow;
-                if (this.HighlightActiveCharacter && character.ID == API.AoHook.GetActiveCharacter())
+                if (this.HighlightActiveCharacter && !isActive)
                 {
-                    charColor = Color.LightGreen;
+                    charColor = new Color(255, 255, 156);   
                 }
 
                 var texture = new MapTexture()
@@ -133,13 +135,25 @@ namespace Demoder.PlanetMapViewer.Plugins
                     txt.TextColor = Color.LightGray;
                     txt.OutlineColor = Color.Gray;
                 }
-
-                mapTextureTexts.Add(new MapTextureText(texture, txt, 1)
+                var mpt = new MapTextureText(texture, txt, 1)
                 {
                     PositionAlignment = MapItemAlignment.Bottom | MapItemAlignment.Center,
-                });
+                };
+
+                if (!isActive)
+                {
+                    mapTextureTexts.Add(mpt);
+                }
+                else
+                {
+                    activeTex = mpt;
+                }
             }
 
+            if (activeTex != null)
+            {
+                mapTextureTexts.Add(activeTex);
+            }
             return mapTextureTexts.ToArray();
         }
 
