@@ -71,8 +71,7 @@
     <Link Label="Source &amp; Downloads" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer" />
   </Links>
   <Versions>
-    <LocalVersion Type="Stable" Value="1.2.1" Package="1.2.2"/>
-    <LocalVersion Type="Stable" Value="1.0.1" Package="1.0.1"/>
+    <LocalVersion Type="Stable" Value="1.2.2" Package="1.2.2"/>
   </Versions>
   <Packages>
     <Package Name="1.2.2" Date="2012-06-12">
