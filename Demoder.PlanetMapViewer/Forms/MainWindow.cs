@@ -739,7 +739,7 @@ namespace Demoder.PlanetMapViewer.Forms
                 try
                 {
                     var item = sender as ToolStripMenuItem;
-                    var charId = (uint)item.Tag;
+                    var charId = (PlayerInfoKey)item.Tag;
                     if (!item.Checked)
                     {
                         API.State.CameraControl = CameraControl.SelectedCharacters;

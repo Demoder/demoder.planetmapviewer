@@ -33,7 +33,11 @@ namespace Demoder.PlanetMapViewer.DataClasses
 {
     public class PlayerInfo
     {
-        public uint ID;
+        public PlayerInfoKey Identity = new PlayerInfoKey(0, 0);
+        public uint ID { 
+            get { return this.Identity.CharacterID; }
+            set { this.Identity.CharacterID = value; }
+        }
         public string Name;
         public ZoneInfo Zone = new ZoneInfo();
         public Vector3 Position = new Vector3();
@@ -49,16 +53,13 @@ namespace Demoder.PlanetMapViewer.DataClasses
         /// </summary>
         public bool IsHooked = true;
 
-        public uint ServerID { get; set; }
+        public uint ServerID = 0;
 
         public Dimension Dimension
         {
             get
             {
-                if (ServerID >= 3000 && ServerID <= 3099) { return Dimension.Atlantean; }
-                if (ServerID >= 3100 && ServerID <= 3199) { return Dimension.Rimor; }
-                if (ServerID >= 3900 && ServerID <= 3999) { return Dimension.Testlive; }
-                else { return Dimension.Unknown; }
+                return PlayerInfoKey.GetDimension(this.ServerID);
             }
         }
     }

@@ -87,7 +87,7 @@ namespace Demoder.PlanetMapViewer.Forms
             API.State.CameraControl = CameraControl.SelectedCharacters;
             lock (API.State.PlayerInfo)
             {
-                API.State.PlayerInfo[(uint)e.Item.Tag].IsTrackedByCamera = e.Item.Checked;
+                API.State.PlayerInfo[(PlayerInfoKey)e.Item.Tag].IsTrackedByCamera = e.Item.Checked;
             }
             API.AoHook.UpdateTrackedDimension();
         }
@@ -105,18 +105,17 @@ namespace Demoder.PlanetMapViewer.Forms
             {
                 this.listView1.BeginUpdate();
                 this.listView1.ItemChecked -= this.ItemCheckedChanged;
-                 this.listView1.Items.Clear();
+                this.listView1.Items.Clear();
 
                 var playerInfo = API.State.PlayerInfo.ToArray();
                 foreach (var kvp in playerInfo)
                 {
-                    var pid = kvp.Key;
                     var item = kvp.Value;
                     var li = new ListViewItem();
-                    li.Tag = item.ID;
+                    li.Tag = new PlayerInfoKey(item.ServerID, item.ID);
 
                     // Figure out which text to use.
-                    li.Text = item.Name ?? String.Format("N/A (PID: {0}", pid);
+                    li.Text = item.Name ?? String.Format("N/A");
 
                     // Figure out which icon to use.
                     if (item.InShadowlands)

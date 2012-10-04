@@ -33,6 +33,7 @@ namespace Demoder.AoHook.Events
     public class DynelNameEventArgs : HookEventArgs
     {
         public uint DynelType { get; private set; }
+        public uint ServerID {get; private set;}
         public uint DynelID { get; private set; }
         public string DynelName { get; private set; }
         /// <summary>
@@ -47,6 +48,7 @@ namespace Demoder.AoHook.Events
             this.DynelID = e.DynelID;
             this.DynelName = e.DynelName;
             this.IsSelf = e.IsSelf;
+            this.ServerID = e.ServerID;
         }
     }
 }

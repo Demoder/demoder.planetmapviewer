@@ -114,12 +114,14 @@ namespace Demoder.AoHookBridge
                         }
                         #endregion
 
-                        if (myInstance.DataStore.CurrentCharacter == null)
+                        if (myInstance.DataStore.CurrentCharacter == null 
+                            || myInstance.DataStore.CurrentCharacter.DynelID != charID
+                            || myInstance.DataStore.ServerID != serverId)
                         {
                             var charName = BridgeHelperMethods.GetName(Identity.Character, charID);
                             if (!String.IsNullOrEmpty(charName) && charName != "NoName")
                             {
-                                myInstance.DataStore.CurrentCharacter = new DynelNameEventArgs(Identity.Character, charID, charName, true);
+                                myInstance.DataStore.CurrentCharacter = new DynelNameEventArgs(serverId, Identity.Character, charID, charName, true);
                                 myInstance.SendBridgeEvent(myInstance.DataStore.CurrentCharacter);
                             }
                         }

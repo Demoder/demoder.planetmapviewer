@@ -38,7 +38,7 @@ namespace Demoder.PlanetMapViewer.Helpers
 {
     public class HookInfoTracker : IDisposable
     {
-        private Dictionary<int, uint> ProcessCharacterMap = new Dictionary<int, uint>();
+        private Dictionary<int, PlayerInfoKey> ProcessCharacterMap = new Dictionary<int, PlayerInfoKey>();
 
         public Provider Provider { get; internal set; }
 
@@ -59,7 +59,7 @@ namespace Demoder.PlanetMapViewer.Helpers
         /// 
         /// </summary>
         /// <returns></returns>
-        public uint GetActiveCharacter()
+        public PlayerInfoKey GetActiveCharacter()
         {
             var foregroundWindow = GetForegroundWindow();
             foreach (var kvp in this.ProcessCharacterMap.ToArray())
@@ -70,7 +70,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                     return kvp.Value;
                 }
             }
-            return 0;
+            return null;
         }
 
         #region AO Hook Provider
@@ -79,33 +79,53 @@ namespace Demoder.PlanetMapViewer.Helpers
         {
             if (!e.IsSelf) { return; }
             bool changed = false;
-
+            PlayerInfoKey key = new PlayerInfoKey(e.ServerID, e.DynelID);
             lock (this.ProcessCharacterMap)
             {
                 if (!this.ProcessCharacterMap.ContainsKey(e.ProcessID))
                 {
-                    this.ProcessCharacterMap[e.ProcessID] = e.DynelID;
+                    this.ProcessCharacterMap[e.ProcessID] = key;
+                }
+                else if (this.ProcessCharacterMap[e.ProcessID] != key)
+                {
+                    API.State.PlayerInfo[this.ProcessCharacterMap[e.ProcessID]].IsHooked = false;
+                    this.ProcessCharacterMap[e.ProcessID] = key;
                 }
             }
 
             lock (API.State.PlayerInfo)
             {
-                if (!API.State.PlayerInfo.ContainsKey(e.DynelID))
+                if (!API.State.PlayerInfo.ContainsKey(key))
                 {
-                    API.State.PlayerInfo[e.DynelID] = new PlayerInfo();
+                    API.State.PlayerInfo[key] = new PlayerInfo();
                 }
 
-                var info = API.State.PlayerInfo[e.DynelID];
+                var info = API.State.PlayerInfo[key];
 
                 if (e.DynelID != uint.MinValue && e.DynelID != uint.MaxValue)
                 {
-                    if (info.ID != e.DynelID) { changed = true; }
+                    if (info.ID != e.DynelID)
+                    {
+                        changed = true;
+                    }
                     info.ID = e.DynelID;
                 }
                 if (e.DynelName != "NoName")
                 {
-                    if (e.DynelName != info.Name) { changed = true; }
+                    if (e.DynelName != info.Name)
+                    {
+                        changed = true;
+                    }
                     info.Name = e.DynelName;
+                }
+                if (e.ServerID != 0)
+                {
+                    if (e.ServerID != info.ServerID)
+                    {
+                        changed = true;
+                    }
+                    info.ServerID = e.ServerID;
+                    info.Identity.Dimension = PlayerInfoKey.GetDimension(e.ServerID);
                 }
             }
             if (changed)
@@ -143,7 +163,8 @@ namespace Demoder.PlanetMapViewer.Helpers
             var update = false;
             lock (API.State.PlayerInfo)
             {
-                var info = API.State.PlayerInfo[e.DynelID];
+                PlayerInfoKey key = new PlayerInfoKey(e.ServerID, e.DynelID);
+                var info = API.State.PlayerInfo[key];
                 info.Position = new Vector3(e.X, e.Y, e.Z);
                 info.Zone.ID = e.ZoneID;
                 info.Zone.Name = e.ZoneName;
@@ -154,6 +175,11 @@ namespace Demoder.PlanetMapViewer.Helpers
                     info.ServerID = e.ServerID;
                     update = true;
                     this.UpdateTrackedDimension();
+                }
+                if (!info.IsHooked)
+                {
+                    info.IsHooked = true;
+                    update = true;
                 }
             }
             if (update)
@@ -167,7 +193,7 @@ namespace Demoder.PlanetMapViewer.Helpers
             if (API.State.CameraControl == CameraControl.ActiveCharacter)
             {
                 var id = API.AoHook.GetActiveCharacter();
-                if (id != 0)
+                if (id != null)
                 {
                     var dim = API.State.PlayerInfo[id].Dimension;
                     if (dim != API.State.CurrentDimension)

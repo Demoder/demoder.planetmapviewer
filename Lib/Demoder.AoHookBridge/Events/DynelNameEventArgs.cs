@@ -31,6 +31,7 @@ namespace Demoder.AoHookBridge.Events
     public class DynelNameEventArgs : BridgeEventArgs
     {
         public uint DynelType { get; private set; }
+        public uint ServerID { get; private set; }
         public uint DynelID { get; private set; }
         public string DynelName { get; private set; }
         /// <summary>
@@ -38,8 +39,9 @@ namespace Demoder.AoHookBridge.Events
         /// </summary>
         public bool IsSelf { get; private set; }
 
-        public DynelNameEventArgs(uint dynelType, uint dynelId, string dynelName, bool isSelf=false) : base(BridgeEventType.DynelName)
+        public DynelNameEventArgs(uint serverID, uint dynelType, uint dynelId, string dynelName, bool isSelf=false) : base(BridgeEventType.DynelName)
         {
+            this.ServerID = serverID;
             this.DynelType = dynelType;
             this.DynelID = dynelId;
             this.DynelName = dynelName;
