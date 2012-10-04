@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataClasses\MapTextureText.cs" />
+    <Compile Include="DataClasses\PlayerInfoKey.cs" />
     <Compile Include="DataClasses\PositionDefinition.cs" />
     <Compile Include="DataClasses\SimpleColor.cs" />
     <Compile Include="DataClasses\Texture2DCacheItem.cs" />

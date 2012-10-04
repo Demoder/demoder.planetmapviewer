@@ -85,7 +85,8 @@ namespace Demoder.PlanetMapViewer.Plugins
 
             foreach (var character in characters)
             {
-                bool isActive = character.ID == API.AoHook.GetActiveCharacter();
+                var activeCharacter = API.AoHook.GetActiveCharacter();
+                bool isActive = character.Identity == activeCharacter;
                 if (character == null || character.Zone == null || character.Position == null || character.Name == null) { continue; }
                 if (!character.IsHooked && !this.DrawOfflineCharacters)
                 {

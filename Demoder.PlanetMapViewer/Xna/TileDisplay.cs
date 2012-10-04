@@ -66,7 +66,7 @@ namespace Demoder.PlanetMapViewer.Xna
 
         private object drawLocker = new Object();
 
-        private uint lastActiveID = 0;
+        private PlayerInfoKey lastActiveID = null;
 
         public TileDisplay()
         {
@@ -538,8 +538,18 @@ namespace Demoder.PlanetMapViewer.Xna
             try
             {
                 var id = API.AoHook.GetActiveCharacter();
-                if (id == 0) { id = lastActiveID; }
-                else { lastActiveID = id; }
+                if (id == null)
+                {
+                    if (this.lastActiveID != null)
+                    {
+                        id = lastActiveID;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+
                 if (!API.State.PlayerInfo.ContainsKey(id)) { return; }
                 var playerInfo = new PlayerInfo[] { API.State.PlayerInfo[id] };
                 this.MoveCameraToCharacterLocators(playerInfo);

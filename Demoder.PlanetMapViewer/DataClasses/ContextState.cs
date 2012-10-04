@@ -51,7 +51,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
         /// </summary>
         public float Magnification = 1;
 
-        public Dictionary<uint, PlayerInfo> PlayerInfo = new Dictionary<uint, PlayerInfo>();
+        public Dictionary<PlayerInfoKey, PlayerInfo> PlayerInfo = new Dictionary<PlayerInfoKey, PlayerInfo>();
 
         public Dimension CurrentDimension {get;internal set;}
     }

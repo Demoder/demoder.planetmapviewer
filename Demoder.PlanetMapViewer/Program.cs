@@ -52,6 +52,7 @@ namespace Demoder.PlanetMapViewer
             WriteLog("");
             WriteLog("Starting application!");
             WriteLog("");
+            AppDomain.CurrentDomain.FirstChanceException += new EventHandler<System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs>(CurrentDomain_FirstChanceException);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
@@ -70,6 +71,11 @@ namespace Demoder.PlanetMapViewer
                 writer.Dispose();
                 writer = null;
             }
+        }
+
+        static void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+        {
+            
         }
 
         static void Application_ApplicationExit(object sender, EventArgs e)
