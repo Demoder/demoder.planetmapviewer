@@ -1,5 +1,5 @@
 ﻿/*
-* Demoder.AoHookBridge
+* Demoder.AoHook
 * Copyright (C) 2012 Demoder (demoder@demoder.me)
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,25 +23,21 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
-namespace Demoder.AoHookBridge
+namespace Demoder.AoHook.Events
 {
-    [Flags]
-    public enum BridgeEventType : uint
+    public class CharacterLoginEventArgs : HookEventArgs
     {
-        Debug = 1,
-        CharacterPosition = 4,
-        HookStateChange = 16,
-        DynelName = 32,
-        QuestLocation = 64,
-        ServerID = 128,
-        CharacterLogin = 256,
-        CharacterLogout = 512,
-    }
+        public uint ServerID { get; private set; }
+        public uint CharacterID { get; private set; }
 
-    public enum CharacterSkill : int
-    {
-        ExpansionPlayfield = 531
+        public CharacterLoginEventArgs(Demoder.AoHookBridge.Events.CharacterLoginEventArgs e)
+            : base(e.ProcessId, HookEventType.CharacterLogin, e.Time)
+        {
+            this.ServerID = e.ServerID;
+            this.CharacterID = e.CharacterID;
+        }
     }
 }

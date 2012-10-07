@@ -35,4 +35,7 @@ namespace Demoder.AoHook
     public delegate void DynelNameEventDelegate(Provider sender, DynelNameEventArgs e);
     public delegate void QuestLocationEventDelegate(Provider sender, QuestLocationEventArgs e);
     public delegate void ServerIdEventDelegate(Provider sender, ServerIdEventArgs e);
+
+    public delegate void CharacterLoginEventDelegate(Provider sender, CharacterLoginEventArgs e);
+    public delegate void CharacterLogoutEventDelegate(Provider sender, CharacterLogoutEventArgs e);
 }

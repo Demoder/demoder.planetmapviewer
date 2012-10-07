@@ -61,6 +61,9 @@ namespace Demoder.AoHook
         public event DynelNameEventDelegate DynelNameEvent;
         public event QuestLocationEventDelegate QuestLocationEvent;
         public event ServerIdEventDelegate ServerIdEvent;
+
+        public event CharacterLoginEventDelegate CharacterLogin;
+        public event CharacterLogoutEventDelegate CharacterLogout;
         #endregion
 
 
@@ -137,7 +140,7 @@ namespace Demoder.AoHook
         private void ProcessBridgeEvents(bEvents.BridgeEventArgs e)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Type: {0}", e.EventType);
+            //Console.WriteLine("Type: {0}", e.EventType);
             Console.ForegroundColor = ConsoleColor.White;
             switch (e.EventType)
             {
@@ -158,6 +161,12 @@ namespace Demoder.AoHook
                     break;
                 case BridgeEventType.ServerID:
                     this.outgoingEvents.Enqueue(new hEvents.ServerIdEventArgs(e as bEvents.ServerIdEventArgs));
+                    break;
+                case BridgeEventType.CharacterLogin:
+                    this.outgoingEvents.Enqueue(new hEvents.CharacterLoginEventArgs(e as bEvents.CharacterLoginEventArgs));
+                    break;
+                case BridgeEventType.CharacterLogout:
+                    this.outgoingEvents.Enqueue(new hEvents.CharacterLogoutEventArgs(e as bEvents.CharacterLogoutEventArgs));
                     break;
             }
         }
@@ -234,6 +243,12 @@ namespace Demoder.AoHook
                     break;
                 case HookEventType.ServerID:
                     this.SendEvent(this.ServerIdEvent, e);
+                    break;
+                case HookEventType.CharacterLogin:
+                    this.SendEvent(this.CharacterLogin, e);
+                    break;
+                case HookEventType.CharacterLogout:
+                    this.SendEvent(this.CharacterLogout, e);
                     break;
             }
         }

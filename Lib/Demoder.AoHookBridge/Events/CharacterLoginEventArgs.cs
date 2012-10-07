@@ -25,23 +25,19 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Demoder.AoHookBridge
+namespace Demoder.AoHookBridge.Events
 {
-    [Flags]
-    public enum BridgeEventType : uint
+    [Serializable]
+    public class CharacterLoginEventArgs : BridgeEventArgs
     {
-        Debug = 1,
-        CharacterPosition = 4,
-        HookStateChange = 16,
-        DynelName = 32,
-        QuestLocation = 64,
-        ServerID = 128,
-        CharacterLogin = 256,
-        CharacterLogout = 512,
-    }
+        public uint ServerID { get; private set; }
+        public uint CharacterID { get; private set; }
 
-    public enum CharacterSkill : int
-    {
-        ExpansionPlayfield = 531
+        public CharacterLoginEventArgs(uint serverID, uint characterID)
+            : base(BridgeEventType.CharacterLogin)
+        {
+            this.ServerID = serverID;
+            this.CharacterID = characterID;
+        }
     }
 }

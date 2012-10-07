@@ -208,10 +208,12 @@ namespace Demoder.AoHookBridge
         }
         internal void Debug(bool report, string message, params object[] parms)
         {
+#if DEBUG
             if (!report) { return; }
             this.SendBridgeEvent(new DebugEventArgs(
                 String.Format(message, parms)
                 ));
+#endif
         }
         #endregion
     }

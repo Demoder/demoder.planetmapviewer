@@ -39,5 +39,6 @@ namespace Demoder.AoHookBridge
         public DynelNameEventArgs CurrentCharacter = null;
 
         public uint ServerID = 0;
+        public uint CharacterID = 0;
     }
 }

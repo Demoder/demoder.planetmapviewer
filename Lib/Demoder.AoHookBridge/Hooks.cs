@@ -44,11 +44,16 @@ namespace Demoder.AoHookBridge
             {
                 public static void AoFrameProcess(IntPtr clientPtr)
                 {
-                    var myInstance = HookRuntimeInfo.Callback as EasyHookEntryPoint;
-                    if (myInstance == null) { return; }
+                    EasyHookEntryPoint myInstance = null;
+                    
                     try
                     {
-                        //bool checkPosition = timeSinceLastPositionQuery.ElapsedMilliseconds >= 67;
+                        myInstance = HookRuntimeInfo.Callback as EasyHookEntryPoint;
+                        if (myInstance == null)
+                        {
+                            return;
+                        }
+
                         bool checkPosition = myInstance.DataStore.TimeSinceLastPositionQuery.ElapsedMilliseconds >= 100;
 
                         // If there's nothing to do, return now.
@@ -69,10 +74,58 @@ namespace Demoder.AoHookBridge
                         }
 
                         var charID = AONative.API.Interfaces.Client_t.GetCharID();
-                        if (charID == 0) { return; }
+                        if (charID == 0)
+                        {
+                            // There's no logged in character
+                            if (myInstance.DataStore.CurrentCharacter == null)
+                            {
+                                // and we haven't reported any characters yet.
+                                return;
+                            }
+                            if (myInstance.DataStore.CurrentCharacter.DynelID == charID) 
+                            {
+                                // and the previously reported character was 0
+                                return;
+                            }
+
+                            // No longer tracking a character.
+                            // Make sure we're notifying AoHook about 'character logout'
+                            var e = new CharacterLogoutEventArgs(myInstance.DataStore.CurrentCharacter.ServerID, myInstance.DataStore.CurrentCharacter.DynelID);
+                            myInstance.SendBridgeEvent(e);
+
+                            // Reset reported character
+                            myInstance.DataStore.CurrentCharacter = null;
+                            myInstance.DataStore.ServerID = 0;
+                            myInstance.DataStore.CharacterID = 0;
+                        }
+
 
                         // Get server ID
                         var serverId = AONative.API.Interfaces.Client_t.GetServerID(clientPtr);
+
+                        // Need to report login?
+                        if (charID != 0 && serverId != 1)
+                        {
+                            if (myInstance.DataStore.CharacterID == 0)
+                            {
+                                // Report login.
+                                var e2 = new CharacterLoginEventArgs(serverId, charID);
+                                myInstance.DataStore.CharacterID = charID;
+                                myInstance.SendBridgeEvent(e2);
+                            }
+                            else if (myInstance.DataStore.CharacterID != charID)
+                            {
+                                // Send logout for previous character
+                                var e1 = new CharacterLogoutEventArgs(myInstance.DataStore.ServerID, myInstance.DataStore.CharacterID);
+                                myInstance.SendBridgeEvent(e1);
+
+                                // Send login for new character.
+                                var e2 = new CharacterLoginEventArgs(serverId, charID);
+                                myInstance.DataStore.CharacterID = charID;
+                                myInstance.SendBridgeEvent(e2);
+                            }
+                        }
+                        
                         if (myInstance.DataStore.ServerID != serverId)
                         {
                             myInstance.DataStore.ServerID = serverId;
@@ -114,10 +167,12 @@ namespace Demoder.AoHookBridge
                         }
                         #endregion
 
-                        if (myInstance.DataStore.CurrentCharacter == null 
+                        if (myInstance.DataStore.CurrentCharacter == null
                             || myInstance.DataStore.CurrentCharacter.DynelID != charID
                             || myInstance.DataStore.ServerID != serverId)
                         {
+
+                            // Tracking character still...
                             var charName = BridgeHelperMethods.GetName(Identity.Character, charID);
                             if (!String.IsNullOrEmpty(charName) && charName != "NoName")
                             {
@@ -137,7 +192,7 @@ namespace Demoder.AoHookBridge
                         {
                             if (myInstance != null)
                             {
-                                myInstance.Debug(true, "AoFrameProcess: {0}", ex.ToString());
+                                myInstance.Debug(true, "AoFrameProcess: {0} \r\n {1}", ex.ToString(), ex.StackTrace ?? "");
                             }
                         }
                         catch { }
