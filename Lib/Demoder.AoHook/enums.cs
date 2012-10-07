@@ -36,5 +36,7 @@ namespace Demoder.AoHook
         DynelName,
         QuestLocation,
         ServerID,
+        CharacterLogin,
+        CharacterLogout,
     }
 }

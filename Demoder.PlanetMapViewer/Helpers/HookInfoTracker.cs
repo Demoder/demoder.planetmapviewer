@@ -50,7 +50,12 @@ namespace Demoder.PlanetMapViewer.Helpers
             this.Provider.CharacterPositionEvent += HandleCharacterPositionEvent;
             this.Provider.HookStateChangeEvent += HandleHookStateChangeEvent;
             this.Provider.DynelNameEvent += HandleDynelNameEvent;
+            this.Provider.CharacterLogin += HandleCharacterLoginEvent;
+            this.Provider.CharacterLogout += new CharacterLogoutEventDelegate(HandleCharacterLogoutEvent);
         }
+
+
+        
 
         [DllImport("user32.dll")]
         static extern IntPtr GetForegroundWindow();
@@ -74,12 +79,11 @@ namespace Demoder.PlanetMapViewer.Helpers
         }
 
         #region AO Hook Provider
-        // Todo: Move this to the general 
-        private void HandleDynelNameEvent(Provider sender, Demoder.AoHook.Events.DynelNameEventArgs e)
+
+        private void HandleCharacterLoginEvent(Provider sender, AoHook.Events.CharacterLoginEventArgs e)
         {
-            if (!e.IsSelf) { return; }
-            bool changed = false;
-            PlayerInfoKey key = new PlayerInfoKey(e.ServerID, e.DynelID);
+            PlayerInfoKey key = new PlayerInfoKey(e.ServerID, e.CharacterID);
+
             lock (this.ProcessCharacterMap)
             {
                 if (!this.ProcessCharacterMap.ContainsKey(e.ProcessID))
@@ -92,6 +96,45 @@ namespace Demoder.PlanetMapViewer.Helpers
                     this.ProcessCharacterMap[e.ProcessID] = key;
                 }
             }
+
+            lock(API.State.PlayerInfo)
+            {
+                if (API.State.PlayerInfo.ContainsKey(key))
+                {
+                    API.State.PlayerInfo[key].IsHooked = true;
+                }
+            }
+            API.UiElements.CharacterTrackerControl.UpdateCharacterList();
+        }
+
+
+        private void HandleCharacterLogoutEvent(Provider sender, AoHook.Events.CharacterLogoutEventArgs e)
+        {
+            PlayerInfoKey key = new PlayerInfoKey(e.ServerID, e.CharacterID);
+            lock (this.ProcessCharacterMap)
+            {
+                if (!this.ProcessCharacterMap.ContainsKey(e.ProcessID))
+                {
+                    return;
+                }
+                else
+                {
+                    if (API.State.PlayerInfo.ContainsKey(this.ProcessCharacterMap[e.ProcessID]))
+                    {
+                        API.State.PlayerInfo[this.ProcessCharacterMap[e.ProcessID]].IsHooked = false;
+                    }
+                    this.ProcessCharacterMap.Remove(e.ProcessID);
+                }
+            }
+            API.UiElements.CharacterTrackerControl.UpdateCharacterList();
+        }
+
+
+        private void HandleDynelNameEvent(Provider sender, Demoder.AoHook.Events.DynelNameEventArgs e)
+        {
+            if (!e.IsSelf) { return; }
+            bool changed = false;
+            PlayerInfoKey key = new PlayerInfoKey(e.ServerID, e.DynelID);
 
             lock (API.State.PlayerInfo)
             {
@@ -147,9 +190,8 @@ namespace Demoder.PlanetMapViewer.Helpers
                 // Update status of whether or not a player character is hooked.
                 API.State.PlayerInfo[this.ProcessCharacterMap[e.ProcessID]].IsHooked = false;
                 this.ProcessCharacterMap.Remove(e.ProcessID);
-
-                API.UiElements.CharacterTrackerControl.UpdateCharacterList();
             }
+            API.UiElements.CharacterTrackerControl.UpdateCharacterList();
         }
 
         private void HandleCharacterPositionEvent(Provider sender, Demoder.AoHook.Events.CharacterPositionEventArgs e)
@@ -192,22 +234,10 @@ namespace Demoder.PlanetMapViewer.Helpers
         {
             if (API.State.CameraControl == CameraControl.ActiveCharacter)
             {
-                var id = API.AoHook.GetActiveCharacter();
-                if (id != null)
-                {
-                    var dim = API.State.PlayerInfo[id].Dimension;
-                    if (dim != API.State.CurrentDimension)
-                    {
-                        bool sendEvent = dim != API.State.CurrentDimension;
-                        API.State.CurrentDimension = dim;
-                        if (sendEvent)
-                        {
-                            this.SendDimChanged();
-                        }
-                    }
-                    return;
-                }
+                this.UpdateTrackerDimensionActiveCharacter();
+                return;
             }
+
             lock (API.State.PlayerInfo)
             {
                 var dict = new Dictionary<Dimension, int>();
@@ -234,6 +264,26 @@ namespace Demoder.PlanetMapViewer.Helpers
 
                 bool sendEvent = newDim != API.State.CurrentDimension;
                 API.State.CurrentDimension = newDim;
+                if (sendEvent)
+                {
+                    this.SendDimChanged();
+                }
+            }
+        }
+
+        private void UpdateTrackerDimensionActiveCharacter()
+        {
+            var id = API.AoHook.GetActiveCharacter();
+            if (id == null)
+            {
+                return;
+            }
+
+            var dim = API.State.PlayerInfo[id].Dimension;
+            if (dim != API.State.CurrentDimension)
+            {
+                bool sendEvent = dim != API.State.CurrentDimension;
+                API.State.CurrentDimension = dim;
                 if (sendEvent)
                 {
                     this.SendDimChanged();

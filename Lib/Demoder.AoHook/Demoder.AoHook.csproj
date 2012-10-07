@@ -63,6 +63,8 @@
   <ItemGroup>
     <Compile Include="delegates.cs" />
     <Compile Include="enums.cs" />
+    <Compile Include="Events\CharacterLoginEventArgs.cs" />
+    <Compile Include="Events\CharacterLogoutEventArgs.cs" />
     <Compile Include="Events\CharacterPositionEventArgs.cs" />
     <Compile Include="Events\DebugEventArgs.cs" />
     <Compile Include="Events\DynelNameEventArgs.cs" />

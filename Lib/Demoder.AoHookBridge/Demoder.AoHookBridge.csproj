@@ -69,6 +69,8 @@
     <Compile Include="AONative\API.cs" />
     <Compile Include="AONative\Identity.cs" />
     <Compile Include="DataStore.cs" />
+    <Compile Include="Events\CharacterLoginEventArgs.cs" />
+    <Compile Include="Events\CharacterLogoutEventArgs.cs" />
     <Compile Include="Events\DynelNameEventArgs.cs" />
     <Compile Include="Events\HookStateChangeEventArgs.cs" />
     <Compile Include="Events\QuestLocationEventArgs.cs" />
