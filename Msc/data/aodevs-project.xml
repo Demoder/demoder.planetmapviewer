@@ -74,20 +74,20 @@
     <LocalVersion Type="Stable" Value="1.2.3" Package="1.2.3"/>
   </Versions>
   <Packages>
-    <Package Name="1.2.3" Date="2012-06-12">
+    <Package Name="1.2.3" Date="2012-11-26">
       <File Label="Setup" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/downloads/Demoders%20PlanetMapViewer%20v1.2.3%20Setup.zip"/>
       <File Label="Binaries" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/downloads/Demoders%20PlanetMap%20Viewer%20v1.2.3.zip"/>
-      <Repository Type="Mercurial" Label="Source" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/src/1.2.2-RELEASE"/>
+      <Repository Type="Mercurial" Label="Source" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/src/1.2.3-RELEASE"/>
     </Package>
     <Package Name="1.2.2" Date="2012-06-12">
       <File Label="Setup" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/downloads/Demoders%20PlanetMap%20Viewer%20v1.2.2%20Setup.zip"/>
       <File Label="Binaries" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/downloads/Demoders%20PlanetMap%20Viewer%20v1.2.2.zip"/>
-      <Repository Type="Mercurial" Label="Source" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/src/b3d1e5c11b2f"/>
+      <Repository Type="Mercurial" Label="Source" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/src/1.2.2-RELEASE"/>
     </Package>
     <Package Name="1.0.1" Date="2012-03-27">
       <File Label="Setup" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/downloads/Demoders%20PlanetMap%20Viewer%20v1.0.1%20Setup.zip"/>
       <File Label="Binaries" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/downloads/Demoders%20PlanetMap%20Viewer%20v1.0.1.zip"/>
-      <Repository Type="Mercurial" Label="Source" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/src/20f33bf9324c"/>
+      <Repository Type="Mercurial" Label="Source" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/src/1.0.1-RELEASE"/>
     </Package>
   </Packages>
 </Root>
