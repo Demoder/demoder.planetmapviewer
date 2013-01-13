@@ -130,6 +130,7 @@ namespace Demoder.PlanetMapViewer
         AutoDetect=0,
         Atlantean=1,
         Rimor=2,
+        Live=4,
         Testlive=9
     }
 }
