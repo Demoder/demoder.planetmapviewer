@@ -41,15 +41,15 @@ namespace Demoder.PlanetMapViewer.DataClasses
     {
         #region Members
         internal const long MemoryCacheTime = 60000;
-        internal const long DiskCacheDays = 7;
+        internal static TimeSpan DiskCacheTime { get { return new TimeSpan(7, 0, 0, 0); } }
         private const string textureSite = "http://static.aodevs.com/";
         private WebClient iconWebClient;
         private WebClient guiWebClient;
         private Timer CleanTimer;
         
 
-        private FileCache iconCache;
-        private FileCache guiCache;
+        private FileCacheTarget iconCache;
+        private FileCacheTarget guiCache;
 
         /// <summary>
         /// Contains our bundled textures
@@ -71,22 +71,20 @@ namespace Demoder.PlanetMapViewer.DataClasses
         public XnaContentTextures()
         {
             this.CleanTimer = new Timer(this.RemoveExpiredItems, null, 30000, 30000);
-            this.iconCache = new FileCache(new DirectoryInfo(Path.Combine(Demoder.Common.Misc.MyTemporaryDirectory, "IconCache")));
-            this.guiCache = new FileCache(new DirectoryInfo(Path.Combine(Demoder.Common.Misc.MyTemporaryDirectory, "GuiCache")));
+            this.iconCache = new FileCacheTarget("IconCache");
+            this.guiCache = new FileCacheTarget("GuiCache");
         }
 
         private void SetupIconWebClient()
         {
             this.iconWebClient = new WebClient();
             this.iconWebClient.Headers.Set(HttpRequestHeader.UserAgent, Assembly.GetAssembly(typeof(XnaContentTextures)).GetName().Name);
-            this.iconWebClient.DownloadDataCompleted += this.iconCache.WebClientDownloadDataCompleted;
         }
 
         private void SetupGuiWebClient()
         {
             this.guiWebClient = new WebClient();
             this.guiWebClient.Headers.Set(HttpRequestHeader.UserAgent, Assembly.GetAssembly(typeof(XnaContentTextures)).GetName().Name);
-            this.guiWebClient.DownloadDataCompleted += this.guiCache.WebClientDownloadDataCompleted;
         }
 
         #endregion
@@ -150,15 +148,16 @@ namespace Demoder.PlanetMapViewer.DataClasses
                 try
                 {
                     byte[] data;
-                    if ((DateTime.Now - this.iconCache.Time(key)).Days > DiskCacheDays)
+                    var entry = this.iconCache.Retrieve(key);
+                    if (entry.IsExpired)
                     {
-
                         data = this.DownloadAoIconTexture(key);
                     }
                     else
                     {
-                        data = this.iconCache.Read(key);
+                        data = entry.Data;
                     }
+
                     var ms = new MemoryStream(data);
                     var tex = Texture2D.FromStream(API.GraphicsDevice, ms);
                     ms.Dispose();
@@ -182,7 +181,14 @@ namespace Demoder.PlanetMapViewer.DataClasses
         {           
             foreach (var key in keys)
             {
-                if (force || (DateTime.Now - this.iconCache.Time(key)).Days > 7)
+                if (force)
+                {
+                    this.DownloadAoIconTexture(key);
+                    continue;
+                }
+
+                var entry = this.iconCache.Retrieve(key);
+                if (entry.IsExpired)
                 {
                     this.DownloadAoIconTexture(key);
                 }
@@ -197,7 +203,13 @@ namespace Demoder.PlanetMapViewer.DataClasses
             }
             var data = this.iconWebClient.WaitForReady().DownloadData(new Uri(String.Format("{0}icon/{1}", textureSite, key)));
             if (data == null) { throw new Exception(); }
-            this.iconCache.Cache(key, data);
+            CacheEntry entry = new CacheEntry
+            {
+                Data = data,
+                Expirity = DateTime.UtcNow + DiskCacheTime
+            };
+            
+            this.iconCache.Store(entry, key);
 
             return data;
         }
@@ -223,13 +235,14 @@ namespace Demoder.PlanetMapViewer.DataClasses
                 try
                 {
                     byte[] data;
-                    if ((DateTime.Now - this.guiCache.Time(key)).Days > DiskCacheDays)
+                    var entry = this.guiCache.Retrieve(key);
+                    if (entry.IsExpired)
                     {
                         data = this.DownloadAoGuiTexture(key);
                     }
                     else
                     {
-                        data = this.guiCache.Read(key);
+                        data = entry.Data;
                     }
                     
                     var ms = new MemoryStream(data);
@@ -259,7 +272,13 @@ namespace Demoder.PlanetMapViewer.DataClasses
             }
             var data = this.guiWebClient.WaitForReady().DownloadData(new Uri(String.Format("{0}texture/gui/{1}", textureSite, key)));
             if (data == null) { throw new Exception(); }
-            this.guiCache.Cache(key, data);
+
+            CacheEntry entry = new CacheEntry
+            {
+                Data = data,
+                Expirity = DateTime.UtcNow + DiskCacheTime
+            };
+            this.guiCache.Store(entry, key);
 
             return data;
         }

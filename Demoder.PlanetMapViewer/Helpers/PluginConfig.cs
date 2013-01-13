@@ -68,11 +68,11 @@ namespace Demoder.PlanetMapViewer.Helpers
             }
 
             var settings = SettingInfo.Generate(plugin.GetType());
-            var storedSettings = Xml.Deserialize<List<PluginSetting>>(conf, false);
+            var storedSettings = Xml.Deserialize<List<PluginSetting>>(conf);
             if (storedSettings == null)
             {
                 this.GenerateDefaultConfig(plugin.GetType());
-                storedSettings = Xml.Deserialize<List<PluginSetting>>(conf, false);
+                storedSettings = Xml.Deserialize<List<PluginSetting>>(conf);
             }
 
             foreach (var setting in settings)
@@ -109,7 +109,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                     Value = setting.PropertyInfo.GetValue(plugin, null).ToString()
                 });
             }
-            Xml.Serialize(conf, storedSettings, false);
+            Xml.Serialize<List<PluginSetting>>(storedSettings, conf);
             API.PluginManager.RedrawLayers(plugin.GetType());
         }
 
@@ -127,7 +127,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                      Value = setting.SettingAttribute.DefaultValue.ToString()
                 });
             }
-            Xml.Serialize(conf, storedSettings, false);
+            Xml.Serialize<List<PluginSetting>>(storedSettings, conf);
         }
     }
 
