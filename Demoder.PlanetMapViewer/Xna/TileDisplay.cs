@@ -116,14 +116,16 @@ namespace Demoder.PlanetMapViewer.Xna
 
         private void InvalidateFrame(object state)
         {
-            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;            
+            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+            Stopwatch sw = Stopwatch.StartNew();
             do
             {
-                var sw = Stopwatch.StartNew();
                 try
                 {
+                    sw.Restart();
                     this.Invalidate();
                     var toSleep = (int)((1000 / TileDisplay.FrameFrequency) - sw.ElapsedMilliseconds);
+                    sw.Stop();
                     if (toSleep > 0)
                     {
                         Thread.Sleep(toSleep);
