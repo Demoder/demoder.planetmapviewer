@@ -142,6 +142,7 @@
     <Compile Include="Helpers\PluginConfig.cs" />
     <Compile Include="Plugins\CharacterLocatorPlugin.cs" />
     <Compile Include="Plugins\PluginSetting.cs" />
+    <Compile Include="Plugins\PmvNetworkPlugn.cs" />
     <Compile Include="Plugins\TowerStatusPlugin.cs" />
     <Compile Include="Plugins\TutorialPlugin.cs" />
     <Compile Include="PmvApi\GuiOverlay.cs" />
