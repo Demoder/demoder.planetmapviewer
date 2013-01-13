@@ -34,6 +34,7 @@ using Demoder.PlanetMapViewer.Xna;
 using System.ComponentModel;
 using Demoder.PlanetMapViewer.Helpers;
 using Demoder.PlanetMapViewer.Events;
+using System.IO;
 
 namespace Demoder.PlanetMapViewer.PmvApi
 {
@@ -48,6 +49,23 @@ namespace Demoder.PlanetMapViewer.PmvApi
         public PluginManager()
         {
             Task.Factory.StartNew(this.SendEvents, TaskCreationOptions.LongRunning);
+            // Load plugin assemblies
+            DirectoryInfo pluginDir = new DirectoryInfo("Plugins");
+            if (pluginDir.Exists)
+            {
+                foreach (FileInfo pluginFile in pluginDir.GetFiles("*.dll"))
+                {
+                    try
+                    {
+                        Assembly ass = Assembly.LoadFrom(pluginFile.FullName);
+                        this.RegisterPlugins(ass);
+                    }
+                    catch
+                    {
+
+                    }
+                }
+            }
         }
 
         private void SendEvents()
