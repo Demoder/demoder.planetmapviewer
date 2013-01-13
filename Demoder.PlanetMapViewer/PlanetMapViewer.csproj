@@ -1,0 +1,390 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2C6E87CB-4B84-44B8-90AD-468A6656B35B}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Demoder.PlanetMapViewer</RootNamespace>
+    <AssemblyName>Demoders PlanetMap Viewer</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>085EF48A4B563F665D955472D590937DE54FCA77</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>PlanetMapViewer_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <StartupObject>Demoder.PlanetMapViewer.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataClasses\MapTextureText.cs" />
+    <Compile Include="DataClasses\PlayerInfoKey.cs" />
+    <Compile Include="DataClasses\PositionDefinition.cs" />
+    <Compile Include="DataClasses\SimpleColor.cs" />
+    <Compile Include="DataClasses\Texture2DCacheItem.cs" />
+    <Compile Include="DataClasses\ContextState.cs" />
+    <Compile Include="DataClasses\ContextUiElements.cs" />
+    <Compile Include="DataClasses\PlayerInfo.cs" />
+    <Compile Include="DataClasses\QuestInfo.cs" />
+    <Compile Include="DataClasses\TextureDefinition.cs" />
+    <Compile Include="DataClasses\TimedMapText.cs" />
+    <Compile Include="DataClasses\XnaContentSpriteFonts.cs" />
+    <Compile Include="DataClasses\XnaContentTextures.cs" />
+    <Compile Include="delegates.cs" />
+    <Compile Include="Events\PluginStateChangeEventArgs.cs" />
+    <Compile Include="Forms\CameraUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\CameraUserControl.Designer.cs">
+      <DependentUpon>CameraUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MapSelectionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\MapSelectionControl.Designer.cs">
+      <DependentUpon>MapSelectionControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PluginConfigurationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PluginConfigurationForm.Designer.cs">
+      <DependentUpon>PluginConfigurationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PluginListControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\PluginListControl.Designer.cs">
+      <DependentUpon>PluginListControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PluginManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PluginManagerForm.Designer.cs">
+      <DependentUpon>PluginManagerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\MapTextBuilder.cs" />
+    <Compile Include="Helpers\PluginConfig.cs" />
+    <Compile Include="Plugins\CharacterLocatorPlugin.cs" />
+    <Compile Include="Plugins\PluginSetting.cs" />
+    <Compile Include="Plugins\TowerStatusPlugin.cs" />
+    <Compile Include="Plugins\TutorialPlugin.cs" />
+    <Compile Include="PmvApi\GuiOverlay.cs" />
+    <Compile Include="PmvApi\GuiTableOverlay.cs" />
+    <Compile Include="PmvApi\MapOverlay.cs" />
+    <Compile Include="PmvApi\IPlugin.cs" />
+    <Compile Include="PmvApi\PluginInfo.cs" />
+    <Compile Include="PmvApi\PluginManager.cs" />
+    <Compile Include="PmvApi\PluginAttribute.cs" />
+    <Compile Include="Properties\MapFonts.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>MapFonts.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\GuiFonts.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>GuiFonts.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\CharacterTrackerControlResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CharacterTrackerControlResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="DataClasses\IMapItem.cs" />
+    <Compile Include="DataClasses\MapText.cs" />
+    <Compile Include="enums.cs" />
+    <Compile Include="Forms\AboutBox1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AboutBox1.Designer.cs">
+      <DependentUpon>AboutBox1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataClasses\MapTexture.cs" />
+    <Compile Include="Forms\CharacterTrackerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\CharacterTrackerControl.Designer.cs">
+      <DependentUpon>CharacterTrackerControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ErrorLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ErrorLog.Designer.cs">
+      <DependentUpon>ErrorLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\Camera.cs" />
+    <Compile Include="API.cs" />
+    <Compile Include="DataClasses\ZoneInfo.cs" />
+    <Compile Include="Helpers\FrameDrawer.cs" />
+    <Compile Include="Properties\NormalTutorial.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>NormalTutorial.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\OverlayTutorial.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>OverlayTutorial.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\GeneralSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>GeneralSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\HookInfoTracker.cs" />
+    <Compile Include="Forms\MainWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MainWindow.Designer.cs">
+      <DependentUpon>MainWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataClasses\MapCoords.cs" />
+    <Compile Include="Helpers\MapManager.cs" />
+    <Compile Include="Forms\OptionWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OptionWindow.Designer.cs">
+      <DependentUpon>OptionWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\PlanetMap.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Xna\TileDisplay.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Properties\WindowSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>WindowSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="DataClasses\XnaContent.cs" />
+    <Compile Include="Xna\GraphicsDeviceControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Xna\GraphicsDeviceService.cs" />
+    <Compile Include="Xna\ServiceContainer.cs" />
+    <EmbeddedResource Include="Forms\CameraUserControl.resx">
+      <DependentUpon>CameraUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MapSelectionControl.resx">
+      <DependentUpon>MapSelectionControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PluginConfigurationForm.resx">
+      <DependentUpon>PluginConfigurationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PluginListControl.resx">
+      <DependentUpon>PluginListControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PluginManagerForm.resx">
+      <DependentUpon>PluginManagerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\CharacterTrackerControlResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CharacterTrackerControlResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AboutBox1.resx">
+      <DependentUpon>AboutBox1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CharacterTrackerControl.resx">
+      <DependentUpon>CharacterTrackerControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ErrorLog.resx">
+      <DependentUpon>ErrorLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MainWindow.resx">
+      <DependentUpon>MainWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OptionWindow.resx">
+      <DependentUpon>OptionWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="app.manifest">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\MapFonts.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>MapFonts.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Properties\GuiFonts.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>GuiFonts.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Properties\NormalTutorial.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>NormalTutorial.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Properties\OverlayTutorial.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>OverlayTutorial.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Properties\GeneralSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>GeneralSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Installer.nsi" />
+    <None Include="postbuild.bat" />
+    <None Include="prebuild.bat" />
+    <None Include="Properties\MapSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>MapSettings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\MapSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MapSettings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="Properties\WindowSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>WindowSettings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lib\Demoder.AoHook\Demoder.AoHook.csproj">
+      <Project>{A4D11EA9-1C7A-4140-943B-0325907BF8D9}</Project>
+      <Name>Demoder.AoHook</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ext\Demoder.Common\Demoder.Common.csproj">
+      <Project>{AC7BB3A1-A0E3-4931-9661-2BA4DB418B6F}</Project>
+      <Name>Demoder.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Xna\ContentLibrary\ContentLibrary.csproj">
+      <Project>{396ADBE6-FB16-4DBA-8C70-C16A46B448EA}</Project>
+      <Name>ContentLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Building.txt" />
+    <Content Include="Icon.ico" />
+    <Content Include="License.txt" />
+    <Content Include="Readme.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\MapCoordinates.xml" />
+    <None Include="Resources\PlayerInShadowlands.png" />
+    <None Include="Resources\PlayerOnRubika.png" />
+    <Content Include="Xna\Readme.txt" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>"$(ProjectDir)\prebuild.bat" "$(ProjectDir)" $(ConfigurationName)</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>"$(ProjectDir)\postbuild.bat" "$(ProjectDir)" $(ConfigurationName)</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
