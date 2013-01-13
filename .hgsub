@@ -1,2 +1,2 @@
-Ext/Demoder.Common = [hg]https://bitbucket.org/Savagedlight/demoder.common
-Ext/Vha.Build = [hg]https://bitbucket.org/Savagedlight/vha.build
+Ext/Demoder.Common = [hg]ssh://hg@bitbucket.org/Savagedlight/demoder.common
+Ext/Vha.Build = [hg]ssh://hg@bitbucket.org/Savagedlight/vha.build
