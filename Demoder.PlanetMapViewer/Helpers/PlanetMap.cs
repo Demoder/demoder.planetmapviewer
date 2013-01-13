@@ -246,21 +246,18 @@ namespace Demoder.PlanetMapViewer.Helpers
 
             if (map.CoordsFile == null)
             {
-                try
+                // Try to load default map coords
+                if (!Xml.TryDeserialize<MapCoords>(
+                    new FileInfo(Path.Combine(mapDir, "MapCoordinates.xml")),
+                    out map.CoordsFile))
                 {
-                    map.CoordsFile = Xml.Deserialize<MapCoords>(new FileInfo(Path.Combine(mapDir, "MapCoordinates.xml")));
+                    // If loading default map coords failed, load the embedded map coords.
+                    using (var ms = new MemoryStream(ASCIIEncoding.UTF8.GetBytes(Properties.Resources.MapCoordinates)))
+                    {
+                        map.CoordsFile = Xml.Deserialize<MapCoords>(ms);
+                    }
                 }
-                catch { }
-            }
-
-            // Is it still invalid?
-            if (map.CoordsFile == null)
-            {
-                using (var ms = new MemoryStream(ASCIIEncoding.UTF8.GetBytes(Properties.Resources.MapCoordinates)))
-                {
-                    map.CoordsFile = Xml.Deserialize<MapCoords>(ms);
-                }
-            }
+             }
 
             map.Layers = layers.ToArray();
             return map;
