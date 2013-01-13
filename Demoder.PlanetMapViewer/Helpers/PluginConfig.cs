@@ -68,9 +68,10 @@ namespace Demoder.PlanetMapViewer.Helpers
             }
 
             var settings = SettingInfo.Generate(plugin.GetType());
-            var storedSettings = Xml.Deserialize<List<PluginSetting>>(conf);
-            if (storedSettings == null)
-            {
+            
+            List<PluginSetting> storedSettings;
+            if (!Xml.TryDeserialize(conf, out storedSettings)) 
+            {            
                 this.GenerateDefaultConfig(plugin.GetType());
                 storedSettings = Xml.Deserialize<List<PluginSetting>>(conf);
             }
