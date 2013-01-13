@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InstallerHelpers", "Install
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demoder.PmvInstaller.Tester", "Demoder.PmvInstaller.Tester\Demoder.PmvInstaller.Tester.csproj", "{B1DE1B63-F64B-40D9-888E-78A0957133C8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{872468C5-253A-41EC-BF0A-E63AB93824BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
