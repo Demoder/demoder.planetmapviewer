@@ -23,20 +23,20 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using Demoder.PlanetMapViewer.PmvApi;
-using Demoder.Common.Serialization;
+using Demoder.Common.AO;
 using Demoder.Common.AO.Towerwars.DataClasses;
+using Demoder.Common.Attributes;
+using Demoder.Common.Cache;
+using Demoder.Common.Extensions;
+using Demoder.Common.Serialization;
 using Demoder.Common.Web;
 using Demoder.PlanetMapViewer.DataClasses;
-using Microsoft.Xna.Framework;
-using System.ComponentModel;
-using Demoder.Common.AO;
-using Demoder.Common.Attributes;
 using Demoder.PlanetMapViewer.Helpers;
-using Demoder.Common.Extensions;
-using Demoder.Common.Cache;
+using Demoder.PlanetMapViewer.PmvApi;
+using Microsoft.Xna.Framework;
 
 namespace Demoder.PlanetMapViewer.Plugins
 {
@@ -73,8 +73,8 @@ namespace Demoder.PlanetMapViewer.Plugins
         public TowerStatusPlugin()
         {
             API.MapManager.MapChangedEvent += new Action(this.HandleMapChangedEvent);
-            API.XmlCache.Create<TowerSites>(5, 20000);
-            API.XmlCache.Create<TowerAttacks>(1, 10000);
+            API.XmlCache.Create<TowerSites>(new TimeSpan(0,5,0));
+            API.XmlCache.Create<TowerAttacks>(new TimeSpan(0,1,0));
 
             API.AoHook.TrackedDimensionChanged += AoHook_TrackedDimensionChanged;
         }
@@ -142,7 +142,7 @@ namespace Demoder.PlanetMapViewer.Plugins
             }
 
             var towerData = API.XmlCache.Get<TowerAttacks>().Request(
-                XMLCacheFlags.Default,
+                Common.CacheFlags.Default,
                 qb.ToUri(new Uri(twHistorySearch)),
                 dimension.ToString());
 
@@ -304,7 +304,7 @@ namespace Demoder.PlanetMapViewer.Plugins
             }
 
             var towerData = API.XmlCache.Get<TowerSites>().Request(
-                XMLCacheFlags.Default,
+                Demoder.Common.CacheFlags.Default,
                 qb.ToUri(new Uri(twTowerDistribution)),
                 dimension.ToString(), 
                 this.LcaMinLevel.ToString(), 
