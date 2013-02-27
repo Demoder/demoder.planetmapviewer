@@ -45,9 +45,6 @@ namespace Demoder.PlanetMapViewer.Plugins
     public class TowerStatusPlugin : IPlugin
     {
         #region Settings
-        [Setting(DimensionSelection.AutoDetect)]
-        public DimensionSelection Dimension { get; set; }
-
         [Setting(true)]
         public bool ShowNames { get; set; }
 
@@ -96,29 +93,8 @@ namespace Demoder.PlanetMapViewer.Plugins
 
         public IEnumerable<MapOverlay> GetCustomOverlay()
         {
-            Dimension dim;
-            switch (this.Dimension)
-            {
-                case DimensionSelection.Atlantean:
-                    dim = Demoder.Common.AO.Dimension.Atlantean;
-                    break;
-                case DimensionSelection.Rimor:
-                    dim = Demoder.Common.AO.Dimension.Rimor;
-                    break;
-                case DimensionSelection.Live:
-                    dim = Common.AO.Dimension.RubiKa;
-                    break;
-                case DimensionSelection.Testlive:
-                    dim = Demoder.Common.AO.Dimension.Testlive;
-                    break;
-                default:
-                case DimensionSelection.AutoDetect:
-                       dim = API.State.CurrentDimension;
-                    break;
-            }
-
-            yield return this.GenerateTowerFieldInfo(dim);
-            yield return this.GenerateRecentAttackInfo(dim);
+            yield return this.GenerateTowerFieldInfo(Dimension.RubiKa);
+            yield return this.GenerateRecentAttackInfo(Dimension.RubiKa);
         }
 
         private MapOverlay GenerateRecentAttackInfo(Dimension dimension)
