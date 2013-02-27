@@ -106,7 +106,7 @@ namespace Demoder.PlanetMapViewer.Plugins
                     dim = Demoder.Common.AO.Dimension.Rimor;
                     break;
                 case DimensionSelection.Live:
-                    dim = Common.AO.Dimension.Live;
+                    dim = Common.AO.Dimension.RubiKa;
                     break;
                 case DimensionSelection.Testlive:
                     dim = Demoder.Common.AO.Dimension.Testlive;
