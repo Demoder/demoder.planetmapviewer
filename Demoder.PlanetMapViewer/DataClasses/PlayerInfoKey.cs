@@ -79,10 +79,7 @@ namespace Demoder.PlanetMapViewer.DataClasses
 
         internal static Dimension GetDimension(uint serverID)
         {
-            if (serverID >= 3000 && serverID <= 3099) { return Dimension.Atlantean; }
-            if (serverID >= 3100 && serverID <= 3199) { return Dimension.Rimor; }
-            // TODO: Verify this once merge happens.
-            if (serverID >= 3300 && serverID <= 3399) { return Dimension.Live; }
+            if (serverID >= 3500 && serverID <= 3599) { return Dimension.RubiKa; }
             if (serverID >= 3900 && serverID <= 3999) { return Dimension.Testlive; }
             else { return Dimension.Unknown; }
         }
