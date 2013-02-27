@@ -105,15 +105,19 @@ namespace Demoder.PlanetMapViewer.Plugins
             
         }
     }
+    
 
     public class PmvNetCharacterInfo
     {
+        [StreamData(0)]
         public Guid Source { get; set; }
-
+        [StreamData(1)]
         public uint Zone { get; set; }
+        [StreamData(2)]
         public uint X { get; set; }
+        [StreamData(3)]
         public uint Z { get; set; }
-
+        [StreamData(4)]
         public string Name { get; set; }
 
         public PmvNetCharacterInfo()
