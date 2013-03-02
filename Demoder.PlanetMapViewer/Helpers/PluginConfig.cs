@@ -48,34 +48,31 @@ namespace Demoder.PlanetMapViewer.Helpers
 
         private FileInfo GetConfigFile(Type plugin)
         {
-            var fileName = String.Format("{0}-{1}.xml",
+            string fileName = String.Format("{0}-{1}.xml",
                 plugin.Name, 
                 SHA1Checksum.Generate(plugin.GetType().FullName));
 
-            var path = Path.Combine(
+            string path = Path.Combine(
                 this.storageDirectory.FullName,
                 fileName);
 
-            return new FileInfo(path);
+            FileInfo fi = new FileInfo(path);
+
+            return fi;
         }
 
         public void LoadConfig(IPlugin plugin)
         {
             var conf = this.GetConfigFile(plugin.GetType());
-            if (!conf.Exists)
+            List<PluginSetting> storedSettings;
+            if (!Xml.TryDeserialize(conf, out storedSettings))
             {
-                this.GenerateDefaultConfig(plugin.GetType());
+                storedSettings = this.GenerateDefaultConfig(plugin.GetType());
             }
 
+            
             var settings = SettingInfo.Generate(plugin.GetType());
             
-            List<PluginSetting> storedSettings;
-            if (!Xml.TryDeserialize(conf, out storedSettings)) 
-            {            
-                this.GenerateDefaultConfig(plugin.GetType());
-                storedSettings = Xml.Deserialize<List<PluginSetting>>(conf);
-            }
-
             foreach (var setting in settings)
             {
                 try 
@@ -115,7 +112,7 @@ namespace Demoder.PlanetMapViewer.Helpers
         }
 
 
-        private void GenerateDefaultConfig(Type plugin)
+        private List<PluginSetting> GenerateDefaultConfig(Type plugin)
         {
             var conf = this.GetConfigFile(plugin);
             var settings = SettingInfo.Generate(plugin);
@@ -129,6 +126,7 @@ namespace Demoder.PlanetMapViewer.Helpers
                 });
             }
             Xml.Serialize<List<PluginSetting>>(storedSettings, conf);
+            return storedSettings;
         }
     }
 
