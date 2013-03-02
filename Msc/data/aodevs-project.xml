@@ -1,0 +1,93 @@
+﻿<Root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Project" Version="1" xsi:noNamespaceSchemaLocation="http://aodevs.com/xsd/Project.v1.xsd">
+  <Name>Demoder's PlanetMap Viewer</Name>
+  <Tagline>
+    See ingame maps outside the game - With character tracking!
+  </Tagline>
+  <Description>
+    Demoder's PlanetMap Viewer lets you explore planet maps for Anarchy Online without logging in. If you are logged in to the game, it will plot your character(s) on the planet map.[br]
+    The long-term goal is to be a full substitute to the ingame planetmap viewer.[br][br]
+    [b]Features[/b][br]
+    - Plot character marker on planet map for all locally running AO clients[br]
+    - Smart camera tracking of multiple (selectable) characters[br]
+    - See LCA information on the planetmap using the TowerStatus plugin![br]
+    [br][b]Overlay mode[/b] (F12)[br]
+    [ulist]
+    [*]Window will remain on top of other windows, such as Anarchy Online
+    [*]Minimal footprint on screen real estate
+    [*]An extensive menu becomes available upon right-click of the title bar
+    [/ulist]
+    [br]
+    [b]Fullscreen mode[/b] (F11)[br]
+    [ulist]
+    [*]Optimal for running on a dedicated display
+    [*]Window is maximized
+    [*]Borders are removed
+    [/ulist]
+  </Description>
+  <License>GPLv2</License>
+  <Games>
+    <Game>Anarchy Online</Game>
+  </Games>
+  <Pages>
+    <Page Label="Known Issues">
+      [b]Overlay mode fails to stay on top of Anarchy Online[/b][br]
+    There's a workaround available. Open the options dialog (File->Options) and enable the "Force on top (bugfix)" checkbox.[br]
+    </Page>
+    <Page Label="Credits">
+      Created by Demoder (demoder -at- demoder.me)[br]
+      See http://demoder.me/pmv/ for more information.[br]
+      [br]
+      [b]Map plotting algorithm[/b][br]
+      Thanks to Vhab for turning a huge amount of data points into a formula which is useable to do accurate plotting on the map.[br]
+      Also thanks to Niniko for providing documentation on some of the concepts involved in this process.[br]
+      [br]
+      [b]Icon[/b][br]
+      Thanks to Vhab for creating the icon, and to Onack for giving permission to use AoRK for icon generation.[br]
+      [br]
+      [b]Testing[/b][br]
+      Thanks to Iriche, Jandorith, Nesual, Onack, Phooy and Vhab for extensive testing.[br]
+    </Page>
+    <Page Label="Plugins">
+      [b]Default plugins[/b][br]
+      [b]CharacterLocator[/b][br]
+      Description: Draws character name &amp; locator on map.[br]
+      Configurable: Yes[br]
+      [br][b]Tutorial[/b][br]
+      Description: Introduces the user to the graphical user interface.[br]
+      Configurable: No[br]
+      [br][b]TowerStatus[/b][br]
+      Description: Draws LCA ownership information on the map, and optionally displays recent attacks in the GUI.
+      Configurable: Yes[br]
+    </Page>
+    <!--<Page Label ="Changelog">
+      [b]2012-03-27: v1.0, initial release.
+    </Page>-->
+  </Pages>
+  <Staff>
+    <Member Position="Author" Name="Demoder" Server="Rimor"/>
+  </Staff>
+  <Links>
+    <Link Label="Bugtracker" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/issues" />
+    <Link Label="Source &amp; Downloads" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer" />
+  </Links>
+  <Versions>
+    <LocalVersion Type="Stable" Value="1.2.3" Package="1.2.3"/>
+  </Versions>
+  <Packages>
+    <Package Name="1.2.3" Date="2012-11-26">
+      <File Label="Setup" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/downloads/Demoders%20PlanetMapViewer%20v1.2.3%20Setup.zip"/>
+      <File Label="Binaries" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/downloads/Demoders%20PlanetMap%20Viewer%20v1.2.3.zip"/>
+      <Repository Type="Mercurial" Label="Source" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/src/1.2.3-RELEASE"/>
+    </Package>
+    <Package Name="1.2.2" Date="2012-06-12">
+      <File Label="Setup" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/downloads/Demoders%20PlanetMap%20Viewer%20v1.2.2%20Setup.zip"/>
+      <File Label="Binaries" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/downloads/Demoders%20PlanetMap%20Viewer%20v1.2.2.zip"/>
+      <Repository Type="Mercurial" Label="Source" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/src/1.2.2-RELEASE"/>
+    </Package>
+    <Package Name="1.0.1" Date="2012-03-27">
+      <File Label="Setup" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/downloads/Demoders%20PlanetMap%20Viewer%20v1.0.1%20Setup.zip"/>
+      <File Label="Binaries" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/downloads/Demoders%20PlanetMap%20Viewer%20v1.0.1.zip"/>
+      <Repository Type="Mercurial" Label="Source" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/src/1.0.1-RELEASE"/>
+    </Package>
+  </Packages>
+</Root>
