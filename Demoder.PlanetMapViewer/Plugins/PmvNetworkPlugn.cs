@@ -34,6 +34,7 @@ using Demoder.Common.Attributes;
 
 namespace Demoder.PlanetMapViewer.Plugins
 {
+#if PMVNET
     [Plugin("PmvNetwork")]
     [Description("Share character locations with friends!")]
     public class PmvNetworkPlugn : IPlugin
@@ -125,4 +126,5 @@ namespace Demoder.PlanetMapViewer.Plugins
             
         }
     }
+#endif
 }
