@@ -1,6 +1,6 @@
 ﻿/*
 * Demoder.AoHook
-* Copyright (C) 2012 Demoder (demoder@demoder.me)
+* Copyright (C) 2012, 2013 Demoder (demoder@demoder.me)
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
