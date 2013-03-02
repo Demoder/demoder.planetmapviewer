@@ -71,9 +71,14 @@
     <Link Label="Source &amp; Downloads" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer" />
   </Links>
   <Versions>
-    <LocalVersion Type="Stable" Value="1.2.3" Package="1.2.3"/>
+    <LocalVersion Type="Stable" Value="1.2.4" Package="1.2.4"/>
   </Versions>
   <Packages>
+    <Package Name="1.2.4" Date="2013-03-02">
+      <File Label="Setup" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/downloads/Demoders%20PlanetMapViewer%20v1.2.4%20Setup.zip"/>
+      <File Label="Binaries" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/downloads/Demoders%20PlanetMap%20Viewer%20v1.2.4.zip"/>
+      <Repository Type="Mercurial" Label="Source" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/src/1.2.4-RELEASE"/>
+    </Package>
     <Package Name="1.2.3" Date="2012-11-26">
       <File Label="Setup" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/downloads/Demoders%20PlanetMapViewer%20v1.2.3%20Setup.zip"/>
       <File Label="Binaries" Url="https://bitbucket.org/Savagedlight/demoder.planetmapviewer/downloads/Demoders%20PlanetMap%20Viewer%20v1.2.3.zip"/>

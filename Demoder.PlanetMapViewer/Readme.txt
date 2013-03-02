@@ -1,4 +1,4 @@
-﻿Demoders PlanetMap Viewer (v1.2.1, 2012-06-12)
+﻿Demoders PlanetMap Viewer (v1.2.4, 2013-03-02)
    This program lets you explore PlanetMaps made for Anarchy Online. 
 
 Installation
@@ -9,7 +9,7 @@ Installation
       No special notes.
 
 Requirements
-    Operating system:       Microsoft Windows 7, Vista or XP.
+    Operating system:       Microsoft Windows 8, 7, Vista or XP.
     Graphics:               DirectX 9 compatible graphics card
     User level:             Administrator (due to character position tracking)
     
@@ -42,7 +42,9 @@ Modes of operation
       This mode allows for a much smaller window size than the other modes. You may still maximize the window to cover a full screen, if you wish.
 
 Changelog
-   2012-06-12: v1.2, several new features and compatibility with Anarchy Online 18.5.0. See http://redmine.demoder.me/projects/pmv/wiki/Release_12 for more information.
+   2013-03-02: v1.2.4, several reliability improvements, and compatibility with 18.6.0.
+   2012-11-26: v1.2.3, this release fixes an issue where PMV would stop tracking characters properly when you used 'quit to login'.
+   2012-06-12: v1.2.2, several new features and compatibility with Anarchy Online 18.5.0. See http://forums.anarchy-online.com/showpost.php?p=6069502&postcount=27 for more information.
    2012-03-27: v1.0, initial release.
 
 Credits
